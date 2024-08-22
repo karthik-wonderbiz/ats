@@ -16,6 +16,7 @@ import { NgxImageCompressService } from 'ngx-image-compress';
   styleUrls: ['./sign-up.component.css'],
 })
 export class SignUpComponent implements OnInit {
+  
   employee: EmployeeModel = {
     firstName: '',
     lastName: '',
@@ -56,10 +57,8 @@ export class SignUpComponent implements OnInit {
 
   viaCapture = false;
 
-
-  toggleCapture() {
-    this.viaCapture = !this.viaCapture
-  }
+  pType: string = "password";
+  eye: boolean = true
 
   constructor(
     private employeeService: EmployeeService,
@@ -70,7 +69,16 @@ export class SignUpComponent implements OnInit {
     private imageCompress: NgxImageCompressService
   ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
+
+  toggleCapture() {
+    this.viaCapture = !this.viaCapture
+  }
+
+  viewPass() {
+    this.pType = this.pType == "password" ? "text" : 'password'
+    this.eye = !this.eye
+  }
 
   RegisterEmp(empForm: NgForm): void {
     // const loginData = empForm.value;

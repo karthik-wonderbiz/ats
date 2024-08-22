@@ -22,6 +22,14 @@ export class LoginComponent {
   isLogSubmitted = false;
   isLoginSuccessful = false;
 
+  pType: string = "password";
+  eye: boolean = true
+
+  viewPass() {
+    this.pType = this.pType == "password" ? "text" : 'password'
+    this.eye = !this.eye
+  }
+
   validateEmail(): boolean {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailPattern.test(this.loginData.email);
