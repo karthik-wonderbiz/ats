@@ -23,15 +23,23 @@
           class="hidden shadow-lg w-full max-w-2xl object-cover rounded-md border-2 border-gray-200"
         ></div>
       </div>
-      <div class="mt-5 flex flex-col items-center">
-        <button
+      <div class="mt-4 flex flex-row justify-around items-center">
+        <button (click)="onIn()"
           type="button"
           [hidden]="isMarkAttendanceDisabled"
           [ngClass]="{ 'cursor-not-allowed': isMarkAttendanceDisabled }"
-          (click)="markAttendance()"
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
         >
-          {{ cameraType }}
+          IN
+        </button>
+        <button
+          type="button"
+          (click)="onOut()"
+          [hidden]="isMarkAttendanceDisabled"
+          [ngClass]="{ 'cursor-not-allowed': isMarkAttendanceDisabled }"
+          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
+        >
+          OUT
         </button>
         <div role="status" [ngClass]="{ hidden: !isMarkAttendanceDisabled }">
           <svg

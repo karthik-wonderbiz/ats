@@ -12,7 +12,7 @@ from fastapi.templating import Jinja2Templates
 import face_recognition
 import pyodbc
 import random
-from config import connection_string, cameraType, waitTime, apiBaseUrl, detectMultipleface
+from config import connection_string, waitTime, apiBaseUrl, detectMultipleface
 import io
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
@@ -80,7 +80,7 @@ def is_recently_detected(face_encoding):
     return False
 
 # Face Detection function
-def detect_known_faces(known_face_id, known_face_names, known_face_encodings, frame):
+def detect_known_faces(known_face_id, known_face_names, known_face_encodings, frame, cameraType):
     apiUrl = apiBaseUrl + "/attendanceLog/multiple"
     data_list= []
     def mark_attendance(d):
@@ -211,14 +211,14 @@ async def save_encoding(employee_id: str = Form(...)):
         raise HTTPException(status_code=400, detail="No faces detected in the images!")
 
 # Mark attendance endpoint
-@app.post("/mark-attendance/")
+@app.post("/mark-attendance/IN")
 async def mark_attendance(file: UploadFile = File(...)):
     contents = await file.read()
     nparr = np.frombuffer(contents, np.uint8)
     frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
     known_face_id, known_face_names, known_face_encodings = load_encodings_from_db()
-    face_locations, face_names, attendance = detect_known_faces(known_face_id, known_face_names, known_face_encodings, frame)
+    face_locations, face_names, attendance = detect_known_faces(known_face_id, known_face_names, known_face_encodings, frame,"IN")
 
     # Draw the boundary box and label for each detected face
     for (top, right, bottom, left), name in zip(face_locations, face_names):
@@ -238,6 +238,35 @@ async def mark_attendance(file: UploadFile = File(...)):
     )
 
     return JSONResponse(content=response_data.model_dump())
+
+@app.post("/mark-attendance/OUT")
+async def mark_attendance(file: UploadFile = File(...)):
+    contents = await file.read()
+    nparr = np.frombuffer(contents, np.uint8)
+    frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    known_face_id, known_face_names, known_face_encodings = load_encodings_from_db()
+    face_locations, face_names, attendance = detect_known_faces(known_face_id, known_face_names, known_face_encodings, frame,"OUT")
+
+    # Draw the boundary box and label for each detected face
+    for (top, right, bottom, left), name in zip(face_locations, face_names):
+        color = (0, 255, 0) if name != 'Unknown' else (0, 0, 255)
+        cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
+        cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 2)
+
+    # Convert the processed frame to a base64-encoded JPEG image
+    _, img_encoded = cv2.imencode('.jpg', frame)
+    img_bytes = io.BytesIO(img_encoded.tobytes())
+    img_base64 = base64.b64encode(img_bytes.getvalue()).decode('utf-8')
+
+    # Create the response model
+    response_data = FaceDetectionResponse(
+        attendance=attendance,
+        image_base64=img_base64,
+    )
+
+    return JSONResponse(content=response_data.model_dump())
+
 
 @app.get("/camera-type")
 def get_camera_type():

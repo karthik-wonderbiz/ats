@@ -9,7 +9,7 @@ import FaceDetectionResponse from '../../model/enrolment/detection.model';
 export class FaceService {
   private baseURI = 'http://localhost:8000';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   captureImage(formData: FormData): Observable<any> {
     return this.http.post(`${this.baseURI}/capture-image/`, formData);
@@ -23,11 +23,11 @@ export class FaceService {
     return this.http.get<'IN' | 'OUT'>(`${this.baseURI}/camera-type`);
   }
 
-  markAttendance(imageBlob: Blob): Observable<FaceDetectionResponse> {
+  markAttendance(imageBlob: Blob, cameraType: "IN" | "OUT"): Observable<FaceDetectionResponse> {
     const formData = new FormData();
     formData.append('file', imageBlob, 'capture.jpg');
     return this.http.post<FaceDetectionResponse>(
-      `${this.baseURI}/mark-attendance/`,
+      `${this.baseURI}/mark-attendance/${cameraType}`,
       formData,
       {
         responseType: 'json' as 'json',
