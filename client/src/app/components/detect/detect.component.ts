@@ -40,14 +40,15 @@ export class DetectComponent {
     type: 'success',
   };
 
-  // onIn(){
-  //   this.cameraType = 'IN'
-  //   this.markAttendance()
-  // }
+  onIn() {
+    this.cameraType = 'IN'
+    this.markAttendance()
+  }
 
-  // onOut(){
-  //   this.cameraType = 'OUT'
-  // }
+  onOut() {
+    this.cameraType = 'OUT'
+    this.markAttendance()
+  }
 
   ngOnInit(): void {
     this.initializeWebcam();
@@ -104,6 +105,7 @@ export class DetectComponent {
   }
 
   async markAttendance(): Promise<void> {
+    console.log(this.cameraType)
     const video: HTMLVideoElement = this.videoElement.nativeElement;
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
@@ -116,7 +118,7 @@ export class DetectComponent {
         canvas.toBlob(resolve, 'image/jpeg')
       );
       if (imageBlob) {
-        this.attendanceService.markAttendance(imageBlob).subscribe({
+        this.attendanceService.markAttendance(imageBlob, this.cameraType).subscribe({
           next: (data) => {
             const imageUrl = `data:image/jpeg;base64,${data.image_base64}`;
             const image = new Image();
@@ -132,9 +134,8 @@ export class DetectComponent {
               this.resElement.nativeElement.appendChild(image);
               let msg =
                 attendedNames.length > 0
-                  ? `Marked Attendance for ${attendedNames.join(', ')} at ${
-                      data.attendance[0].attendanceLogTime
-                    }`
+                  ? `Marked Attendance for ${attendedNames.join(', ')} at ${data.attendance[0].attendanceLogTime
+                  }`
                   : 'No attendance marked';
               this.displayElement.nativeElement.innerText = msg;
               this.isClose = true;
