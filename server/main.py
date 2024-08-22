@@ -6,15 +6,12 @@ import numpy as np
 import pickle
 import time
 from datetime import datetime
-from fastapi import FastAPI, WebSocket, Form, UploadFile, File, HTTPException
+from fastapi import FastAPI, Form, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
-from fastapi.templating import Jinja2Templates
 import face_recognition
-import pyodbc
 import random
-from config import connection_string, waitTime, apiBaseUrl, detectMultipleface
+from config import waitTime, apiBaseUrl, detectMultipleface
 import io
-from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
@@ -45,9 +42,6 @@ recent_detection_interval = 30  # seconds
 last_attendance_time = {}
 # Directory for storing images
 IMAGES_PATH = 'images/'
-
-# database connection
-conn = pyodbc.connect(connection_string)
 
 class FaceDetectionResponse(BaseModel):
     attendance: List[dict]  
