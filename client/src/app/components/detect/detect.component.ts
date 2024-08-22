@@ -20,11 +20,12 @@ export class DetectComponent {
       .subscribe((text) => this.ttsService.speak(text));
   }
   cameraType: 'IN' | 'OUT' = 'IN';
+  isCameraOpen: boolean = false;
   private ttsText = new Subject<string>();
   isClose: boolean = false;
   isDetected: boolean = false;
   isMarkAttendanceDisabled: boolean = false;
-  private stream: MediaStream | null = null;
+  stream: MediaStream | null = null;
   @ViewChild('video', { static: true })
   videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('res', { static: true })
@@ -50,20 +51,25 @@ export class DetectComponent {
 
   ngOnInit(): void {
     this.initializeWebcam();
-    this.attendanceService.getCameraType().subscribe({
-      next: (data) => {
-        this.cameraType = data;
-      },
-      error: (e) => {
-        this.cameraType = 'IN';
-      },
-    });
+    console.log(this.stream)
+    // this.attendanceService.getCameraType().subscribe({
+    //   next: (data) => {
+    //     this.cameraType = data;
+    //   },
+    //   error: (e) => {
+    //     this.cameraType = 'IN';
+    //   },
+    // });
   }
   ngOnDestroy(): void {
     this.stopWebcam();
   }
 
   private initializeWebcam(): void {
+    if (this.isCameraOpen) {
+      this.stopWebcam();  // Close the webcam if already open
+    }
+
     const video: HTMLVideoElement | null = document.getElementById(
       'video'
     ) as HTMLVideoElement;
@@ -73,9 +79,10 @@ export class DetectComponent {
         .getUserMedia({ video: true })
         .then((stream: MediaStream) => {
           if (video) {
-            video.srcObject = stream;
+            // video.srcObject = stream;
             this.stream = stream;
           }
+          this.isCameraOpen = true; 
         })
         .catch((error: any) => {
           console.error('Error accessing webcam: ', error);
@@ -91,6 +98,8 @@ export class DetectComponent {
     if (this.stream) {
       const tracks = this.stream.getTracks();
       tracks.forEach((track) => track.stop());
+      this.stream = null;
+      this.isCameraOpen = false; 
     }
   }
 
