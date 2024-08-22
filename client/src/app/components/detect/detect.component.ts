@@ -125,9 +125,10 @@ export class DetectComponent {
             image.src = imageUrl;
             if (this.resElement) {
               const attendedNames = data.attendance.map((a) => a.firstName);
+              const welcomeMsg = this.cameraType == "IN" ? "Welcome " : "Thank you"
               let ttsText =
                 attendedNames.length > 0
-                  ? `Thank you ${attendedNames.join(', ')}`
+                  ? `${welcomeMsg} ${attendedNames.join(', ')}`
                   : 'Attendance not marked';
               this.ttsService.setText(ttsText);
               this.resElement.nativeElement.innerHTML = '';
