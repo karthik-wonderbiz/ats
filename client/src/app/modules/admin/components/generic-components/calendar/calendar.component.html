@@ -1,0 +1,6 @@
+<full-calendar [options]="calendarOptions">
+    <ng-template #eventContent let-arg>
+        <!-- <b>{{arg.timeText}}</b> -->
+        <b>{{arg.event.title}}</b>
+    </ng-template>
+</full-calendar>

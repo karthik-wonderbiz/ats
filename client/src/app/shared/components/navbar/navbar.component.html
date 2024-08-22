@@ -1,0 +1,69 @@
+<!-- Navbar -->
+<div class="fixed navbar justify-between bg-blue-50 text-black border-b-2 border-b-indigo-500 z-40">
+  <button (click)="onToggle()" data-drawer-target="separator-sidebar" data-drawer-onToggle="separator-sidebar"
+    aria-controls="separator-sidebar" type="button"
+    class="inline-flex items-center p-2 mt-2 text-sm text-black rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-50">
+    <span class="sr-only">Open sidebar</span>
+    <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+      <path clip-rule="evenodd" fill-rule="evenodd"
+        d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+      </path>
+    </svg>
+  </button>
+  <div class="navbar-start justify-between">
+    <a class="btn btn-ghost text-xl text-black">ATS</a>
+  </div>
+  <!-- <div class="navbar-center hidden sm:flex">
+    <ul class="menu menu-horizontal px-1 text-black">
+      <li><a class="hover:bg-blue-50">Item 1</a></li>
+      <li>
+        <details>
+          <summary>Parent</summary>
+          <ul class="p-2 bg-blue-50 text-black">
+            <li><a class="hover:bg-blue-50">Submenu 1</a></li>
+            <li><a class="hover:bg-blue-50">Submenu 2</a></li>
+          </ul>
+        </details>
+      </li>
+      <li><a class="hover:bg-blue-50">Item 3</a></li>
+    </ul>
+  </div> -->
+
+  <div class="dropdown">
+    <div tabindex="0" role="button" class="btn btn-ghost sm:hidden relative text-black">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+      </svg>
+    </div>
+    <ul tabindex="0"
+      class="menu menu-sm dropdown-content bg-blue-50 rounded-box z-[1] mt-3 w-52 p-2 shadow right-0 text-black">
+      <li><a class="hover:bg-blue-50">Item 1</a></li>
+      <li>
+        <a>Parent</a>
+        <ul class="p-2 bg-blue-50 text-black">
+          <li><a class="hover:bg-blue-50">Submenu 1</a></li>
+          <li><a class="hover:bg-blue-50">Submenu 2</a></li>
+        </ul>
+      </li>
+      <li><a class="hover:bg-blue-50">Item 3</a></li>
+    </ul>
+  </div>
+  <div class="dropdown dropdown-end">
+    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+      <div class="w-10 rounded-full">
+        <img alt="Tailwind CSS Navbar component"
+          src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+      </div>
+    </div>
+    <ul tabindex="0" class="menu menu-sm dropdown-content bg-blue-50 rounded-box z-[1] mt-3 w-52 p-2 shadow text-black">
+      <li>
+        <a class="justify-between hover:bg-blue-50">
+          Profile
+          <span class="badge bg-blue-50 text-black">New</span>
+        </a>
+      </li>
+      <li><a class="hover:bg-blue-50">Settings</a></li>
+      <li><a class="hover:bg-blue-50">Logout</a></li>
+    </ul>
+  </div>
+</div>

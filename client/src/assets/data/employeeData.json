@@ -1,0 +1,358 @@
+{
+  "EmployeeBasicInfo": [
+    {
+      "id": 1,
+      "Employee": "4575",
+      "Name": "Mustafa Ozan",
+      "Image": "https://flowbite.com/docs/images/people/profile-picture-1.jpg"
+    },
+    {
+      "id": 2,
+      "Employee": "4570",
+      "Name": "Scott Fisher",
+      "Image": "https://flowbite.com/docs/images/people/profile-picture-2.jpg"
+    },
+    {
+      "id": 3,
+      "Employee": "4574",
+      "Name": "Jacob Walsh",
+      "Image": "https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+    },
+    {
+      "id": 4,
+      "Employee": "4573",
+      "Name": "Martha Hills",
+      "Image": "https://flowbite.com/docs/images/people/profile-picture-4.jpg"
+    },
+    {
+      "id": 5,
+      "Employee": "ZY200",
+      "Name": "Vignesh TK",
+      "Image": "https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+    },
+    {
+      "id": 6,
+      "Employee": "ZY198",
+      "Name": "Christine Spalding",
+      "Image": "https://flowbite.com/docs/images/people/profile-picture-6.jpg"
+    },
+    {
+      "id": 7,
+      "Employee": "ZY197",
+      "Name": "Aditi A",
+      "Image": "https://flowbite.com/docs/images/people/profile-picture-7.jpg"
+    }
+  ],
+    "EmployeeAttendance": [
+      {
+        "id": 1,
+        "Employee": "4575",
+        "FirstIn": "10:10 AM",
+        "LastOut": "07:30 PM",
+        "DailyHours": "09:20",
+        "WeeklyHours": "46:40",
+        "MonthlyHours": "186:40",
+        "QuarterlyHours": "560:00",
+        "YearlyHours": "2540:00",
+        "AllTimeHours": "22400:00",
+        "TodaysInOut": [
+          {
+            "id": 1,
+            "inTime": "10:10 AM",
+            "outTime": "11:00 AM",
+            "totalOutTime": "50 Mins"
+          },
+          {
+            "id": 2,
+            "inTime": "12:00 PM",
+            "outTime": "01:00 PM",
+            "totalOutTime": "1 Hour"
+          },
+          {
+            "id": 3,
+            "inTime": "02:00 PM",
+            "outTime": "02:30 PM",
+            "totalOutTime": "30 Mins"
+          },
+          {
+            "id": 4,
+            "inTime": "03:50 PM",
+            "outTime": "04:00 PM",
+            "totalOutTime": "10 Mins"
+          },
+          {
+            "id": 5,
+            "inTime": "04:30 PM",
+            "outTime": "04:40 PM",
+            "totalOutTime": "10 Mins"
+          },
+          {
+            "id": 6,
+            "inTime": "06:40 PM",
+            "outTime": "07:00 PM",
+            "totalOutTime": "20 Mins"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "Employee": "4570",
+        "FirstIn": "09:00 AM",
+        "LastOut": "06:30 PM",
+        "DailyHours": "09:30",
+        "WeeklyHours": "47:30",
+        "MonthlyHours": "380:00",
+        "QuarterlyHours": "570:00",
+        "YearlyHours": "2280:00",
+        "AllTimeHours": "22800:00",
+        "TodaysInOut": [
+          {
+            "id": 1,
+            "inTime": "09:00 AM",
+            "outTime": "11:30 AM",
+            "totalOutTime": "2 Hours 30 Mins"
+          },
+          {
+            "id": 2,
+            "inTime": "12:00 PM",
+            "outTime": "02:45 PM",
+            "totalOutTime": "2 Hours 45 Mins"
+          },
+          {
+            "id": 3,
+            "inTime": "03:00 PM",
+            "outTime": "06:00 PM",
+            "totalOutTime": "3 Hours"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "Employee": "4574",
+        "FirstIn": "09:00 AM",
+        "LastOut": "06:00 PM",
+        "DailyHours": "09:00",
+        "WeeklyHours": "45:00",
+        "MonthlyHours": "180:00",
+        "QuarterlyHours": "540:00",
+        "YearlyHours": "2160:00",
+        "AllTimeHours": "21600:00",
+        "TodaysInOut": [
+          {
+            "id": 1,
+            "inTime": "09:00 AM",
+            "outTime": "11:00 AM",
+            "totalOutTime": "2 Hours"
+          },
+          {
+            "id": 2,
+            "inTime": "12:00 PM",
+            "outTime": "02:30 PM",
+            "totalOutTime": "2 Hours 30 Mins"
+          },
+          {
+            "id": 3,
+            "inTime": "03:00 PM",
+            "outTime": "06:00 PM",
+            "totalOutTime": "3 Hours"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "Employee": "4573",
+        "FirstIn": "09:00 AM",
+        "LastOut": "04:37 PM",
+        "DailyHours": "07:37",
+        "WeeklyHours": "38:40",
+        "MonthlyHours": "152:14",
+        "QuarterlyHours": "456:42",
+        "YearlyHours": "1826:48",
+        "AllTimeHours": "18268:00",
+        "TodaysInOut": [
+          {
+            "id": 1,
+            "inTime": "09:00 AM",
+            "outTime": "11:00 AM",
+            "totalOutTime": "2 Hours"
+          },
+          {
+            "id": 2,
+            "inTime": "11:30 AM",
+            "outTime": "02:00 PM",
+            "totalOutTime": "2 Hours 30 Mins"
+          },
+          {
+            "id": 3,
+            "inTime": "02:30 PM",
+            "outTime": "04:00 PM",
+            "totalOutTime": "1 Hour 30 Mins"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "Employee": "ZY200",
+        "FirstIn": "09:00 AM",
+        "LastOut": "03:30 PM",
+        "DailyHours": "06:30",
+        "WeeklyHours": "32:30",
+        "MonthlyHours": "130:00",
+        "QuarterlyHours": "390:00",
+        "YearlyHours": "1560:00",
+        "AllTimeHours": "15600:00",
+        "TodaysInOut": [
+          {
+            "id": 1,
+            "inTime": "09:00 AM",
+            "outTime": "11:00 AM",
+            "totalOutTime": "2 Hours"
+          },
+          {
+            "id": 2,
+            "inTime": "11:30 AM",
+            "outTime": "01:30 PM",
+            "totalOutTime": "2 Hours"
+          },
+          {
+            "id": 3,
+            "inTime": "02:00 PM",
+            "outTime": "03:30 PM",
+            "totalOutTime": "1 Hour 30 Mins"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "Employee": "ZY198",
+        "FirstIn": "09:00 AM",
+        "LastOut": "03:30 PM",
+        "DailyHours": "06:30",
+        "WeeklyHours": "32:30",
+        "MonthlyHours": "200:00",
+        "QuarterlyHours": "300:00",
+        "YearlyHours": "2100:00",
+        "AllTimeHours": "15600:00",
+        "TodaysInOut": [
+          {
+            "id": 1,
+            "inTime": "09:00 AM",
+            "outTime": "11:00 AM",
+            "totalOutTime": "2 Hours"
+          },
+          {
+            "id": 2,
+            "inTime": "11:30 AM",
+            "outTime": "01:30 PM",
+            "totalOutTime": "2 Hours"
+          },
+          {
+            "id": 3,
+            "inTime": "02:00 PM",
+            "outTime": "03:30 PM",
+            "totalOutTime": "1 Hour 30 Mins"
+          }
+        ]
+      }
+    ],
+  "EmployeeTimingDetails": [
+    {
+      "id": 1,
+      "Employee": "4575",
+      "Entry": {
+        "Early": "-",
+        "Late": "-01:10"
+      },
+      "Exit": {
+        "Early": "-",
+        "Late": "+01:30"
+      },
+      "NetHours": "+00:20",
+      "Shift": "General"
+    },
+    {
+      "id": 2,
+      "Employee": "4570",
+      "Entry": {
+        "Early": "+00:00",
+        "Late": "-"
+      },
+      "Exit": {
+        "Early": "-",
+        "Late": "+00:30"
+      },
+      "NetHours": "+00:30",
+      "Shift": "General"
+    },
+    {
+      "id": 3,
+      "Employee": "4574",
+      "Entry": {
+        "Early": "+00:00",
+        "Late": "-"
+      },
+      "Exit": {
+        "Early": "-",
+        "Late": "+00:00"
+      },
+      "NetHours": "+00:00",
+      "Shift": "General"
+    },
+    {
+      "id": 4,
+      "Employee": "4573",
+      "Entry": {
+        "Early": "+00:00",
+        "Late": "-"
+      },
+      "Exit": {
+        "Early": "-01:23",
+        "Late": "-"
+      },
+      "NetHours": "-01:23",
+      "Shift": "General"
+    },
+    {
+      "id": 5,
+      "Employee": "ZY200",
+      "Entry": {
+        "Early": "+00:00",
+        "Late": "-"
+      },
+      "Exit": {
+        "Early": "-02:30",
+        "Late": "-"
+      },
+      "NetHours": "-02:30",
+      "Shift": "General"
+    },
+    {
+      "id": 6,
+      "Employee": "ZY198",
+      "Entry": {
+        "Early": "+00:00",
+        "Late": "-"
+      },
+      "Exit": {
+        "Early": "-02:30",
+        "Late": "-"
+      },
+      "NetHours": "-02:30",
+      "Shift": "General"
+    },
+    {
+      "id": 7,
+      "Employee": "ZY197",
+      "Entry": {
+        "Early": "+00:00",
+        "Late": "-"
+      },
+      "Exit": {
+        "Early": "-01:30",
+        "Late": "-"
+      },
+      "NetHours": "-01:30",
+      "Shift": "General"
+    }
+  ]
+}

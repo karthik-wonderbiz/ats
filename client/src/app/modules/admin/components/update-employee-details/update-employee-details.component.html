@@ -1,0 +1,196 @@
+<div class="fixed z-50 flex items-center justify-center p-4 right-0" style="width: -webkit-fill-available;">
+
+    <div *ngIf="(this.validateForm()) && isSubmitted"
+        class="flex items-center p-2 px-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800"
+        role="alert">
+        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor" viewBox="0 0 20 20">
+            <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+        </svg>
+        <span class="sr-only">Info</span>
+        <div>
+            <span class="font-medium">Account Created Successfully! Redirecting to login...</span>
+        </div>
+    </div>
+
+    <div *ngIf="(!this.validateForm()) && isSubmitted"
+        class="flex items-center px-4 p-2 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+        role="alert">
+        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor" viewBox="0 0 20 20">
+            <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+        </svg>
+        <span class="sr-only">Info</span>
+        <div>
+            <span class="font-medium">All marked fields are required!</span>
+        </div>
+    </div>
+
+    <div *ngIf="isServerError"
+        class="flex items-center px-4 p-2 mb-4 text-sm text-yellow-800 border border-yellow-300 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400 dark:border-yellow-800"
+        role="alert">
+        <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor" viewBox="0 0 20 20">
+            <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+        </svg>
+        <span class="sr-only">Info</span>
+        <div>
+            <span class="font-medium">Server Error!</span>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto bg-fixed bg-center bg-cover">
+    <!-- <a class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+        <img class="w-8 h-8 mr-2" src="https://www.pngmart.com/files/6/Time-Attendance-System-PNG-HD.png" alt="logo">
+        ATS
+    </a> -->
+    <div
+        class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-screen-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                Create an account
+            </h1>
+
+            <form #empForm="ngForm" (ngSubmit)="RegisterEmp(empForm)" class="space-y-4 md:space-y-6">
+
+                <div class=" sm:gap-8  sm:grid sm:grid-cols-3 sm:grid-rows-3">
+
+                    <div class="row-span-3 grid grid-rows-3 gap-8">
+
+                        <div class="row-span-2 flex justify-center items-center w-full h-full">
+
+                            <div [ngClass]="{'bg-red-500 border-red-500': (this.isInvalid && !this.validateProfilePic()), 'bg-gray-500 border-gray-500':  !(this.isInvalid && !this.validateProfilePic()) }"
+                                class="relative  h-5/6 aspect-square overflow-hidden border-2  rounded-full ">
+                                <svg *ngIf="!thumbnail" fill="#f9fafb" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                                    xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 45.532 45.532"
+                                    xml:space="preserve">
+                                    <g>
+                                        <path d="M22.766,0.001C10.194,0.001,0,10.193,0,22.766s10.193,22.765,22.766,22.765c12.574,0,22.766-10.192,22.766-22.765
+		S35.34,0.001,22.766,0.001z M22.766,6.808c4.16,0,7.531,3.372,7.531,7.53c0,4.159-3.371,7.53-7.531,7.53
+		c-4.158,0-7.529-3.371-7.529-7.53C15.237,10.18,18.608,6.808,22.766,6.808z M22.761,39.579c-4.149,0-7.949-1.511-10.88-4.012
+		c-0.714-0.609-1.126-1.502-1.126-2.439c0-4.217,3.413-7.592,7.631-7.592h8.762c4.219,0,7.619,3.375,7.619,7.592
+		c0,0.938-0.41,1.829-1.125,2.438C30.712,38.068,26.911,39.579,22.761,39.579z" />
+                                    </g>
+                                </svg>
+                                <img class="absolute h-full w-full" *ngIf="thumbnail" [src]="thumbnail" alt="Uploaded image preview" />
+                            </div>
+                        </div>
+
+                        <div class="row-span-1">
+
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                for="profilePic">Upload Photo</label>
+                            <input (change)="onProfilePicInput($event)"  type="file" name="profilePic" id="profilePic" [(ngModel)]="employee.profilePic"
+                                #profilePic="ngModel" required autocomplete="off" accept=".png,.jpg,.jpeg"
+                                [ngClass]="{'file-input-error': (this.isInvalid && !this.validateProfilePic()), 'file-input-accent':  !(this.isInvalid && !this.validateProfilePic()) }"
+                                class="file-input-sm w-full text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">(JPG, JPEG, or PNG)</p>
+                            <div class="sm:h-0 h-8">
+                                <div *ngIf="(!this.validateProfilePic() && (profilePic.dirty || profilePic.touched)) || (this.isInvalid && !this.validateProfilePic() )"
+                                    class="text-red-500 text-xs p-2">{{
+                                    errors.profilePic }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+
+                    <div>
+                        <label for="firstName"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
+                        <input type="text" name="firstName" id="firstName" [(ngModel)]="employee.firstName"
+                            #name="ngModel" required autocomplete="off"
+                            [ngClass]="{ ' border-red-500': (this.isInvalid && !this.validateName() ), ' border-gray-300': ! (this.isInvalid && !this.validateName() ) }"
+                            class="bg-gray-50 input input-bordered  text-gray-900 rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="First">
+                        <div class="sm:h-4 h-8">
+                            <div *ngIf="(!this.validateName() && (name.dirty || name.touched)) || (this.isInvalid && !this.validateName() )"
+                                class="text-red-500 text-xs p-2">{{
+                                errors.firstName }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <label for="lastName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
+                            Name</label>
+                        <input type="text" name="lastName" id="lastName" [(ngModel)]="employee.lastName"
+                            #lastName="ngModel" required autocomplete="off"
+                            [ngClass]="{ ' border-red-500': (this.isInvalid && !this.validateLastName() ), ' border-gray-300': ! (this.isInvalid && !this.validateLastName() ) }"
+                            class="bg-gray-50 input input-bordered  text-gray-900 rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Last">
+                        <div class="sm:h-4 h-8">
+                            <div *ngIf="(!this.validateLastName() && (lastName.dirty || lastName.touched)) || (this.isInvalid && !this.validateLastName() )"
+                                class="text-red-500 text-xs p-2">{{
+                                errors.lastName }}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div>
+                        <label for="email"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                        <input type="text" name="email" id="email" [(ngModel)]="employee.email"
+                            #email="ngModel" required autocomplete="off"
+                            [ngClass]="{ ' border-red-500': (this.isInvalid && !this.validateEmail() ), 'border-gray-300': ! (this.isInvalid && !this.validateEmail() ) }"
+                            class="bg-gray-50 input input-bordered text-gray-900 rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="name@company.com">
+                        <div class="sm:h-4 h-8">
+                            <div *ngIf="(!this.validateEmail() && (email.dirty || email.touched)) || (this.isInvalid && !validateEmail())"
+                                class="text-red-500 text-xs p-2">{{
+                                errors.email }}</div>
+                        </div>
+
+                    </div>
+
+                    <div class="relative">
+                        <label for="contactNo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Phone
+                        </label>
+
+                        <div
+                            class="absolute inset-y-0 left-0 sm:top-3 max-sm:bottom-1 flex items-center pl-3 pointer-events-none">
+                            <span class="text-gray-500 dark:text-gray-400">+91</span>
+                        </div>
+
+                        <input type="text" name="contactNo" id="contactNo" [(ngModel)]="employee.contactNo"
+                            #phone="ngModel" required autocomplete="off"
+                            [ngClass]="{ 'border-red-500': (this.isInvalid && !this.validatePhone()), 'border-gray-300': !(this.isInvalid && !this.validatePhone()) }"
+                            class="bg-gray-50 input input-bordered text-gray-900 rounded-lg block w-full pl-12 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Enter phone number">
+
+                        <div class="sm:h-4 h-8">
+                            <div *ngIf="(!this.validatePhone() && (phone.dirty || phone.touched)) || (this.isInvalid && !validatePhone())"
+                                class="text-red-500 text-xs p-2">
+                                {{ errors.contactNo }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between max-sm:flex-col-reverse ">
+                    <button type="submit" 
+                        class="btn text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-3  font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Update
+                    </button>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+<div
+  class="p-4 bg-white border border-gray-200 rounded-lg shadow-md shadow-yellow-300 dark:bg-gray-800 dark:border-gray-700 w-full animate-slideDown mb-4 text-center justify-self-center">
+  <div class="flex items-center">
+    <!-- Date Input with Label -->
+    <label for="date-input" class="mr-2 text-blue-900 dark:text-white font-medium">Date:</label>
+    <input id="date-input" type="date" [(ngModel)]="selectedDate" (change)="onDateChange()"
+      class="px-2 py-1 border border-blue-800 rounded-md text-base dark:bg-yellow-700 dark:text-white focus:outline-none focus:ring focus:border-blue-300" />
+
+    <!-- Status Filter Select with Label -->
+    <label for="status-select" class="ml-4 mr-2 text-blue-900 dark:text-white font-medium">Status:</label>
+    <select id="status-select" [(ngModel)]="selectedStatus" (change)="onStatusChange()"
+      class="px-2 py-1 border border-blue-800 rounded-md text-base dark:bg-yellow-700 dark:text-white focus:outline-none focus:ring focus:border-blue-300">
+      <option value="all">All</option>
+      <option value="present">Present</option>
+      <option value="absent">Absent</option>
+    </select>
+  </div>
+</div>
+
+<div
+  class="p-2 bg-white border border-gray-200 rounded-lg shadow-md shadow-yellow-300 dark:bg-gray-800 dark:border-gray-700 w-full animate-slideDown">
+  <div class="flex items-center justify-between mb-2">
+    <h1 class="text-xs font-bold text-blue-900 uppercase">Today's Attendance</h1>
+  </div>
+  <div class="flex flex-row gap-2">
+    <div>
+      <button
+        class="p-2 bg-white border border-blue-200 rounded-lg dark:bg-blue-800 dark:border-blue-700 text-center focus:outline-none">
+        <div class="flex items-center">
+          <h3 class="text-sm font-semibold">Total Employees :</h3>
+          <h3 class="text-sm font-bold text-blue-500 ml-1">{{ attendanceLogModel.total || 0 }}</h3>
+        </div>
+      </button>
+    </div>
+    <div>
+      <button
+        class="p-2 bg-white border border-blue-200 rounded-lg dark:bg-blue-800 dark:border-blue-700 text-center focus:outline-none">
+        <div class="flex items-center">
+          <h3 class="text-sm font-semibold">Present :</h3>
+          <h3 class="text-sm font-bold text-green-500 ml-1">{{ attendanceLogModel.present || 0 }}</h3>
+        </div>
+      </button>
+    </div>
+    <div>
+      <button
+        class="p-2 bg-white border border-blue-200 rounded-lg dark:bg-blue-800 dark:border-blue-700 text-center focus:outline-none">
+        <div class="flex items-center">
+          <h3 class="text-sm font-semibold">Absent :</h3>
+          <h3 class="text-sm font-bold text-red-500 ml-1">{{ attendanceLogModel.absent || 0 }}</h3>
+        </div>
+      </button>
+    </div>
+</div>
+
+
+  <hr class="my-2 border-gray-300 dark:border-gray-600">
+  <div *ngIf="!isLoaded">
+    <app-table [data]="employeeData" [columns]="columns" (rowClicked)="onRowClicked($event)"></app-table>
+  </div>
+  <div class="flex justify-center m-5" *ngIf="isLoaded">
+    <app-loader></app-loader>
+  </div>
+  <!-- <app-table [data]="employeeData" [columns]="columns" (rowClicked)="onRowClicked($event)"></app-table> -->
+</div>
+
