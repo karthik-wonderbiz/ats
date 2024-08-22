@@ -19,8 +19,13 @@
 
 <div
   class="p-2 bg-white border border-gray-200 rounded-lg shadow-md shadow-yellow-300 dark:bg-gray-800 dark:border-gray-700 w-full animate-slideDown">
-  <div class="flex items-center justify-between mb-2">
+  <div class="flex items-center justify-between mb-2 p-2">
     <h1 class="text-xs font-bold text-blue-900 uppercase">Today's Attendance</h1>
+
+    <button title="Export to CSV" (click)="exportToCSV()"
+      class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+      <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
+    </button>
   </div>
   <div class="flex flex-row gap-2">
     <div>
@@ -50,8 +55,7 @@
         </div>
       </button>
     </div>
-</div>
-
+  </div>
 
   <hr class="my-2 border-gray-300 dark:border-gray-600">
   <div *ngIf="!isLoaded">
@@ -60,6 +64,4 @@
   <div class="flex justify-center m-5" *ngIf="isLoaded">
     <app-loader></app-loader>
   </div>
-  <!-- <app-table [data]="employeeData" [columns]="columns" (rowClicked)="onRowClicked($event)"></app-table> -->
 </div>
-

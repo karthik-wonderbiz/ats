@@ -26,7 +26,6 @@ const routes: Routes = [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'employee-detail/:id', component: EmployeeDetailComponent },
       { path: 'update-employee-details/:id', component: UpdateEmployeeDetailsComponent },
-      { path: 'empLogs', component: EmployeeLogRecordsComponent },
       { path: 'employee-status-details', component: EmployeeStatusDetailsComponent },
       {path:'todays-attendance', component: EmployeeStatusDetailsComponent},
       {path:'employees-today-working', component: EmployeeAttendanceRecordsComponent},

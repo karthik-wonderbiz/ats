@@ -1,38 +1,39 @@
-<div class="bg-white shadow-md shadow-yellow-300 rounded-lg p-4 border border-gray-200 w-full animate-slideDown mb h-full">
+<div
+  class="bg-white shadow-md shadow-yellow-300 rounded-lg p-4 border border-gray-200 w-full animate-slideDown mb h-full">
   <div class="flex items-center justify-between mb-2">
     <h1 class="text-xs font-bold text-blue-900 uppercase">Employee Details</h1>
-    <div class="search-box relative flex flex-wrap items-center border border-gray-300 rounded-lg p-2 space-x-2 dark:text-white focus:outline-none focus:ring focus:border-blue-300">
-      <div class="tags flex flex-wrap space-x-2">
-        <span *ngFor="let term of searchTerms" class="tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full flex items-center">
-          {{ term }}
-          <span class="remove-tag ml-2 text-red-600 cursor-pointer font-bold" (click)="removeTerm(term)">
-            ×
+    <div class="flex items-center space-x-2">
+      <div
+        class="search-box mr-4 relative flex flex-wrap items-center border border-gray-300 rounded-lg p-2 space-x-2 dark:text-white focus:outline-none focus:ring focus:border-blue-300">
+        <div class="tags flex flex-wrap space-x-2">
+          <span *ngFor="let term of searchTerms"
+            class="tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full flex items-center">
+            {{ term }}
+            <span class="remove-tag ml-2 text-red-600 cursor-pointer font-bold" (click)="removeTerm(term)">
+              ×
+            </span>
           </span>
-        </span>
-      </div>
-      <input 
-        type="text" 
-        [(ngModel)]="searchInput" 
-        (input)="onInputChange()" 
-        (keydown.enter)="addTerm()" 
-        placeholder="Search..." 
-        class="flex-grow border-none outline-none bg-transparent placeholder-gray-500 text-sm "
-        (keydown)="handleKeyDown($event)"
-      />
-      <ul *ngIf="filteredSuggestions.length > 0" class="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-1 z-10 shadow-lg">
-        <li *ngFor="let suggestion of filteredSuggestions" 
-            (click)="selectSuggestion(suggestion)" 
+        </div>
+        <input type="text" [(ngModel)]="searchInput" (input)="onInputChange()" (keydown.enter)="addTerm()"
+          placeholder="Search..."
+          class="flex-grow border-none outline-none bg-transparent placeholder-gray-500 text-sm "
+          (keydown)="handleKeyDown($event)" />
+        <ul *ngIf="filteredSuggestions.length > 0"
+          class="absolute overflow-x-auto max-h-[60vh] top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-1 z-10 shadow-lg">
+          <li *ngFor="let suggestion of filteredSuggestions" (click)="selectSuggestion(suggestion)"
             class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-          {{ suggestion }}
-        </li>
-      </ul>
+            {{ suggestion }}
+          </li>
+        </ul>
+      </div>
+      <button title="Export to CSV" (click)="exportToCSV()"
+        class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+        <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
+      </button>
     </div>
   </div>
   <hr class="my-2 border-gray-300 dark:border-gray-700 border-2">
-  <app-table [data]="employees" [columns]="columns" 
-             (rowClicked)="onRowClicked($event)"
-             (editClicked)="onEditClicked($event)"
-             (deleteClicked)="onDeleteClicked($event)"
-             class="w-full">
+  <app-table [data]="employees" [columns]="columns" (rowClicked)="onRowClicked($event)"
+    (editClicked)="onEditClicked($event)" (deleteClicked)="onDeleteClicked($event)" class="w-full">
   </app-table>
 </div>

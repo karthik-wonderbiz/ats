@@ -47,7 +47,7 @@ export class EmployeeAttendanceRecordsComponent implements OnInit {
   }
 
   getAllEmployeeHours() {
-    const reportType = '';
+    const reportType = 'Daily';
     this.attendanceLogService.getAllEmployeesHours(this.formattedStartDate, this.formattedEndDate, reportType).subscribe(data => {
       this.allEmployees = data; // Store all employee data
       this.allSuggestions = this.allEmployees.map(employee => employee.fullName);

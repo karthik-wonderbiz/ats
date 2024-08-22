@@ -4,7 +4,9 @@ import { EncryptDescrypt } from '../../../../utils/genericFunction';
 import { SignalRService } from '../../../../services/signalR/signal-r.service';
 import { EmployeeService } from '../../../../services/employee/employee.service';
 import { UserService } from '../../../../services/user/user.service';
-import { ToastrService } from 'ngx-toastr';
+import { ngxCsv } from 'ngx-csv';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-all-employees',
@@ -31,8 +33,7 @@ export class AllEmployeesComponent implements OnInit {
     private router: Router,
     private employeeService: EmployeeService,
     private signalRService: SignalRService,
-    private userService: UserService,
-    private toastr: ToastrService
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -83,15 +84,40 @@ export class AllEmployeesComponent implements OnInit {
 
   onDeleteClicked(employee: any) {
     if (employee && employee.id) {
-      console.log(employee.id);
-      this.userService.deleteUserById(employee.userId).subscribe((data) => {
-        alert('Employee deleted Successfully.');
-        window.location.reload();
+      Swal.fire({
+        title: 'Are you sure?',
+        text: `Do you really want to delete ${employee.fullName}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.userService.deleteUserById(employee.userId).subscribe(
+            (data) => {
+              Swal.fire(
+                'Deleted!',
+                `${employee.fullName} has been deleted.`,
+                'success'
+              );
+              this.getAllEmployeeHours();
+            },
+            (error) => {
+              Swal.fire(
+                'Error!',
+                'There was a problem deleting the employee.',
+                'error'
+              );
+            }
+          );
+        }
       });
     } else {
       console.error('Employee ID is missing or data is incorrect');
     }
   }
+  
 
   onInputChange() {
     this.filteredSuggestions = this.allSuggestions.filter((suggestion) =>
@@ -142,5 +168,32 @@ export class AllEmployeesComponent implements OnInit {
       );
     }
     console.log('Filtered employees:', this.employees);
+  }
+
+  exportToCSV() {
+    const dataToExport = this.employees.map(({ id, fullName, email, contactNo}) => ({
+      'Employee Id': id,
+      'Name': fullName,
+      'Email': email,
+      'Phone Number': contactNo
+    }));
+
+    const filename = 'employee-details';
+
+    const options = {
+      filename: filename,
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      showTitle: false,
+      title: '',
+      useBom: true,
+      headers: ['Employee Id', 'Name', 'Email', 'Phone Number'],
+      noDownload: false,
+      removeEmptyValues: true,
+    };
+
+    new ngxCsv(dataToExport, options.filename, options);
   }
 }

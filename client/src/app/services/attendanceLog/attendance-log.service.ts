@@ -89,9 +89,9 @@ export class AttendanceLogService {
     );
   }
 
-  getAllEmployeesInHours(): Observable<AttendanceLogModel[]> {
+  getAllEmployeesInHours(reportType: string): Observable<AttendanceLogModel[]> {
     console.log("in hours");
-    const attUrl = `${this.urlMain}/total-hours/in`;
+    const attUrl = `${this.urlMain}/total-hours/in?reportType=${reportType}`;
     return this.http.get<AttendanceLogModel[]>(attUrl).pipe(
       map(employees => 
         employees.map(employee => ({

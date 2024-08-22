@@ -19,7 +19,7 @@ export class EmployeeStatusDetailsComponent implements OnInit {
   columns = [
     { key: 'fullName', label: 'Employee Name' },
     { key: 'status', label: 'Status' },
-    { key: 'inTime', label: 'In time' },
+    { key: 'inTime', label: 'In Time' },
   ];
 
   attendanceLogModel: AttendanceLogModel = {
@@ -45,8 +45,8 @@ export class EmployeeStatusDetailsComponent implements OnInit {
   };
 
   showAll: boolean = false;
-  selectedDate: string = ''; // Bind this to the Date input
-  selectedStatus: string = 'all'; // Bind this to the select input
+  selectedDate: string = '';
+  selectedStatus: string = 'all';
 
   constructor(
     private router: Router,
@@ -56,24 +56,23 @@ export class EmployeeStatusDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Set selectedDate to today's date by default
     this.selectedDate = new Date().toISOString().split('T')[0];
 
     this.subscribeToItemUpdates();
 
-    // Check route parameter to decide whether to show all records or not
     this.route.paramMap.subscribe((params) => {
       this.showAll = params.get('showAll') === 'true';
-      if (this.showAll) {
-        this.getAllEmployeesLogsStatus();
-      } else {
-        this.getAllEmployeesLogsStatus();
-      }
+      this.getAllEmployeesLogsStatus();
+    });
+
+    this.route.queryParamMap.subscribe((params) => {
+      this.selectedStatus = params.get('status') || 'all';
+      this.getAllEmployeesLogsStatus();
     });
   }
 
   private subscribeToItemUpdates(): void {
-    this.isLoaded=true;
+    this.isLoaded = true;
     this.signalRService.itemUpdate$.subscribe((update) => {
       console.log('Item update received:', update);
       if (update) {
@@ -117,8 +116,23 @@ export class EmployeeStatusDetailsComponent implements OnInit {
   }
 
   exportToCSV() {
+    const dataToExport = this.employeeData.map(({ fullName, status, inTime }) => ({
+      'Employee Name': fullName,
+      'Status': status,
+      'In Time': inTime
+    }));
+
+    // Dynamic filename based on selected status
+    const statusMap: { [key: string]: string } = {
+      all: 'All',
+      present: 'Present',
+      absent: 'Absent',
+    };
+    const statusLabel = statusMap[this.selectedStatus] || 'All';
+    const filename = `employee-status-details-${statusLabel}`;
+
     const options = {
-      filename: 'employee-status-details',
+      filename: filename,
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
@@ -126,12 +140,12 @@ export class EmployeeStatusDetailsComponent implements OnInit {
       showTitle: false,
       title: '',
       useBom: true,
-      headers: this.columns.map((col) => col.label),
+      headers: ['Employee Name', 'Status', 'In Time'],
       noDownload: false,
       removeEmptyValues: true,
     };
 
-    new ngxCsv(this.employeeData, options.filename, options);
+    new ngxCsv(dataToExport, options.filename, options);
   }
 
   onRowClicked(employee: any) {
