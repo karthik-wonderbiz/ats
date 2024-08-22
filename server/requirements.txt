@@ -24,7 +24,6 @@ pillow
 pydantic
 pydantic_core
 Pygments
-pyodbc
 python-multipart
 rich
 setuptools

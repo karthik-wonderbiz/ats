@@ -3,37 +3,52 @@
         <div class="flex justify-between">
             <h1 class="text-xs font-bold text-blue-900 uppercase">Top Employees with Max In Hours</h1>
             <div class="flex space-x-5">
+                <button title="Export to CSV" (click)="exportToCSV(top5EmployeeIn, 'Top 5 Employees with Max In Hours')"
+                    class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+                    <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
+                </button>
                 <button title="View All" (click)="viewAll('max in Hours')"
                     class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
-                    <i class="fa-solid fa-users-viewfinder fa-xl" style="color: #0040ff;"></i>
+                    <i class="fa-solid fa-street-view fa-2xl" style="color: #00bb83;"></i>
+
                 </button>
             </div>
         </div>
         <hr class="my-2 border-gray-400 dark:border-gray-700">
-        <app-table-with-tabs #hoursTable [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeIn" [columns]="columns1"
-            (tabChanged)="onTabChanged($event)" class="w-full" [ngClass]="{'hidden':isTabChanged}"></app-table-with-tabs>
-            <div class="flex justify-center" *ngIf="isTabChanged">
-                <app-loader></app-loader>
-              </div>
+        <app-table-with-tabs #hoursTable [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeIn" [columns]="columns"
+            (tabChanged)="onTabChanged($event)" class="w-full"
+            [ngClass]="{'hidden':isTabChanged}"></app-table-with-tabs>
+        <div class="flex justify-center" *ngIf="isTabChanged">
+            <app-loader></app-loader>
+        </div>
     </div>
     <div class="bg-white shadow-md shadow-yellow-300 rounded-lg p-4 border border-gray-200 w-full">
-        <div class="flex justify-between ">
+        <div class="flex justify-between">
             <h1 class="text-xs font-bold text-blue-900 uppercase">Top Employees with Max Out Hours</h1>
             <div class="flex space-x-5">
+                <button title="Export to CSV"
+                    (click)="exportToCSV(top5EmployeeOut, 'Top 5 Employees with Max Out Hours')"
+                    class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+                    <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
+                </button>
                 <button title="View All" (click)="viewAll('min out Hours')"
                     class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
-                    <i class="fa-solid fa-users-viewfinder fa-xl" style="color: #0040ff;"></i>
+                    <i class="fa-solid fa-street-view fa-2xl" style="color: #00bb83;"></i>
                 </button>
             </div>
         </div>
         <hr class="my-2 border-gray-400 dark:border-gray-700">
-        <app-table-with-tabs [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeOut" [columns]="columns2"
-            (tabChanged)="onTabChanged($event)" class="w-full"></app-table-with-tabs>
-            <div class="flex justify-center" *ngIf="isTabChanged">
-                <app-loader></app-loader>
-              </div>
+        <app-table-with-tabs #hoursTable [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeOut"
+            [columns]="columns" (tabChanged)="onTabChanged($event)" class="w-full"
+            [ngClass]="{'hidden':isTabChanged}"></app-table-with-tabs>
+        <div class="flex justify-center" *ngIf="isTabChanged">
+            <app-loader></app-loader>
+        </div>
     </div>
 </div>
+
+
+
 <!-- <div class="md:p-4 space-y-4 md:space-y-0 md:grid md:grid-cols-1 lg:grid-cols-2 md:gap-8 lg:gap-4">
     <div class="bg-white shadow-md shadow-yellow-300 rounded-lg p-4 border border-gray-200 w-full">
         <div class="flex justify-between ">

@@ -1,18 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AttendanceLogModel } from '../../../../model/AttendanceLog.model';
 import { AttendanceLogService } from '../../../../services/attendanceLog/attendance-log.service';
-import { SignalRService } from '../../../../services/signalR/signal-r.service'; // Import SignalR service
-import { ngxCsv } from 'ngx-csv';
-import {
-  EncryptDescrypt,
-  TimeFormatter,
-} from '../../../../utils/genericFunction';
+import { SignalRService } from '../../../../services/signalR/signal-r.service';
+import { TimeFormatter } from '../../../../utils/genericFunction';
 import { Router } from '@angular/router';
+import { ngxCsv } from 'ngx-csv';
 
 @Component({
   selector: 'app-employee-log-records',
   templateUrl: './employee-log-records.component.html',
-  styleUrls: ['./employee-log-records.component.css'], // Fix styleUrls property name
+  styleUrls: ['./employee-log-records.component.css'],
 })
 export class EmployeeLogRecordsComponent implements OnInit {
   @Input() employeeLogData: any[] = [];
@@ -26,6 +23,10 @@ export class EmployeeLogRecordsComponent implements OnInit {
   selectedTab: string = '';
 
   isDataLoaded: boolean = false;
+
+  inCount: number = 0;
+  outCount: number = 0;
+  totalCount: number = 0;
 
   columns = [
     { key: 'fullName', label: 'Employee Name' },
@@ -43,15 +44,14 @@ export class EmployeeLogRecordsComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectedDate = this.getDefaultDate();
-    this.selectedTab = this.tabs[0] || ''; // Set default tab
+    this.selectedTab = this.tabs[0] || '';
     this.subscribeToItemUpdates();
     this.fetchAttendanceLogs();
   }
 
   onDateChange() {
-    console.log('Selected date:', this.selectedDate);
     this.isDataLoaded = false;
-    this.fetchAttendanceLogs(); // Updated
+    this.fetchAttendanceLogs();
   }
 
   getDefaultDate(): string {
@@ -61,12 +61,18 @@ export class EmployeeLogRecordsComponent implements OnInit {
 
   private subscribeToItemUpdates(): void {
     this.signalRService.itemUpdate$.subscribe((update) => {
-      console.log('Item update received:', update);
       if (update) {
-        this.getAllAttendanceLogs();
+        if (this.selectedTab === '') {
+          this.isDataLoaded = false;
+          this.getAllAttendanceLogs();
+        } else if (this.selectedTab === 'IN' || this.selectedTab === 'OUT') {
+          this.isDataLoaded = false;
+          this.getAllAttendanceLogsInOut(this.selectedTab);
+        }
       }
     });
   }
+
   onTabChanged(selectedTab: string): void {
     this.isDataLoaded = false;
     this.selectedTab = selectedTab;
@@ -77,48 +83,7 @@ export class EmployeeLogRecordsComponent implements OnInit {
     this.employeeLogData = filteredData;
   }
 
-  exportToCSV() {
-    const options = {
-      filename: 'employee-log-records-details',
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalseparator: '.',
-      showLabels: true,
-      showTitle: false,
-      title: '',
-      useBom: true,
-      headers: this.columns.map((col) => col.label),
-      noDownload: false,
-      removeEmptyValues: true,
-    };
-
-    new ngxCsv(this.employeeLogData, options.filename, options);
-  }
-
-  attendanceLogModel: AttendanceLogModel = {
-    userId: 0,
-    inOutTime: '',
-    checkType: '',
-    total: 0,
-    present: 0,
-    wfh: 0,
-    absent: 0,
-    startDate: '',
-    endDate: '',
-    attendanceLogTime: '',
-    firstName: '',
-    lastName: '',
-    totalHours: '',
-    profilePic: '',
-    fullName: '',
-    lastCheckInTime: '',
-    lastCheckOutTime: '',
-    status: '',
-    inTime: '',
-  };
-
   fetchAttendanceLogs() {
-    this.isDataLoaded = false;
     if (this.selectedTab === '') {
       this.getAllAttendanceLogs();
     } else if (this.selectedTab === 'IN' || this.selectedTab === 'OUT') {
@@ -132,6 +97,8 @@ export class EmployeeLogRecordsComponent implements OnInit {
       .subscribe((data) => {
         this.processAttendanceLogs(data);
         this.isDataLoaded = true;
+        this.inCount = 0;
+        this.outCount = 0;
       });
   }
 
@@ -141,6 +108,9 @@ export class EmployeeLogRecordsComponent implements OnInit {
       .subscribe((data) => {
         this.processAttendanceLogs(data);
         this.isDataLoaded = true;
+        this.inCount = data.filter((log) => log.checkType === 'IN').length;
+        this.outCount = data.filter((log) => log.checkType === 'OUT').length;
+        this.totalCount = this.inCount + this.outCount;
       });
   }
 
@@ -153,14 +123,13 @@ export class EmployeeLogRecordsComponent implements OnInit {
         attendanceTime: TimeFormatter.formatTime(dateTime),
       };
     });
+
     const uniqueNames = new Set(this.allLogRecords.map((log) => log.fullName));
     this.allSuggestions = Array.from(uniqueNames);
 
     this.performSearch();
-    console.log('Sorted and Transformed Data:', this.employeeLogData);
   }
 
-  // Search related methods
   onInputChange() {
     this.filteredSuggestions = this.allSuggestions.filter((suggestion) =>
       suggestion.toLowerCase().includes(this.searchInput.toLowerCase())
@@ -175,15 +144,15 @@ export class EmployeeLogRecordsComponent implements OnInit {
       !this.searchTerms.includes(trimmedInput)
     ) {
       this.searchTerms.push(trimmedInput);
-      this.searchInput = ''; // Clear the input box
-      this.filteredSuggestions = []; // Clear suggestions
-      this.performSearch(); // Filter logs based on the updated search terms
+      this.searchInput = '';
+      this.filteredSuggestions = [];
+      this.performSearch();
     }
   }
 
   removeTerm(term: string) {
     this.searchTerms = this.searchTerms.filter((t) => t !== term);
-    this.performSearch(); // Filter logs based on the updated search terms
+    this.performSearch();
   }
 
   selectSuggestion(suggestion: string) {
@@ -200,7 +169,7 @@ export class EmployeeLogRecordsComponent implements OnInit {
 
   performSearch() {
     if (this.searchTerms.length === 0) {
-      this.employeeLogData = this.allLogRecords; // Show all logs if no search terms
+      this.employeeLogData = this.allLogRecords;
     } else {
       const query = this.searchTerms.join(' ').toLowerCase();
       this.employeeLogData = this.allLogRecords.filter((log) =>
@@ -209,7 +178,39 @@ export class EmployeeLogRecordsComponent implements OnInit {
         )
       );
     }
-    console.log('Filtered logs:', this.employeeLogData);
     this.isDataLoaded = true;
   }
+
+  exportToCSV() {
+    const dataToExport = this.allLogRecords.map(({ fullName, attendanceTime, checkType }) => ({
+      'Employee Name': fullName,
+      'Attendance Time': attendanceTime,
+      'Check Type': checkType
+    }));
+  
+    const filenameMap: { [key: string]: string } = {
+      '': 'employee-log-records-in-out',
+      'IN': 'employee-log-records-in',
+      'OUT': 'employee-log-records-out'
+    };
+    
+    const filename = filenameMap[this.selectedTab as keyof typeof filenameMap] || 'employee-log-records';
+  
+    const options = {
+      filename: filename,
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      showTitle: false,
+      title: '',
+      useBom: true,
+      headers: ['Employee Name','Attendance Time', 'Check Type'],
+      noDownload: false,
+      removeEmptyValues: true,
+    };
+  
+    new ngxCsv(dataToExport, options.filename, options);
+  }
+  
 }

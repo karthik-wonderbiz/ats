@@ -141,14 +141,14 @@
 
 
 
-<div class="flex overflow-auto" [ngClass]="columns.length >= 3 && columns.length != 2 ? 'max-h-[60vh]' : ''">
+<div class="flex overflow-auto" [ngClass]="columns.length >= 2 ? 'max-h-[60vh]' : ''">
   <table
     class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border border-gray-300 dark:border-gray-600 animate-slideDown">
     <thead
-      class="text-xs sticky top-0 text-gray-700 uppercase bg-blue-100 dark:bg-blue-900 dark:text-gray-400 border-b border-blue-200 dark:border-blue-700">
+      class="text-xs sticky -top-[0.5px] sm:-top[1px] text-gray-700 uppercase bg-blue-100 dark:bg-blue-900 dark:text-gray-400 border-b border-blue-200 dark:border-blue-700">
       <tr>
         <th *ngFor="let column of columns" scope="col"
-          class="px-6 py-3 bg-blue-200 dark:bg-blue-800 text-black dark:text-blue-200 border-b border-gray-300 dark:border-gray-600">
+          class="px-6 py-2 bg-blue-200 dark:bg-blue-800 text-black dark:text-blue-200 border-b border-gray-300 dark:border-gray-600">
           {{ column.label }}
         </th>
       </tr>
@@ -157,7 +157,7 @@
       <tr *ngFor="let row of data"
         class="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-blue-600 cursor-pointer transition-colors duration-200 ease-in-out"
         (click)="onRowClick(row)">
-        <td *ngFor="let column of columns" class="px-6 py-2 border-b border-gray-300 dark:border-gray-600">
+        <td *ngFor="let column of columns" class="px-6 py-1 border-b border-gray-300 dark:border-gray-600">
           <ng-container *ngIf="isObject(row[column.key]); else simpleContent">
             <div *ngIf="column.subColumns" class="space-y-1">
               <div *ngFor="let subColumn of column.subColumns" class="text-sm text-gray-600 dark:text-gray-300">

@@ -22,7 +22,6 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { ToastrModule } from 'ngx-toastr';
 import { NavComponent } from './components/nav/nav.component';
 import { HomeComponent } from './components/home/home.component';
 import { EnrolComponent } from './components/enrol/enrol.component';
@@ -62,7 +61,6 @@ import { EnrolmentComponent } from './components/enrolment/enrolment.component';
     FullCalendarModule,
     HttpClientModule,
     BrowserAnimationsModule, // required animations module
-    ToastrModule.forRoot(),
   ],
   providers: [provideCharts(withDefaultRegisterables()), provideHttpClient(), DataService],
   bootstrap: [AppComponent]

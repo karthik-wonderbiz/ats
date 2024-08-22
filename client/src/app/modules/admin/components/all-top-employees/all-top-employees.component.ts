@@ -1,18 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AttendanceLogService } from '../../../../services/attendanceLog/attendance-log.service';
+import { ngxCsv } from 'ngx-csv';
+import { SignalRService } from '../../../../services/signalR/signal-r.service';
 
 @Component({
   selector: 'app-all-top-employees',
   templateUrl: './all-top-employees.component.html',
-  styleUrls: ['./all-top-employees.component.css']
+  styleUrls: ['./all-top-employees.component.css'],
 })
 export class AllTopEmployeesComponent implements OnInit {
   type: string | null = null;
-  allEmployeeData: any[] = [];
+  allEmployeeInData: any[] = [];
+  allEmployeeOutData: any[] = [];
+  isTabChanged: boolean = false;
+
   columns = [
     { key: 'fullName', label: 'Employee Name' },
-    { key: 'totalHours', label: 'Total Hours' }
+    { key: 'totalHours', label: 'Total Hours' },
   ];
   tabs = ['Daily', 'Weekly', 'Monthly', 'Yearly', 'All-Time'];
   tabNames = ['Daily', 'Weekly', 'Monthly', 'Yearly', 'All Time'];
@@ -20,41 +25,100 @@ export class AllTopEmployeesComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private attendanceLogService: AttendanceLogService
+    private attendanceLogService: AttendanceLogService,
+    private signalRService: SignalRService 
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.route.paramMap.subscribe((params) => {
       this.type = params.get('type');
-      if(this.type=='max in Hours'){
+      if (this.type?.toLowerCase() === 'max in hours') {
         this.loadInData(this.activeTab);
-      } else{
+        this.subscribeToItemUpdates();
+      } else {
         this.loadOutData(this.activeTab);
+        this.subscribeToItemUpdates();
       }
     });
   }
 
   loadInData(reportType: string): void {
-    this.attendanceLogService.getAllEmployeesInHours().subscribe(data => {
-      this.allEmployeeData = data;
-      console.log(`Employee Max In Data for ${reportType}:`, this.allEmployeeData);
-    });
-  }
-  loadOutData(reportType: string): void {
-    this.attendanceLogService.getAllEmployeesOutHours().subscribe(data => {
-      this.allEmployeeData = data;
-      console.log(`Employee Max out Data for ${reportType}:`, this.allEmployeeData);
+    this.isTabChanged = true;
+    this.attendanceLogService.getAllEmployeesInHours(reportType).subscribe((data) => {
+      this.allEmployeeInData = data;
+      this.isTabChanged = false;
+      console.log(
+        `Employee Max In Data for ${reportType}:`,
+        this.allEmployeeInData
+      );
     });
   }
 
+  loadOutData(reportType: string): void {
+    this.isTabChanged = true;
+    this.attendanceLogService.getAllEmployeesOutHours().subscribe((data) => {
+      this.allEmployeeOutData = data;
+      this.isTabChanged = false;
+      console.log(
+        `Employee Max Out Data for ${reportType}:`,
+        this.allEmployeeOutData
+      );
+    });
+  }
+
+  private subscribeToItemUpdates(): void {
+    this.signalRService.itemUpdate$.subscribe(update => {
+      if (update) {
+        this.route.paramMap.subscribe((params) => {
+          this.type = params.get('type');
+          if (this.type?.toLowerCase() === 'max in hours') {
+            this.loadInData(this.activeTab);
+          } else {
+            this.loadOutData(this.activeTab);
+          }
+        });
+      }
+    });
+  }
 
   onTabChanged(reportType: string): void {
     this.activeTab = reportType;
-    if(this.type=='max in hours'){
+    if (this.type?.toLowerCase() === 'max in hours') {
+      this.isTabChanged = true;
       this.loadInData(reportType);
-    } else{
+    } else {
+      this.isTabChanged = true;
       this.loadOutData(reportType);
     }
+  }
 
+  exportToCSV(data: any[], filenamePrefix: string): void {
+    const filenameMap = {
+      'Daily': `${filenamePrefix}-daily`,
+      'Weekly': `${filenamePrefix}-weekly`,
+      'Monthly': `${filenamePrefix}-monthly`,
+      'Yearly': `${filenamePrefix}-yearly`,
+      'All-Time': `${filenamePrefix}-all-time`
+    };
+
+    const filename = filenameMap[this.activeTab as keyof typeof filenameMap] || filenamePrefix;
+
+    const dataToExport = data.map(({ fullName, totalHours }) => ({
+      'Employee Name': fullName,
+      'Total Hours': totalHours
+    }));
+
+    new ngxCsv(dataToExport, filename, {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      showTitle: false,
+      title: '',
+      useBom: true,
+      headers: ['Employee Name', 'Total Hours'],
+      noDownload: false,
+      removeEmptyValues: true
+    });
   }
 }

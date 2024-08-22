@@ -1,4 +1,4 @@
-<ul class="flex flex-wrap mb-4">
+<ul class="flex flex-wrap mb-2">
   <li *ngFor="let tab of tabs; let i = index" class="mr-1 mb-1">
     <button (click)="setActiveTab(tab)"
       [ngClass]="{'bg-blue-100 text-blue-700': activeTab === tab, 'bg-white text-gray-700': activeTab !== tab}"

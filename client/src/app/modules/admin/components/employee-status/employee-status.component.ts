@@ -3,6 +3,7 @@ import { AttendanceLogService } from '../../../../services/attendanceLog/attenda
 import { AttendanceLogModel } from '../../../../model/AttendanceLog.model';
 import { SignalRService } from '../../../../services/signalR/signal-r.service';
 import { UpdateEmployeeDetailsComponent } from '../update-employee-details/update-employee-details.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-employee-status',
@@ -19,13 +20,19 @@ export class EmployeeStatusComponent implements OnInit {
   filteredEmployees: any[] = [];
   filter: 'all' | 'present' | 'absent' | 'wfh' = 'all';
 
-  constructor(private attendanceLogService: AttendanceLogService, private signalRService: SignalRService) {}
+  constructor(private attendanceLogService: AttendanceLogService, private signalRService: SignalRService, private router: Router) {}
 
   ngOnInit(): void {
     this.subscribeToItemUpdates();
     // this.fetchAttendanceData();
     this.subscribeToUserUpdates();
     this.getSummaryData();
+  }
+
+  navigateToDetails(status: 'all' | 'present' | 'absent'): void {
+    this.router.navigate(['/admin/employee-status-details'], {
+      queryParams: { status: status }
+    });
   }
 
   attendanceLogModel: AttendanceLogModel = {
@@ -69,40 +76,6 @@ export class EmployeeStatusComponent implements OnInit {
     })
   }
 
-  // private fetchAttendanceData(): void {
-  //   this.attendanceLogService.getTodayAttendanceLogStatus(this.).subscribe((data) => {
-  //     this.totalEmployees = data.length;
-  //     this.presentEmployees = data.filter(log => log.status === 'Present').length;
-  //     this.absentEmployees = data.filter(log => log.status === 'Absent').length;
-  //     this.workFromHomeEmployees = data.filter(log => log.status === 'Work From Home').length;
-
-  //     this.allEmployees = data.map(employee => {
-  //       return {
-  //         userId: employee.userId,
-  //         inOutTime: employee.inOutTime,
-  //         checkType: employee.checkType,
-  //         total: employee.total,
-  //         present: employee.present,
-  //         wfh: employee.wfh,
-  //         absent: employee.absent,
-  //         startDate: employee.startDate,
-  //         endDate: employee.endDate,
-  //         attendanceLogTime: employee.attendanceLogTime,
-  //         firstName: employee.firstName,
-  //         lastName: employee.lastName,
-  //         totalHours: employee.totalHours,
-  //         profilePic: employee.profilePic,
-  //         fullName: employee.fullName,
-  //         lastCheckInTime: employee.lastCheckInTime,
-  //         lastCheckOutTime: employee.lastCheckOutTime,
-  //         status: employee.status === 'Present' ? 'Present' : 'Absent',
-  //         inTime: employee.status === 'Present' ? employee.inTime : null
-  //       };
-  //     });
-  //     // this.filterEmployees();
-  //   });
-  // }
-
   getSummaryData(): void {
     const startDate = this.attendanceLogModel.startDate || '';  // Use empty string if not set
     const endDate = this.attendanceLogModel.endDate || '';      // Use empty string if not set
@@ -112,26 +85,4 @@ export class EmployeeStatusComponent implements OnInit {
       console.log('Summary data updated:', this.attendanceLogModel);
     });
   }  
-
-  // setFilter(filter: 'all' | 'present' | 'absent' | 'wfh'): void {
-  //   this.filter = filter;
-  //   this.filterEmployees();
-  // }
-
-  // private filterEmployees(): void {
-  //   switch (this.filter) {
-  //     case 'present':
-  //       this.filteredEmployees = this.allEmployees.filter(employee => employee.status === 'Present');
-  //       break;
-  //     case 'absent':
-  //       this.filteredEmployees = this.allEmployees.filter(employee => employee.status === 'Absent');
-  //       break;
-  //     case 'wfh':
-  //       this.filteredEmployees = this.allEmployees.filter(employee => employee.status === 'Wfh');
-  //       break;
-  //     default:
-  //       this.filteredEmployees = [...this.allEmployees];
-  //       break;
-  //   }
-  // }
 }
