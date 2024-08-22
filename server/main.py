@@ -10,7 +10,7 @@ from fastapi import FastAPI, Form, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
 import face_recognition
 import random
-from config import waitTime, apiBaseUrl, detectMultipleface
+from config import cameraType, waitTime, apiBaseUrl, detectMultipleface
 import io
 from pydantic import BaseModel
 from typing import List
