@@ -3,15 +3,35 @@
         <div class="flex justify-between">
             <h1 class="text-xs font-bold text-blue-900 uppercase">Top Employees with Max In Hours</h1>
             <div class="flex space-x-5">
-                <button title="Export to CSV" (click)="exportToCSV(top5EmployeeIn, 'Top 5 Employees with Max In Hours')"
-                    class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
-                    <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
-                </button>
-                <button title="View All" (click)="viewAll('max in Hours')"
-                    class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
-                    <i class="fa-solid fa-street-view fa-2xl" style="color: #00bb83;"></i>
-
-                </button>
+                <div class="relative group">
+                    <button title="Export to CSV"
+                        (click)="exportToCSV(top5EmployeeIn, 'Top 5 Employees with Max In Hours')"
+                        class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+                        <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
+                    </button>
+                    <span
+                    class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-green-600 rounded-lg shadow-sm">
+                        Export to CSV
+                    </span>
+                </div>
+                <div class="relative group">
+                    <button (click)="viewAll('max in Hours')"
+                        class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+                        <svg class="w-7 h-7 text-yellow-500 dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+                            <path
+                                d="M17 0h-5.768a1 1 0 1 0 0 2h3.354L8.4 8.182A1.003 1.003 0 1 0 9.818 9.6L16 3.414v3.354a1 1 0 0 0 2 0V1a1 1 0 0 0-1-1Z">
+                            </path>
+                            <path
+                                d="m14.258 7.985-3.025 3.025A3 3 0 1 1 6.99 6.768l3.026-3.026A3.01 3.01 0 0 1 8.411 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V9.589a3.011 3.011 0 0 1-1.742-1.604Z">
+                            </path>
+                        </svg>
+                    </button>
+                    <span
+                        class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-yellow-500 rounded-lg shadow-sm">
+                        View All
+                    </span>
+                </div>
             </div>
         </div>
         <hr class="my-2 border-gray-400 dark:border-gray-700">
@@ -26,15 +46,37 @@
         <div class="flex justify-between">
             <h1 class="text-xs font-bold text-blue-900 uppercase">Top Employees with Max Out Hours</h1>
             <div class="flex space-x-5">
-                <button title="Export to CSV"
-                    (click)="exportToCSV(top5EmployeeOut, 'Top 5 Employees with Max Out Hours')"
-                    class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
-                    <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
-                </button>
-                <button title="View All" (click)="viewAll('min out Hours')"
-                    class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
-                    <i class="fa-solid fa-street-view fa-2xl" style="color: #00bb83;"></i>
-                </button>
+                <div class="relative group">
+                    <button title="Export to CSV"
+                        (click)="exportToCSV(top5EmployeeOut, 'Top 5 Employees with Max Out Hours')"
+                        class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+                        <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
+                    </button>
+                    <span
+                    class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-green-600 rounded-lg shadow-sm">
+                        Export to CSV
+                    </span>
+                </div>
+                <div class="relative group">
+                    <button title="View All" (click)="viewAll('min out Hours')"
+                        class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+                        <!-- <i class="fa-solid fa-street-view fa-2xl" style="color: #00bb83;"></i> -->
+                        <svg class="w-7 h-7 text-yellow-500 dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+                            <path
+                                d="M17 0h-5.768a1 1 0 1 0 0 2h3.354L8.4 8.182A1.003 1.003 0 1 0 9.818 9.6L16 3.414v3.354a1 1 0 0 0 2 0V1a1 1 0 0 0-1-1Z">
+                            </path>
+                            <path
+                                d="m14.258 7.985-3.025 3.025A3 3 0 1 1 6.99 6.768l3.026-3.026A3.01 3.01 0 0 1 8.411 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V9.589a3.011 3.011 0 0 1-1.742-1.604Z">
+                            </path>
+                        </svg>
+                    </button>
+                    <span
+                        class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-yellow-500 rounded-lg shadow-sm">
+                        View All
+                    </span>
+                </div>
+
             </div>
         </div>
         <hr class="my-2 border-gray-400 dark:border-gray-700">

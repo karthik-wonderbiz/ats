@@ -57,10 +57,9 @@
     </div>
     <ul tabindex="0" class="menu menu-sm dropdown-content bg-blue-50 rounded-box z-[1] mt-3 w-52 p-2 shadow text-black">
       <li>
-        <a class="justify-between hover:bg-blue-50">
+        <button class="justify-between hover:bg-blue-50" (click)="navigateToProfile()">
           My Profile
-          <!-- <span class="badge bg-blue-50 text-black">New</span> -->
-        </a>
+        </button>
       </li>
       <!-- <li><a class="hover:bg-blue-50">Settings</a></li> -->
       <li><a class="hover:bg-blue-50" (click)="logout()">Logout</a></li>

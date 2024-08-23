@@ -5,6 +5,7 @@ import { SignalRService } from '../../../../services/signalR/signal-r.service';
 import { TimeFormatter } from '../../../../utils/genericFunction';
 import { Router } from '@angular/router';
 import { ngxCsv } from 'ngx-csv';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-employee-log-records',
@@ -212,6 +213,13 @@ export class EmployeeLogRecordsComponent implements OnInit {
     };
   
     new ngxCsv(dataToExport, options.filename, options);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Export Successful',
+      text: `Data has been successfully exported as ${filename}.csv`,
+      timer: 3000
+    });
   }
   
 }

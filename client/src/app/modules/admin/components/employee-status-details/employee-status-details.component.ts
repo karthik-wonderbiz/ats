@@ -5,6 +5,7 @@ import { EncryptDescrypt } from '../../../../utils/genericFunction';
 import { AttendanceLogService } from '../../../../services/attendanceLog/attendance-log.service';
 import { AttendanceLogModel } from '../../../../model/AttendanceLog.model';
 import { SignalRService } from '../../../../services/signalR/signal-r.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-employee-status-details',
@@ -186,6 +187,7 @@ export class EmployeeStatusDetailsComponent implements OnInit {
       present: 'Present',
       absent: 'Absent',
     };
+    
     const statusLabel = statusMap[this.selectedStatus] || 'All';
     const filename = `employee-status-details-${statusLabel}`;
 
@@ -204,6 +206,13 @@ export class EmployeeStatusDetailsComponent implements OnInit {
     };
 
     new ngxCsv(dataToExport, options.filename, options);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Export Successful',
+      text: `Data has been successfully exported as ${filename}.csv`,
+      timer: 3000
+    });
   }
 
   onRowClicked(employee: any) {

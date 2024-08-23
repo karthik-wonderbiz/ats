@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { EncryptDescrypt } from '../../../../utils/genericFunction';
 import { AttendanceLogService } from '../../../../services/attendanceLog/attendance-log.service';
 import { SignalRService } from '../../../../services/signalR/signal-r.service';
+import { ngxCsv } from 'ngx-csv';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-employee-attendance-records',
@@ -111,5 +114,40 @@ export class EmployeeAttendanceRecordsComponent implements OnInit {
       );
     }
     console.log('Filtered employees:', this.employees);
+  }
+
+  exportToCSV() {
+    const dataToExport = this.employees.map(({ id, fullName, lastCheckInTime,lastCheckOutTime, totalHours}) => ({
+      'Employee Id': id,
+      'Name': fullName,
+      'In Time': lastCheckInTime,
+      'Out Time': lastCheckOutTime,
+      'Total Hours': totalHours
+    }));
+
+    const filename = 'emplyee-today-working-hours';
+
+    const options = {
+      filename: filename,
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      showTitle: false,
+      title: '',
+      useBom: true,
+      headers: ['Employee Id', 'Name', 'Email', 'Phone Number'],
+      noDownload: false,
+      removeEmptyValues: true,
+    };
+
+    new ngxCsv(dataToExport, options.filename, options);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Export Successful',
+      text: `Data has been successfully exported as ${filename}.csv`,
+      timer: 3000
+    });
   }
 }

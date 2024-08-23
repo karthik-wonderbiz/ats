@@ -207,5 +207,12 @@ export class AllEmployeesComponent implements OnInit {
     };
 
     new ngxCsv(dataToExport, options.filename, options);
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Export Successful',
+      text: `Data has been successfully exported as ${filename}.csv`,
+      timer: 3000
+    });
   }
 }
