@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
 import { EmployeeInfoModel } from '../../model/EmployeeInfo.model';
 import { ConcatName } from '../../utils/genericFunction'; // Import the Utils class
+import { EmployeeInfoGetAll } from '../../model/EmployeeInfoGetAll.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,8 @@ export class EmployeeService {
   constructor(private http: HttpClient) { }
 
   // Existing method to get all employee info
-  getAllEmployeeInfo(): Observable<EmployeeInfoModel[]> {
-    return this.http.get<EmployeeInfoModel[]>(this.baseUrl).pipe(
+  getAllEmployeeInfo(): Observable<EmployeeInfoGetAll[]> {
+    return this.http.get<EmployeeInfoGetAll[]>(this.baseUrl).pipe(
       map(employees => 
         employees.map(employee => ({
           ...employee,

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import EmployeeModel from '../../../../model/employee-sign-up.model';
 import ConfirmPassword from '../../../../model/confirm-password.model';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,6 +8,8 @@ import { SignUpService } from '../../../../shared/services/sign-up/sign-up.servi
 import { NgForm } from '@angular/forms';
 import { EncryptDescrypt } from '../../../../utils/genericFunction';
 import { EmployeeService } from '../../../../services/employee/employee.service';
+import { NgxImageCompressService } from 'ngx-image-compress';
+
 
 @Component({
   selector: 'app-update-employee-details',
@@ -41,6 +43,11 @@ export class UpdateEmployeeDetailsComponent {
   isSubmitted = false;
   isServerError = false;
 
+  viaCapture = false;
+
+  pType: string = "password";
+  eye: boolean = true
+
   constructor(
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
@@ -48,6 +55,8 @@ export class UpdateEmployeeDetailsComponent {
     private sanitizer: DomSanitizer,
     private http: HttpClient,
     // private signupService: SignUpService
+    private imageCompress: NgxImageCompressService
+
   ) {}
 
   ngOnInit(): void {
@@ -67,14 +76,23 @@ export class UpdateEmployeeDetailsComponent {
       this.employeeService.getEmployeeByUserId(employeeId).subscribe(data => {
         console.log(data);
         if(data){
-          this.employee.firstName = data.firstName;
-          this.employee.lastName = data.lastName;
-          this.employee.email = data.email;
-          this.employee.contactNo = data.contactNo;
-          this.employee.profilePic = data.profilePic;
+          this.employee.firstName = data[0].firstName;
+          this.employee.lastName = data[0].lastName;
+          this.employee.email = data[0].email;
+          this.employee.contactNo = data[0].contactNo;
+          this.employee.profilePic = data[0].profilePic;
         }
       });
     }
+  }
+
+  toggleCapture() {
+    this.viaCapture = !this.viaCapture
+  }
+
+  viewPass() {
+    this.pType = this.pType == "password" ? "text" : 'password'
+    this.eye = !this.eye
   }
 
   RegisterEmp(empForm: NgForm): void {
@@ -132,6 +150,10 @@ export class UpdateEmployeeDetailsComponent {
     // }
   }
 
+  setImageFromCamera(e: string) {
+    this.thumbnail = e
+  }
+
   resetForm(): void {
     this.employee = {
       firstName: '',
@@ -157,12 +179,34 @@ export class UpdateEmployeeDetailsComponent {
   }
 
   validateName(): boolean {
-    const namePattern = /^[a-zA-Z]{3,}$/;
+    // const namePattern = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/;
+    const namePattern = /^[a-zA-Z ]{3,}$/;
+    this.errors.firstName = 'First name must be min 3 chars!';
+
+    if (/\d/.test(this.employee.firstName)) {
+      this.errors.firstName = 'Name contains digits!';
+      return false;
+    } else if (/[^a-zA-Z ]/.test(this.employee.firstName)) {
+      this.errors.firstName = 'Name contains special characters!';
+      return false;
+    }
+
     return namePattern.test(this.employee.firstName);
   }
 
+
   validateLastName(): boolean {
-    const namePattern = /^[a-zA-Z]{1,}$/;
+    const namePattern = /^[a-zA-Z ]{1,}$/;
+    this.errors.lastName = 'Last name must be min 1 char!';
+
+    if (/\d/.test(this.employee.lastName)) {
+      this.errors.lastName = 'Name contains digits!';
+      return false;
+    } else if (/[^a-zA-Z ]/.test(this.employee.lastName)) {
+      this.errors.lastName = 'Name contains special characters!';
+      return false;
+    }
+
     return namePattern.test(this.employee.lastName);
   }
 
@@ -177,10 +221,27 @@ export class UpdateEmployeeDetailsComponent {
   }
 
   validatePassword(): boolean {
-    const regex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
-    return regex.test(this.employee.password);
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
+
+    if (!regex.test(this.employee.password)) {
+      if (!/(?=.*[a-z])/.test(this.employee.password)) {
+        this.errors.password = "Pass should've at least 1 lowercase!";
+      } else if (!/(?=.*[A-Z])/.test(this.employee.password)) {
+        this.errors.password = "Pass should've at least 1 uppercase!";
+      } else if (!/(?=.*\d)/.test(this.employee.password)) {
+        this.errors.password = "Pass should've at least 1 digit!";
+      } else if (!/(?=.*[^A-Za-z\d])/.test(this.employee.password)) {
+        this.errors.password = "Pass should've at least 1 special char!";
+      } else {
+        this.errors.password = "Pass must be at least 8 char long!";
+      }
+      return false;
+    }
+
+    this.errors.password = '';
+    return true;
   }
+
 
   validateConfirmPassword(): boolean {
     return this.employee.password === this.confirmPass.confirmPassword;
@@ -205,37 +266,84 @@ export class UpdateEmployeeDetailsComponent {
   }
 
   thumbnail: SafeUrl | undefined;
-  imageId: number | undefined;
+  // imageId: number | undefined;
+
+  convertImage = () => {
+    const img = new Image();
+    img.src = this.capturedImage;
+
+    img.onload = () => {
+      const minDimension = Math.min(img.width, img.height);
+      const canvas = document.createElement('canvas');
+      canvas.width = minDimension;
+      canvas.height = minDimension;
+      const context = canvas.getContext('2d');
+
+      if (context) {
+        // Calculate the cropping area
+        const offsetX = (img.width - minDimension) / 2;
+        const offsetY = (img.height - minDimension) / 2;
+
+        // Draw the image onto the canvas, cropping to a square
+        context.drawImage(
+          img,
+          offsetX, offsetY, minDimension, minDimension,  // source rectangle
+          0, 0, minDimension, minDimension  // destination rectangle
+        );
+
+        // Convert canvas to base64 string
+        const croppedBase64String = canvas.toDataURL('image/jpeg').split(',')[1];
+
+        // Check file size
+        const fileSizeInKB = (croppedBase64String.length * (3 / 4)) / 1024;
+        console.log(fileSizeInKB);
+        if (fileSizeInKB > 1024) {
+          this.errors.profilePic = 'File size exceeds 1024kb!';
+          this.employee.profilePic = '';
+          return;
+        }
+        // Resize the image if necessary and then handle the result
+        this.imageCompress.compressFile('data:image/jpeg;base64,' + croppedBase64String, -1, 50, 50, 180, 180).then((resizedImage) => {
+          const resizedBase64String = resizedImage.split(',')[1];
+          this.imageToByte(resizedBase64String);
+          const objectURL = 'data:image/jpeg;base64,' + resizedBase64String;
+          this.thumbnail = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+        });
+      }
+    };
+  }
 
   onProfilePicInput(event: Event): void {
+    this.isCaptured = true
+    this.thumbnail = ""
+    this.employee.profilePic = ""
+
     const input = event.target as HTMLInputElement;
     const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
 
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
-
-      // Validate file type
       if (validFileTypes.includes(file.type)) {
-        this.errors.profilePic = ''; // Clear any previous error message
-
+        this.errors.profilePic = '';
         const reader = new FileReader();
+
         reader.onload = () => {
-          const base64String = (reader.result as string).split(',')[1];
-          this.imageToByte(base64String);
-          const objectURL = 'data:image/jpeg;base64,' + base64String;
-          this.thumbnail = this.sanitizer.bypassSecurityTrustUrl(objectURL); // Create a thumbnail for display
+          const base64String = reader.result as string;
+          this.capturedImage = base64String;
+          this.thumbnail = base64String
+          this.convertImage();
         };
 
         reader.readAsDataURL(file); // Convert file to base64
       } else {
-        // Invalid file type, clear the input field and set error message
+        // Invalid file type
         this.errors.profilePic = 'Invalid file type!';
         input.value = ''; // Clear the input field
         this.employee.profilePic = ''; // Clear the model value
         this.thumbnail = '';
       }
     } else {
-      // Clear the model value if no file is selected
+      // No file selected
       this.errors.profilePic = 'Profile Photo is required!';
       input.value = ''; // Clear the input field
       this.employee.profilePic = ''; // Clear the model value
@@ -243,8 +351,100 @@ export class UpdateEmployeeDetailsComponent {
     }
   }
 
+
   imageToByte(base64String: string): void {
     const imageData = { imageData: base64String };
     this.employee.profilePic = imageData.imageData;
+    // console.log(this.employee.profilePic)
+    // this.http.post('http://localhost:5029/api/images', imageData)
+    //   .subscribe(response => {
+    //     console.log('Image saved successfully', response);
+    //   }, error => {
+    //     console.error('Error saving image', error);
+    //   });
+    // this.getImageFromDatabase(this.imageId)
+  }
+
+  isCamOpen: boolean = false;
+  isCaptured: boolean = false;
+  private stream: MediaStream | null = null;
+  @ViewChild('video', { static: true })
+  videoElement!: ElementRef<HTMLVideoElement>;
+  capturedImage: string = ""
+
+  openCamera() {
+    console.log("call")
+
+    this.thumbnail = ''
+    this.isCaptured = false
+    this.initializeWebcam()
+  }
+  async removeCurrent() {
+    await this.capture()
+  }
+
+  ngOnDestroy(): void {
+    this.stopWebcam();
+  }
+
+
+  async capture(): Promise<void> {
+    const video: HTMLVideoElement = this.videoElement.nativeElement;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const context = canvas.getContext('2d');
+    if (context) {
+      context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+      const imageBlob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, 'image/jpeg')
+      );
+
+      if (imageBlob) {
+        this.stopWebcam()
+        this.isCaptured = true
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          this.capturedImage = reader.result as string;
+          this.thumbnail = this.capturedImage;
+          this.isCamOpen = false;
+          this.employee.profilePic = this.capturedImage
+          this.convertImage()
+        };
+        reader.readAsDataURL(imageBlob);
+      }
+    }
+  }
+
+
+
+  initializeWebcam(): void {
+    const video: HTMLVideoElement | null = document.getElementById(
+      'video'
+    ) as HTMLVideoElement;
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream: MediaStream) => {
+          if (video) {
+            video.srcObject = stream;
+            this.stream = stream;
+            this.isCamOpen = true
+          }
+        })
+        .catch((error: any) => {
+          console.error('Error accessing webcam: ', error);
+        });
+    } else {
+      console.error('getUserMedia not supported in this browser.');
+    }
+  }
+  stopWebcam(): void {
+    if (this.stream) {
+      const tracks = this.stream.getTracks();
+      tracks.forEach((track) => track.stop());
+      this.isCamOpen = false
+    }
   }
 }

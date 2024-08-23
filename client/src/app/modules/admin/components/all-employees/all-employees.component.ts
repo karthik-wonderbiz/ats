@@ -54,6 +54,7 @@ export class AllEmployeesComponent implements OnInit {
     const reportType = '';
     this.employeeService.getAllEmployeeInfo().subscribe((data) => {
       this.allEmployees = data;
+      console.log(data)
       this.allSuggestions = this.allEmployees.map(
         (employee) => employee.fullName
       );
@@ -73,10 +74,11 @@ export class AllEmployeesComponent implements OnInit {
   }
 
   onEditClicked(employee: any) {
-    if (employee && employee.id) {
-      console.log(employee.id);
-      const encryptedId = EncryptDescrypt.encrypt(employee.id.toString());
+    if (employee && employee.userId) {
+      console.log(employee.userId);
+      const encryptedId = EncryptDescrypt.encrypt(employee.userId.toString());
       this.router.navigate(['/admin/update-employee-details', encryptedId]);
+      
     } else {
       console.error('Employee ID is missing or data is incorrect');
     }

@@ -35,6 +35,11 @@ export class LoginComponent {
     return emailPattern.test(this.loginData.email);
   }
 
+  validatePassword(): boolean {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
+    return regex.test(this.loginData.password)
+  }
+
   @Output() loginStatusChange = new EventEmitter<boolean>();
   @Output() signUpStatusChange = new EventEmitter<boolean>();
 
@@ -52,7 +57,7 @@ export class LoginComponent {
       password: this.loginData.password
     }
     console.log(loginData)
-    if (this.validateEmail() && this.loginData.password != '') {
+    if (this.validateEmail() && this.validatePassword()) {
       this.loginService.Login(loginData).pipe().subscribe({
         next: (response) => {
           console.log(JSON.stringify(response))
@@ -60,7 +65,8 @@ export class LoginComponent {
         error: (error) => {
           // console.log(JSON.stringify(error.error))
           this.isInvalid = true
-          this.loginError = error.error
+          // this.loginError = error.error
+          this.loginError = 'Invalid Credentials!'
           this.loginStatusChange.emit(false);
           this.isLogSubmitted = true;
           setTimeout(() => { this.isLogSubmitted = false }, 900);
@@ -80,7 +86,7 @@ export class LoginComponent {
     }
     else {
       console.log('Login failed');
-      this.loginError = 'Invalid Credentials';
+      this.loginError = 'Invalid Credentials!';
       this.isInvalid = true;
       this.loginStatusChange.emit(false);
       this.isLogSubmitted = true;
