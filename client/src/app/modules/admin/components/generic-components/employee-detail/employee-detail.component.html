@@ -10,9 +10,9 @@
     <!-- Employee Details Section -->
     <div class="flex-1">
       <p class="text-2xl font-semibold text-blue-900 mb-2 inline-block">{{ employee[0]?.firstName }} {{ employee[0]?.lastName }}</p>
-      <p class="text-gray-700"><strong class="mr-2 text-yellow-500">Email:</strong> <span>{{ user.email ||
+      <p class="text-gray-700"><strong class="mr-2 text-yellow-500">Email:</strong> <span>{{ employee[0].email ||
           'john.doe@gmail.com' }}</span></p>
-      <p class="text-gray-700"><strong class="mr-2 text-yellow-500">Phone:</strong> <span>{{ user.contactNo ||
+      <p class="text-gray-700"><strong class="mr-2 text-yellow-500">Phone:</strong> <span>{{ employee[0].contactNo ||
           '8766545632' }}</span></p>
     </div>
     <!-- Vertical Line -->

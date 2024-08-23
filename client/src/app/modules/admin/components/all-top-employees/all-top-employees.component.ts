@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AttendanceLogService } from '../../../../services/attendanceLog/attendance-log.service';
 import { ngxCsv } from 'ngx-csv';
 import { SignalRService } from '../../../../services/signalR/signal-r.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-all-top-employees',
@@ -119,6 +120,13 @@ export class AllTopEmployeesComponent implements OnInit {
       headers: ['Employee Name', 'Total Hours'],
       noDownload: false,
       removeEmptyValues: true
+    });
+    
+    Swal.fire({
+      icon: 'success',
+      title: 'Export Successful',
+      text: `Data has been successfully exported as ${filename}.csv`,
+      timer: 3000
     });
   }
 }

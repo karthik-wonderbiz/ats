@@ -20,6 +20,8 @@ export class EmployeeStatusComponent implements OnInit {
   filteredEmployees: any[] = [];
   filter: 'all' | 'present' | 'absent' | 'wfh' = 'all';
 
+  isDataLoaded: boolean = false;
+
   constructor(private attendanceLogService: AttendanceLogService, private signalRService: SignalRService, private router: Router) {}
 
   ngOnInit(): void {
@@ -62,6 +64,7 @@ export class EmployeeStatusComponent implements OnInit {
     this.signalRService.itemUpdate$.subscribe(update => {
       console.log('Item update received:', update);
       if (update) {
+        this.isDataLoaded = false;
         this.getSummaryData();
       }
     });
@@ -71,6 +74,7 @@ export class EmployeeStatusComponent implements OnInit {
     this.signalRService.userUpdate$.subscribe(update =>{
       console.log('User update received:', update);
       if (update) {
+        this.isDataLoaded = false;
         this.getSummaryData();
       }
     })
@@ -82,6 +86,7 @@ export class EmployeeStatusComponent implements OnInit {
   
     this.attendanceLogService.getSummaryAttendance(startDate, endDate).subscribe((data) => {
       this.attendanceLogModel = data;
+      this.isDataLoaded = true;
       console.log('Summary data updated:', this.attendanceLogModel);
     });
   }  
