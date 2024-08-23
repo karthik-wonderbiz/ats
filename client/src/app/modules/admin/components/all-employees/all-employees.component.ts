@@ -108,11 +108,12 @@ export class AllEmployeesComponent implements OnInit {
         if (result.isConfirmed) {
           this.userService.deleteUserById(employee.userId).subscribe(
             (data) => {
-              Swal.fire(
-                'Deleted!',
-                `${employee.fullName} has been deleted.`,
-                'success'
-              );
+              Swal.fire({
+                title: 'Deleted!',
+                text: `${employee.fullName} has been deleted.`,
+                showConfirmButton: false,
+                icon: 'success'
+              });
               this.getAllEmployees();
             },
             (error) => {

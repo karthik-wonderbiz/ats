@@ -82,10 +82,14 @@ export class LoginComponent {
             icon: 'success',
             title: 'Login Successful',
             showConfirmButton: false,
-            text: 'Redirecting to admin panel...',
+            text: 'Redirecting',
             timer: 2000
           }).then(() => {
-            this.router.navigate(['admin']);
+            if(this.loginData.email === "admin@gmail.com" && this.loginData.password ==="Admin@123"){
+              this.router.navigate(['admin']);
+            } else{
+              this.router.navigate(['/']);
+            }
           });
           setTimeout(() => { this.isLoginSuccessful = false }, 1000);
         }
