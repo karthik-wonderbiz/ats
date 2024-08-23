@@ -23,7 +23,9 @@ export class SignUpComponent implements OnInit {
     email: '',
     contactNo: '',
     password: '',
-    profilePic: ''
+    profilePic: '',
+    id: '',
+    userId: ''
   };
   confirmPass: ConfirmPassword = {
     confirmPassword: '',
@@ -90,6 +92,8 @@ export class SignUpComponent implements OnInit {
       contactNo: this.employee.contactNo,
       password: this.employee.password,
       profilePic: this.employee.profilePic,
+      id: '',
+      userId: ''
     };
     console.log(loginData);
 
@@ -137,6 +141,8 @@ export class SignUpComponent implements OnInit {
 
   resetForm(): void {
     this.employee = {
+      id: '',
+      userId:'',
       firstName: '',
       lastName: '',
       email: '',
