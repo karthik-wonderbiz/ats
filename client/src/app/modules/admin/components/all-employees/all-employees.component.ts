@@ -38,19 +38,29 @@ export class AllEmployeesComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscribeToItemUpdates();
-    this.getAllEmployeeHours();
+    this.subscribeToUserUpdates();
+    this.getAllEmployees();
   }
 
   private subscribeToItemUpdates(): void {
     this.signalRService.itemUpdate$.subscribe((update) => {
       console.log('Item update received:', update);
       if (update) {
-        this.getAllEmployeeHours();
+        this.getAllEmployees();
       }
     });
   }
 
-  getAllEmployeeHours() {
+  private subscribeToUserUpdates(): void {
+    this.signalRService.userUpdate$.subscribe(update =>{
+      console.log('User update received:', update);
+      if (update) {
+        this.getAllEmployees();
+      }
+    })
+  }
+
+  getAllEmployees() {
     const reportType = '';
     this.employeeService.getAllEmployeeInfo().subscribe((data) => {
       this.allEmployees = data;
@@ -63,9 +73,9 @@ export class AllEmployeesComponent implements OnInit {
   }
 
   onRowClicked(employee: any) {
-    if (employee && employee.id) {
-      console.log(employee.id);
-      const encryptedId = EncryptDescrypt.encrypt(employee.id.toString());
+    if (employee && employee.userId) {
+      console.log(employee.userId);
+      const encryptedId = EncryptDescrypt.encrypt(employee.userId.toString());
       this.router.navigate(['/admin/employee-detail', encryptedId]);
     } else {
       console.error('Employee ID is missing or data is incorrect');
@@ -101,7 +111,7 @@ export class AllEmployeesComponent implements OnInit {
                 `${employee.fullName} has been deleted.`,
                 'success'
               );
-              this.getAllEmployeeHours();
+              this.getAllEmployees();
             },
             (error) => {
               Swal.fire(

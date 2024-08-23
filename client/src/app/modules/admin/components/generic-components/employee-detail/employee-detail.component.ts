@@ -14,7 +14,7 @@ import { SignalRService } from '../../../../../services/signalR/signal-r.service
 })
 export class EmployeeDetailComponent implements OnInit {
   employee: any = {};
-  user: any = {};
+  // user: any = {};
   inOutData: any[] = [];
   selectedDate: Date = new Date();
   formattedDate: string = '';
@@ -64,10 +64,10 @@ export class EmployeeDetailComponent implements OnInit {
         console.log('Employee Data:', this.employee);
       });
 
-      this.userService.getUserById(employeeId).subscribe(data => {
-        this.user = data;
-        console.log('User Data:', this.user);
-      });
+      // this.userService.getUserById(employeeId).subscribe(data => {
+      //   this.user = data;
+      //   console.log('User Data:', this.user);
+      // });
 
       this.formattedDate = this.selectedDate.toLocaleDateString();
 
@@ -143,10 +143,10 @@ export class EmployeeDetailComponent implements OnInit {
           // console.log('Updated Employee Data:', this.employee);
         });
 
-        this.userService.getUserById(employeeId).subscribe(data => {
-          this.user = data;
-          // console.log('Updated User Data:', this.user);
-        });
+        // this.userService.getUserById(employeeId).subscribe(data => {
+        //   this.user = data;
+        //   // console.log('Updated User Data:', this.user);
+        // });
 
         this.fetchActivityRecords();
       }

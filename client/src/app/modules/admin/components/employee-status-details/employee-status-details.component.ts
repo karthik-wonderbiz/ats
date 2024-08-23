@@ -14,6 +14,10 @@ import { SignalRService } from '../../../../services/signalR/signal-r.service';
 export class EmployeeStatusDetailsComponent implements OnInit {
   @Input() employeeData: any[] = [];
   @Output() rowClicked = new EventEmitter<any>();
+  allSuggestions: string[] = [];
+  filteredSuggestions: string[] = [];
+  searchTerms: string[] = [];
+  searchInput: string = '';
   isLoaded: boolean = false;
 
   columns = [
@@ -93,6 +97,9 @@ export class EmployeeStatusDetailsComponent implements OnInit {
         ).length;
         this.attendanceLogModel.absent = this.attendanceLogModel.total - this.attendanceLogModel.present;
         this.employeeData = this.filterData(data);
+        this.allSuggestions = this.employeeData.map(
+          (employee) => employee.fullName
+        );
         this.isLoaded = false;
         console.log("Filtered Employee Today's Entries: ", this.employeeData);
       });
@@ -113,6 +120,57 @@ export class EmployeeStatusDetailsComponent implements OnInit {
         employee.status.toLowerCase() === this.selectedStatus;
       return matchesStatus;
     });
+  }
+
+  onInputChange() {
+    this.filteredSuggestions = this.allSuggestions.filter((suggestion) =>
+      suggestion.toLowerCase().includes(this.searchInput.toLowerCase())
+    );
+  }
+
+  addTerm() {
+    const trimmedInput = this.searchInput.trim();
+    if (
+      trimmedInput &&
+      this.allSuggestions.includes(trimmedInput) &&
+      !this.searchTerms.includes(trimmedInput)
+    ) {
+      this.searchTerms.push(trimmedInput);
+      this.searchInput = ''; // Clear the input box
+      this.filteredSuggestions = []; // Clear suggestions
+      this.performSearch(); // Filter employees based on the updated search terms
+    }
+  }
+
+  removeTerm(term: string) {
+    this.searchTerms = this.searchTerms.filter((t) => t !== term);
+    this.performSearch(); // Filter employees based on the updated search terms
+  }
+
+  selectSuggestion(suggestion: string) {
+    this.searchInput = suggestion;
+    this.addTerm();
+  }
+
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter' && this.filteredSuggestions.length > 0) {
+      this.selectSuggestion(this.filteredSuggestions[0]);
+      event.preventDefault();
+    }
+  }
+
+  performSearch() {
+    if (this.searchTerms.length === 0) {
+      this.employeeData = this.employeeData; // Show all employees if no search terms
+    } else {
+      const query = this.searchTerms.join(' ').toLowerCase();
+      this.employeeData = this.employeeData.filter((employee) =>
+        this.searchTerms.some((term) =>
+          employee.fullName.toLowerCase().includes(term.toLowerCase())
+        )
+      );
+    }
+    console.log('Filtered employees:', this.employeeData);
   }
 
   exportToCSV() {

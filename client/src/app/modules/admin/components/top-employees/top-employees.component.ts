@@ -4,6 +4,7 @@ import { AttendanceLogService } from '../../../../services/attendanceLog/attenda
 import { SignalRService } from '../../../../services/signalR/signal-r.service';
 import { Router } from '@angular/router';
 import { ngxCsv } from 'ngx-csv';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-top-employees',
@@ -96,14 +97,14 @@ export class TopEmployeesComponent implements OnInit {
       'Yearly': `${filenamePrefix}-yearly`,
       'All-Time': `${filenamePrefix}-all-time`
     };
-
+  
     const filename = filenameMap[this.activeTab as keyof typeof filenameMap] || filenamePrefix;
-
+  
     const dataToExport = data.map(({ fullName, totalHours }) => ({
       'Employee Name': fullName,
       'Total Hours': totalHours
     }));
-
+  
     new ngxCsv(dataToExport, filename, {
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -116,5 +117,13 @@ export class TopEmployeesComponent implements OnInit {
       noDownload: false,
       removeEmptyValues: true
     });
+  
+    Swal.fire({
+      icon: 'success',
+      title: 'Export Successful',
+      text: `Data has been successfully exported as ${filename}.csv`,
+      timer: 3000
+    });
   }
+  
 }

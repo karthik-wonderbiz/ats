@@ -1,6 +1,6 @@
 <div
   class="p-4 bg-white border border-gray-200 rounded-lg shadow-md shadow-yellow-300 dark:bg-gray-800 dark:border-gray-700 w-full animate-slideDown mb-4 text-center justify-self-center">
-  <div class="flex items-center">
+  <div class="flex items-center space-x-2">
     <!-- Date Input with Label -->
     <label for="date-input" class="mr-2 text-blue-900 dark:text-white font-medium">Date:</label>
     <input id="date-input" type="date" [(ngModel)]="selectedDate" (change)="onDateChange()"
@@ -14,7 +14,31 @@
       <option value="present">Present</option>
       <option value="absent">Absent</option>
     </select>
+    <div
+        class="search-box mr-4 relative flex flex-wrap items-center border border-gray-300 rounded-lg p-2 space-x-2 dark:text-white focus:outline-none focus:ring focus:border-blue-300 justify-end">
+        <div class="tags flex flex-wrap space-x-2">
+          <span *ngFor="let term of searchTerms"
+            class="tag bg-blue-100 text-blue-800 px-3 py-1 rounded-full flex items-center">
+            {{ term }}
+            <span class="remove-tag ml-2 text-red-600 cursor-pointer font-bold" (click)="removeTerm(term)">
+              ×
+            </span>
+          </span>
+        </div>
+        <input type="text" [(ngModel)]="searchInput" (input)="onInputChange()" (keydown.enter)="addTerm()"
+          placeholder="Search..."
+          class="flex-grow border-none outline-none bg-transparent placeholder-gray-500 text-sm "
+          (keydown)="handleKeyDown($event)" />
+        <ul *ngIf="filteredSuggestions.length > 0"
+          class="absolute overflow-x-auto max-h-[60vh] top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-1 z-10 shadow-lg">
+          <li *ngFor="let suggestion of filteredSuggestions" (click)="selectSuggestion(suggestion)"
+            class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+            {{ suggestion }}
+          </li>
+        </ul>
+      </div>
   </div>
+  
 </div>
 
 <div

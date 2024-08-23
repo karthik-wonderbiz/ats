@@ -11,6 +11,7 @@ import { ngxCsv } from 'ngx-csv';
   templateUrl: './employee-log-records.component.html',
   styleUrls: ['./employee-log-records.component.css'],
 })
+
 export class EmployeeLogRecordsComponent implements OnInit {
   @Input() employeeLogData: any[] = [];
 
