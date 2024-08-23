@@ -9,6 +9,7 @@ import { NgForm } from '@angular/forms';
 import { EncryptDescrypt } from '../../../../utils/genericFunction';
 import { EmployeeService } from '../../../../services/employee/employee.service';
 import { NgxImageCompressService } from 'ngx-image-compress';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -91,22 +92,44 @@ export class UpdateEmployeeDetailsComponent {
 
   updateUser(empForm: NgForm): void {
     if (this.validateForm()) {
-    if (this.employee) {
-      const employeeId = this.employee.id;
-      console.log(this.employee.id);
-      this.employeeService.updateUserById(employeeId, this.employee).pipe().subscribe({
-        next: (response) => {
-          alert(JSON.stringify(response));
-        },
-        error: (error) => {
-          alert(JSON.stringify(error));
-        },
-        complete: () => {
-          alert(JSON.stringify("Complete"));
-        }
-      })
-    }}
+      if (this.employee) {
+        const employeeId = this.employee.id;
+        console.log(this.employee.id);
+        this.employeeService.updateUserById(employeeId, this.employee).pipe().subscribe({
+          next: (response) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Update Successful',
+              text: 'Employee details have been updated successfully.',
+              timer: 1000
+            });
+          },
+          error: (error) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Update Failed',
+              text: 'There was an error updating the employee details.',
+              timer: 1000
+            });
+          },
+          complete: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Update Complete',
+              showConfirmButton: false,
+              text: 'The update process has completed.',
+              timer: 1000
+            });
+            setTimeout(() => {
+              this.router.navigate(['/admin/employees']);
+              
+            }, 1000);
+          }
+        });
+      }
+    }
   }
+  
 
   setImageFromCamera(e: string) {
     this.thumbnail = e
