@@ -1,5 +1,6 @@
 interface EmployeeModel{
-
+    id: string,
+    userId: string,
     firstName: string ,
     lastName : string,
     email: string ,

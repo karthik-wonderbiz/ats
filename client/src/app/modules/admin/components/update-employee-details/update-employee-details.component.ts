@@ -17,13 +17,16 @@ import { NgxImageCompressService } from 'ngx-image-compress';
   styleUrl: './update-employee-details.component.css'
 })
 export class UpdateEmployeeDetailsComponent {
+
   employee: EmployeeModel = {
+    id: '',
+    userId: '',
     firstName: '',
     lastName: '',
     email: '',
     contactNo: '',
     password: '',
-    profilePic: '',
+    profilePic: ''
   };
   confirmPass: ConfirmPassword = {
     confirmPassword: '',
@@ -32,10 +35,6 @@ export class UpdateEmployeeDetailsComponent {
   errors = {
     firstName: 'First name must be at least 3 chars!',
     lastName: 'Last name must be at least 1 char!',
-    email: 'Enter a valid email!',
-    contactNo: 'Phone must be 10 digits!',
-    password: 'Pass must be min 8 alphanumerics!',
-    confirmPassword: 'Password does not match!',
     profilePic: 'Profile Photo is required!',
   };
 
@@ -45,19 +44,16 @@ export class UpdateEmployeeDetailsComponent {
 
   viaCapture = false;
 
-  pType: string = "password";
-  eye: boolean = true
-
   constructor(
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
-    // private router: Router,
+    private router: Router,
     private sanitizer: DomSanitizer,
     private http: HttpClient,
-    // private signupService: SignUpService
+    private signupService: SignUpService,
     private imageCompress: NgxImageCompressService
 
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // this.route.params.subscribe((params: Params) => {
@@ -70,18 +66,21 @@ export class UpdateEmployeeDetailsComponent {
     // });
     const encryptedId = this.route.snapshot.paramMap.get('id');
     console.log("EncryptedId", encryptedId);
-    if(encryptedId){
+    if (encryptedId) {
       const employeeId = EncryptDescrypt.decrypt(encryptedId);
       console.log('Decrypted Employee ID:', employeeId);
       this.employeeService.getEmployeeByUserId(employeeId).subscribe(data => {
         console.log(data);
-        if(data){
+        if (data) {
+          this.employee.id = data[0].id;
+          this.employee.userId = data[0].userId;
           this.employee.firstName = data[0].firstName;
           this.employee.lastName = data[0].lastName;
           this.employee.email = data[0].email;
           this.employee.contactNo = data[0].contactNo;
           this.employee.profilePic = data[0].profilePic;
         }
+        this.thumbnail = 'data:image/jpeg;base64,' + this.employee.profilePic;
       });
     }
   }
@@ -90,90 +89,33 @@ export class UpdateEmployeeDetailsComponent {
     this.viaCapture = !this.viaCapture
   }
 
-  viewPass() {
-    this.pType = this.pType == "password" ? "text" : 'password'
-    this.eye = !this.eye
-  }
-
-  RegisterEmp(empForm: NgForm): void {
-    const loginData: EmployeeModel = {
-      firstName: this.employee.firstName,
-      lastName: this.employee.lastName,
-      email: this.employee.email,
-      contactNo: this.employee.contactNo,
-      password: this.employee.password,
-      profilePic: this.employee.profilePic,
-    };
-    console.log(loginData);
-
-    // if (this.validateForm()) {
-    //   this.employeeService.saveEmployeeData(loginData).subscribe((success) => {
-    //     if (success) {
-    //       console.log('Data saved successfully');
-    //       this.signupService
-    //         .saveLoginData(loginData)
-    //         .pipe()
-    //         .subscribe({
-    //           next: (response) => {
-    //             console.log(JSON.stringify(response));
-    //             // alert(JSON.stringify(response));
-    //           },
-    //           error: (error) => {
-    //             console.log(JSON.stringify(error));
-    //             this.isServerError = true;
-    //             setTimeout(() => {
-    //               this.isServerError = false;
-    //             }, 1000);
-    //             // alert(JSON.stringify(error));
-    //           },
-    //           complete: () => {
-    //             console.log(JSON.stringify('Complete'));
-    //             this.isSubmitted = true;
-    //             setTimeout(() => {
-    //               this.isSubmitted = false;
-    //             }, 1000);
-    //             setTimeout(() => {
-    //               this.router.navigate(['/login']);
-    //             }, 1000);
-    //             // alert(JSON.stringify("Complete"));
-    //           },
-    //         });
-    //     }
-    //   });
-    // } else {
-    //   console.log('Validation failed');
-    //   this.isInvalid = true;
-    //   this.isSubmitted = true;
-    //   setTimeout(() => {
-    //     this.isSubmitted = false;
-    //   }, 900);
-    // }
+  updateUser(empForm: NgForm): void {
+    if (this.validateForm()) {
+    if (this.employee) {
+      const employeeId = this.employee.id;
+      console.log(this.employee.id);
+      this.employeeService.updateUserById(employeeId, this.employee).pipe().subscribe({
+        next: (response) => {
+          alert(JSON.stringify(response));
+        },
+        error: (error) => {
+          alert(JSON.stringify(error));
+        },
+        complete: () => {
+          alert(JSON.stringify("Complete"));
+        }
+      })
+    }}
   }
 
   setImageFromCamera(e: string) {
     this.thumbnail = e
   }
 
-  resetForm(): void {
-    this.employee = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      contactNo: '',
-      password: '',
-      profilePic: '',
-    };
-    this.confirmPass.confirmPassword = '';
-  }
-
   validateForm(): boolean {
     return (
       this.validateName() &&
       this.validateLastName() &&
-      this.validateEmail() &&
-      this.validatePhone() &&
-      this.validatePassword() &&
-      this.validateConfirmPassword() &&
       this.validateProfilePic()
     );
   }
@@ -210,43 +152,6 @@ export class UpdateEmployeeDetailsComponent {
     return namePattern.test(this.employee.lastName);
   }
 
-  validateEmail(): boolean {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailPattern.test(this.employee.email);
-  }
-
-  validatePhone(): boolean {
-    const phoneRegex = /^[0-9]{10}$/;
-    return phoneRegex.test(this.employee.contactNo);
-  }
-
-  validatePassword(): boolean {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
-
-    if (!regex.test(this.employee.password)) {
-      if (!/(?=.*[a-z])/.test(this.employee.password)) {
-        this.errors.password = "Pass should've at least 1 lowercase!";
-      } else if (!/(?=.*[A-Z])/.test(this.employee.password)) {
-        this.errors.password = "Pass should've at least 1 uppercase!";
-      } else if (!/(?=.*\d)/.test(this.employee.password)) {
-        this.errors.password = "Pass should've at least 1 digit!";
-      } else if (!/(?=.*[^A-Za-z\d])/.test(this.employee.password)) {
-        this.errors.password = "Pass should've at least 1 special char!";
-      } else {
-        this.errors.password = "Pass must be at least 8 char long!";
-      }
-      return false;
-    }
-
-    this.errors.password = '';
-    return true;
-  }
-
-
-  validateConfirmPassword(): boolean {
-    return this.employee.password === this.confirmPass.confirmPassword;
-  }
-
   validateProfilePic(): boolean {
     if (
       this.employee.profilePic == '' ||
@@ -266,7 +171,6 @@ export class UpdateEmployeeDetailsComponent {
   }
 
   thumbnail: SafeUrl | undefined;
-  // imageId: number | undefined;
 
   convertImage = () => {
     const img = new Image();
@@ -355,14 +259,6 @@ export class UpdateEmployeeDetailsComponent {
   imageToByte(base64String: string): void {
     const imageData = { imageData: base64String };
     this.employee.profilePic = imageData.imageData;
-    // console.log(this.employee.profilePic)
-    // this.http.post('http://localhost:5029/api/images', imageData)
-    //   .subscribe(response => {
-    //     console.log('Image saved successfully', response);
-    //   }, error => {
-    //     console.error('Error saving image', error);
-    //   });
-    // this.getImageFromDatabase(this.imageId)
   }
 
   isCamOpen: boolean = false;
@@ -386,7 +282,6 @@ export class UpdateEmployeeDetailsComponent {
   ngOnDestroy(): void {
     this.stopWebcam();
   }
-
 
   async capture(): Promise<void> {
     const video: HTMLVideoElement = this.videoElement.nativeElement;
@@ -416,8 +311,6 @@ export class UpdateEmployeeDetailsComponent {
     }
   }
 
-
-
   initializeWebcam(): void {
     const video: HTMLVideoElement | null = document.getElementById(
       'video'
@@ -440,6 +333,7 @@ export class UpdateEmployeeDetailsComponent {
       console.error('getUserMedia not supported in this browser.');
     }
   }
+
   stopWebcam(): void {
     if (this.stream) {
       const tracks = this.stream.getTracks();

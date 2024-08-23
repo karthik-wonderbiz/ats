@@ -4,6 +4,7 @@ import { Observable, map, catchError, of } from 'rxjs';
 import { EmployeeInfoModel } from '../../model/EmployeeInfo.model';
 import { ConcatName } from '../../utils/genericFunction'; // Import the Utils class
 import { EmployeeInfoGetAll } from '../../model/EmployeeInfoGetAll.model';
+import EmployeeModel from '../../model/employee-sign-up.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class EmployeeService {
   // Existing method to get all employee info
   getAllEmployeeInfo(): Observable<EmployeeInfoGetAll[]> {
     return this.http.get<EmployeeInfoGetAll[]>(this.baseUrl).pipe(
-      map(employees => 
+      map(employees =>
         employees.map(employee => ({
           ...employee,
           fullName: ConcatName.concatName(employee.firstName, employee.lastName)
@@ -41,4 +42,32 @@ export class EmployeeService {
       })
     );
   }
+
+  updateUserById(id: string, user: EmployeeModel): Observable<EmployeeModel> {
+    const {
+
+        firstName,
+        lastName,
+        profilePic
+
+    } = user;
+    console.log({
+
+        firstName,
+        lastName,
+        profilePic
+
+    })
+    const url = `${this.baseUrl}/${id}`;
+    return this.http.put<EmployeeModel>(url, {
+
+        id,
+        firstName,
+        lastName,
+        profilePic
+
+    });
+  }
+
+
 }

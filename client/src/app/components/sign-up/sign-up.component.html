@@ -65,14 +65,14 @@
                             <div class=" flex items-center justify-center mx-auto">
                                 <img *ngIf="thumbnail" [src]="thumbnail"
                                     [ngClass]="{'hidden':thumbnail=='' || isCamOpen}"
-                                    class="rounded-full w-[180px] h-[180px] object-cover border-2 border-gray-300 mt-1 scale-x-[-1]"
+                                    class="rounded-full w-[180px] h-[180px] object-cover border-2 border-gray-300 mt-1"
                                     [ngClass]="{'absolute': !isCamOpen && !isCaptured}" />
 
                                 <i *ngIf="!thumbnail" class="absolute fa-regular fa-user fa-xl z-10"
                                     (click)="openCamera()" [ngClass]="{'hidden':isCamOpen || isCaptured}"></i>
                                 <div class="flex justify-center items-center w-full h-full">
                                     <video #video id="video"
-                                        class="rounded-full w-[180px] h-[180px] object-cover border-2 border-gray-300 mt-1 scale-x-[-1]" autoplay
+                                        class="rounded-full w-[180px] h-[180px] object-cover border-2 border-gray-300 mt-1" autoplay
                                         (click)="capture()" [ngClass]="{'hidden':isCaptured}"></video>
                                 </div>
                             </div>
