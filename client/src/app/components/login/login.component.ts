@@ -81,6 +81,7 @@ export class LoginComponent {
           Swal.fire({
             icon: 'success',
             title: 'Login Successful',
+            showConfirmButton: false,
             text: 'Redirecting to admin panel...',
             timer: 2000
           }).then(() => {

@@ -53,6 +53,7 @@ export class NavbarComponent implements OnInit {
           Swal.fire({
             icon: 'success',
             title: 'Logged out',
+            showConfirmButton: false,
             text: 'You have been logged out successfully.',
             timer: 2000
           }).then(() => {
