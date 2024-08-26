@@ -61,7 +61,6 @@ export class EnrolComponent {
     try {
       const user = JSON.parse(userString) as User;
       this.user = user;
-      console.log(this.user);
     } catch (e) {
       console.error('Error parsing user data from localStorage:', e);
       this.router.navigate(['/']);
@@ -104,8 +103,8 @@ export class EnrolComponent {
           video: true,
         });
         this.videoElement.nativeElement.srcObject = this.stream;
-        console.log('hello');
         video.addEventListener('playing', this.detectFaces.bind(this));
+        this.isCameraOpen = true;
       } catch (error) {
         console.log('Error accessing webcam: ', error);
       }
@@ -119,13 +118,11 @@ export class EnrolComponent {
       clearInterval(this.modelInterval);
     }
     this.modelInterval = setInterval(async () => {
-      console.log('ddddkdk');
       try {
         const faces = await this.model!.estimateFaces(
           this.videoElement.nativeElement,
           false
         );
-        console.log(faces.length, faces);
         this.detectedFace = faces.length;
       } catch (error) {
         console.error(error);
@@ -138,11 +135,13 @@ export class EnrolComponent {
       const tracks = this.stream.getTracks();
       clearInterval(this.modelInterval);
       tracks.forEach((track) => track.stop());
-      this.isCameraOpen = false;
       this.videoElement.nativeElement.srcObject = null;
-      this.videoElement.nativeElement.removeEventListener('playing', () => {
-        this.detectFaces.bind(this);
-      });
+      this.stream = null;
+      this.isCameraOpen = false;
+      this.videoElement.nativeElement.removeEventListener(
+        'playing',
+        this.detectFaces.bind(this)
+      );
     }
   }
 
@@ -201,7 +200,6 @@ export class EnrolComponent {
         this.toast.message = 'Encodings saved';
         this.toast.position = 'top';
         this.toast.type = 'success';
-        console.log(this.toast);
         this.isCapturedDisabled = false;
         this.router.navigate(['/enrolment/detect']);
         setTimeout(() => {
