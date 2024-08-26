@@ -20,6 +20,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: '/enrolment/home', pathMatch: 'full' },
       { path: 'home', component: HomeComponent },
+      { path: 'home/:userId', component: HomeComponent },
       { path: 'detect', component: DetectComponent },
       { path: 'enrol', component: EnrolComponent },
     ]
