@@ -5,7 +5,6 @@ import { AdminRoutingModule } from './admin-routing.module';
 
 import { HttpClientModule, provideHttpClient } from '@angular/common/http';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { DataService } from '../../services/data.service';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FullCalendarModule } from '@fullcalendar/angular';
@@ -76,7 +75,7 @@ import { LoaderComponent } from './components/loader/loader.component';
     FullCalendarModule,
     HttpClientModule
   ],
-  providers: [provideCharts(withDefaultRegisterables()), provideHttpClient(), DataService],
+  providers: [provideCharts(withDefaultRegisterables()), provideHttpClient()],
 
 })
 export class AdminModule { }

@@ -26,7 +26,6 @@ export class EmployeeStatusComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscribeToItemUpdates();
-    // this.fetchAttendanceData();
     this.subscribeToUserUpdates();
     this.getSummaryData();
   }
@@ -81,8 +80,8 @@ export class EmployeeStatusComponent implements OnInit {
   }
 
   getSummaryData(): void {
-    const startDate = this.attendanceLogModel.startDate || '';  // Use empty string if not set
-    const endDate = this.attendanceLogModel.endDate || '';      // Use empty string if not set
+    const startDate = this.attendanceLogModel.startDate || '';
+    const endDate = this.attendanceLogModel.endDate || ''; 
   
     this.attendanceLogService.getSummaryAttendance(startDate, endDate).subscribe((data) => {
       this.attendanceLogModel = data;

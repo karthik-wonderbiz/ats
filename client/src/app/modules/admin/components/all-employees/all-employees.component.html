@@ -35,6 +35,9 @@
   </div>
   <hr class="my-2 border-gray-300 dark:border-gray-700 border-2">
   <app-table [data]="employees" [columns]="columns" (rowClicked)="onRowClicked($event)"
-    (editClicked)="onEditClicked($event)" (deleteClicked)="onDeleteClicked($event)" class="w-full">
+    (editClicked)="onEditClicked($event)" (deleteClicked)="onDeleteClicked($event)" [ngClass]="{'hidden':!isDataLoaded}" class="w-full">
   </app-table>
+  <div class="flex justify-center" [ngClass]="{'hidden':isDataLoaded}">
+    <app-loader></app-loader>
+  </div>
 </div>

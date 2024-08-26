@@ -82,7 +82,6 @@ export class LoginComponent {
             icon: 'success',
             title: 'Login Successful',
             showConfirmButton: false,
-            text: 'Redirecting',
             timer: 2000
           }).then(() => {
             if(this.loginData.email === "admin@gmail.com" && this.loginData.password ==="Admin@123"){

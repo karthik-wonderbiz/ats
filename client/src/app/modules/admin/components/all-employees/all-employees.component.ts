@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { EncryptDescrypt } from '../../../../utils/genericFunction';
 import { SignalRService } from '../../../../services/signalR/signal-r.service';
@@ -21,6 +21,18 @@ export class AllEmployeesComponent implements OnInit {
   filteredSuggestions: string[] = [];
   searchTerms: string[] = [];
   searchInput: string = '';
+
+  isDataLoaded: boolean = false;
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    const targetElement = event.target as HTMLElement;
+    const searchBox = document.querySelector('.search-box');
+
+    if (searchBox && !searchBox.contains(targetElement)) {
+      this.filteredSuggestions = [];
+    }
+  }
 
   columns = [
     { key: 'fullName', label: 'Name' },
@@ -47,6 +59,7 @@ export class AllEmployeesComponent implements OnInit {
       console.log('Item update received:', update);
       if (update) {
         this.getAllEmployees();
+        this.isDataLoaded = false;
       }
     });
   }
@@ -56,6 +69,7 @@ export class AllEmployeesComponent implements OnInit {
       console.log('User update received:', update);
       if (update) {
         this.getAllEmployees();
+        this.isDataLoaded = false;
       }
     })
   }
@@ -63,6 +77,7 @@ export class AllEmployeesComponent implements OnInit {
   getAllEmployees() {
     const reportType = '';
     this.employeeService.getAllEmployeeInfo().subscribe((data) => {
+      this.isDataLoaded = true;
       this.allEmployees = data;
       console.log(data)
       this.allSuggestions = this.allEmployees.map(
@@ -146,15 +161,15 @@ export class AllEmployeesComponent implements OnInit {
       !this.searchTerms.includes(trimmedInput)
     ) {
       this.searchTerms.push(trimmedInput);
-      this.searchInput = ''; // Clear the input box
-      this.filteredSuggestions = []; // Clear suggestions
-      this.performSearch(); // Filter employees based on the updated search terms
+      this.searchInput = '';
+      this.filteredSuggestions = [];
+      this.performSearch();
     }
   }
 
   removeTerm(term: string) {
     this.searchTerms = this.searchTerms.filter((t) => t !== term);
-    this.performSearch(); // Filter employees based on the updated search terms
+    this.performSearch();
   }
 
   selectSuggestion(suggestion: string) {
@@ -171,7 +186,7 @@ export class AllEmployeesComponent implements OnInit {
 
   performSearch() {
     if (this.searchTerms.length === 0) {
-      this.employees = this.allEmployees; // Show all employees if no search terms
+      this.employees = this.allEmployees;
     } else {
       const query = this.searchTerms.join(' ').toLowerCase();
       this.employees = this.allEmployees.filter((employee) =>
@@ -180,6 +195,7 @@ export class AllEmployeesComponent implements OnInit {
         )
       );
     }
+    this.isDataLoaded = true;
     console.log('Filtered employees:', this.employees);
   }
 

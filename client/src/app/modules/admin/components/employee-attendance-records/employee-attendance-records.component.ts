@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { EncryptDescrypt } from '../../../../utils/genericFunction';
 import { AttendanceLogService } from '../../../../services/attendanceLog/attendance-log.service';
@@ -10,16 +10,26 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-employee-attendance-records',
   templateUrl: './employee-attendance-records.component.html',
-  styleUrls: ['./employee-attendance-records.component.css'] // Changed styleUrl to styleUrls
+  styleUrls: ['./employee-attendance-records.component.css']
 })
 export class EmployeeAttendanceRecordsComponent implements OnInit {
   @Output() rowClicked = new EventEmitter<any>();
   employees: any[] = [];
-  allEmployees: any[] = []; // To store all fetched employees
+  allEmployees: any[] = [];
   allSuggestions: string[] = [];
   filteredSuggestions: string[] = [];
   searchTerms: string[] = [];
   searchInput: string = '';
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    const targetElement = event.target as HTMLElement;
+    const searchBox = document.querySelector('.search-box');
+
+    if (searchBox && !searchBox.contains(targetElement)) {
+      this.filteredSuggestions = [];
+    }
+  }
 
   columns = [
     { key: 'fullName', label: 'Name' },
@@ -51,10 +61,10 @@ export class EmployeeAttendanceRecordsComponent implements OnInit {
 
   getAllEmployeeHours() {
     const reportType = 'Daily';
-    this.attendanceLogService.getAllEmployeesHours(this.formattedStartDate, this.formattedEndDate, reportType).subscribe(data => {
-      this.allEmployees = data; // Store all employee data
+    this.attendanceLogService.getAllEmployeesHours(this.formattedStartDate, '', '').subscribe(data => {
+      this.allEmployees = data;
       this.allSuggestions = this.allEmployees.map(employee => employee.fullName);
-      this.performSearch(); // Perform initial search/filter based on searchTerms
+      this.performSearch();
       console.log("Employee Today's working hours Data:", this.allEmployees);
     });
   }
@@ -79,15 +89,15 @@ export class EmployeeAttendanceRecordsComponent implements OnInit {
     const trimmedInput = this.searchInput.trim();
     if (trimmedInput && this.allSuggestions.includes(trimmedInput) && !this.searchTerms.includes(trimmedInput)) {
       this.searchTerms.push(trimmedInput);
-      this.searchInput = ''; // Clear the input box
-      this.filteredSuggestions = []; // Clear suggestions
-      this.performSearch(); // Filter employees based on the updated search terms
+      this.searchInput = '';
+      this.filteredSuggestions = [];
+      this.performSearch();
     }
   }
 
   removeTerm(term: string) {
     this.searchTerms = this.searchTerms.filter(t => t !== term);
-    this.performSearch(); // Filter employees based on the updated search terms
+    this.performSearch();
   }
 
   selectSuggestion(suggestion: string) {
@@ -104,7 +114,7 @@ export class EmployeeAttendanceRecordsComponent implements OnInit {
 
   performSearch() {
     if (this.searchTerms.length === 0) {
-      this.employees = this.allEmployees; // Show all employees if no search terms
+      this.employees = this.allEmployees;
     } else {
       const query = this.searchTerms.join(' ').toLowerCase();
       this.employees = this.allEmployees.filter(employee =>
