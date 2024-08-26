@@ -17,6 +17,12 @@ export class NavbarComponent implements OnInit {
   logindata: any;
   employeeInfo: any = {};
 
+  view = false;
+
+  toggleView() {
+    this.view = !this.view;
+  }
+
   constructor(
     private employeeService: EmployeeService,
     private router: Router // Inject Router
