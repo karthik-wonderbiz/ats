@@ -48,7 +48,7 @@ export class TableWithTabsComponent implements OnInit, OnChanges {
   setActiveTab(tab: string): void {
     this.activeTab = tab;
     this.filterData();
-    this.tabChanged.emit(tab); // Emit the tab change event
+    this.tabChanged.emit(tab);
   }
 
   filterData(): void {
@@ -56,9 +56,7 @@ export class TableWithTabsComponent implements OnInit, OnChanges {
       ...item,
     }));
     this.filteredDataChange.emit(this.filteredData);
-    // if(this.filteredData.length > 0){
       this.isLoaded = true;
-    // }
   }
 
   getFilteredData(): any[] {

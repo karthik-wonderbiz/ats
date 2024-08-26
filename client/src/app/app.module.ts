@@ -15,7 +15,6 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { provideHttpClient } from '@angular/common/http';
 
-import { DataService } from './services/data.service';
 import { LoginComponent } from './components/login/login.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -62,7 +61,7 @@ import { EnrolmentComponent } from './components/enrolment/enrolment.component';
     HttpClientModule,
     BrowserAnimationsModule, // required animations module
   ],
-  providers: [provideCharts(withDefaultRegisterables()), provideHttpClient(), DataService],
+  providers: [provideCharts(withDefaultRegisterables()), provideHttpClient()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

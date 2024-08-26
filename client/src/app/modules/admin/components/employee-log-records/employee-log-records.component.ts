@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { AttendanceLogModel } from '../../../../model/AttendanceLog.model';
 import { AttendanceLogService } from '../../../../services/attendanceLog/attendance-log.service';
 import { SignalRService } from '../../../../services/signalR/signal-r.service';
@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./employee-log-records.component.css'],
 })
 
+
 export class EmployeeLogRecordsComponent implements OnInit {
   @Input() employeeLogData: any[] = [];
 
@@ -25,6 +26,16 @@ export class EmployeeLogRecordsComponent implements OnInit {
   selectedTab: string = '';
 
   isDataLoaded: boolean = false;
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    const targetElement = event.target as HTMLElement;
+    const searchBox = document.querySelector('.search-box');
+
+    if (searchBox && !searchBox.contains(targetElement)) {
+      this.filteredSuggestions = [];
+    }
+  }
 
   inCount: number = 0;
   outCount: number = 0;

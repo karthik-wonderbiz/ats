@@ -1,4 +1,11 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  EventEmitter,
+  Output,
+  HostListener,
+} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ngxCsv } from 'ngx-csv';
 import { EncryptDescrypt } from '../../../../utils/genericFunction';
@@ -14,12 +21,23 @@ import Swal from 'sweetalert2';
 })
 export class EmployeeStatusDetailsComponent implements OnInit {
   @Input() employeeData: any[] = [];
+  @Input() allEmployeeData: any[] = [];
   @Output() rowClicked = new EventEmitter<any>();
   allSuggestions: string[] = [];
   filteredSuggestions: string[] = [];
   searchTerms: string[] = [];
   searchInput: string = '';
   isLoaded: boolean = false;
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    const targetElement = event.target as HTMLElement;
+    const searchBox = document.querySelector('.search-box');
+
+    if (searchBox && !searchBox.contains(targetElement)) {
+      this.filteredSuggestions = [];
+    }
+  }
 
   columns = [
     { key: 'fullName', label: 'Employee Name' },
@@ -96,13 +114,18 @@ export class EmployeeStatusDetailsComponent implements OnInit {
         this.attendanceLogModel.present = data.filter(
           (log) => log.status === 'Present'
         ).length;
-        this.attendanceLogModel.absent = this.attendanceLogModel.total - this.attendanceLogModel.present;
-        this.employeeData = this.filterData(data);
+        this.attendanceLogModel.absent =
+          this.attendanceLogModel.total - this.attendanceLogModel.present;
+        this.allEmployeeData = this.filterData(data);
+        this.employeeData = [...this.allEmployeeData];
         this.allSuggestions = this.employeeData.map(
           (employee) => employee.fullName
         );
         this.isLoaded = false;
-        console.log("Filtered Employee Today's Entries: ", this.employeeData);
+        console.log(
+          "Filtered Employee Today's Entries: ",
+          this.allEmployeeData
+        );
       });
   }
 
@@ -137,15 +160,15 @@ export class EmployeeStatusDetailsComponent implements OnInit {
       !this.searchTerms.includes(trimmedInput)
     ) {
       this.searchTerms.push(trimmedInput);
-      this.searchInput = ''; // Clear the input box
-      this.filteredSuggestions = []; // Clear suggestions
-      this.performSearch(); // Filter employees based on the updated search terms
+      this.searchInput = '';
+      this.filteredSuggestions = []; 
+      this.performSearch(); 
     }
   }
 
   removeTerm(term: string) {
     this.searchTerms = this.searchTerms.filter((t) => t !== term);
-    this.performSearch(); // Filter employees based on the updated search terms
+    this.performSearch();
   }
 
   selectSuggestion(suggestion: string) {
@@ -162,10 +185,9 @@ export class EmployeeStatusDetailsComponent implements OnInit {
 
   performSearch() {
     if (this.searchTerms.length === 0) {
-      this.employeeData = this.employeeData; // Show all employees if no search terms
+      this.employeeData = [...this.allEmployeeData];
     } else {
-      const query = this.searchTerms.join(' ').toLowerCase();
-      this.employeeData = this.employeeData.filter((employee) =>
+      this.employeeData = this.allEmployeeData.filter((employee) =>
         this.searchTerms.some((term) =>
           employee.fullName.toLowerCase().includes(term.toLowerCase())
         )
@@ -175,19 +197,20 @@ export class EmployeeStatusDetailsComponent implements OnInit {
   }
 
   exportToCSV() {
-    const dataToExport = this.employeeData.map(({ fullName, status, inTime }) => ({
-      'Employee Name': fullName,
-      'Status': status,
-      'In Time': inTime
-    }));
+    const dataToExport = this.employeeData.map(
+      ({ fullName, status, inTime }) => ({
+        'Employee Name': fullName,
+        Status: status,
+        'In Time': inTime,
+      })
+    );
 
-    // Dynamic filename based on selected status
     const statusMap: { [key: string]: string } = {
       all: 'All',
       present: 'Present',
       absent: 'Absent',
     };
-    
+
     const statusLabel = statusMap[this.selectedStatus] || 'All';
     const filename = `employee-status-details-${statusLabel}`;
 
@@ -211,7 +234,7 @@ export class EmployeeStatusDetailsComponent implements OnInit {
       icon: 'success',
       title: 'Export Successful',
       text: `Data has been successfully exported as ${filename}.csv`,
-      timer: 3000
+      timer: 3000,
     });
   }
 
@@ -225,7 +248,6 @@ export class EmployeeStatusDetailsComponent implements OnInit {
     }
   }
 
-  // Navigate to show all records
   viewAllRecords() {
     this.router.navigate([
       '/admin/employee-status-details',

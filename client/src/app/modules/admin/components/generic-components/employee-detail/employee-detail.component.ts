@@ -41,7 +41,7 @@ export class EmployeeDetailComponent implements OnInit {
     private attendanceLogService: AttendanceLogService,
     private employeeService: EmployeeService,
     private userService: UserService,
-    private signalRService: SignalRService  // Inject SignalR service
+    private signalRService: SignalRService 
   ) {}
 
   activityInRecords: ActivityRecordModel[] = [];
@@ -71,7 +71,7 @@ export class EmployeeDetailComponent implements OnInit {
 
       this.formattedDate = this.selectedDate.toLocaleDateString();
 
-      this.subscribeToItemUpdates(employeeId);  // Subscribe to SignalR updates
+      this.subscribeToItemUpdates(employeeId); 
     } else {
       console.error('Employee ID is missing in the URL');
     }
@@ -79,7 +79,7 @@ export class EmployeeDetailComponent implements OnInit {
 
   setActiveTab(tab: string): void {
     this.activeTab = tab;
-    this.updateDatesAndFetchData(); // Update dates and fetch data based on the selected tab
+    this.updateDatesAndFetchData();
   }
 
   updateDatesAndFetchData(): void {
@@ -88,15 +88,15 @@ export class EmployeeDetailComponent implements OnInit {
     switch (this.activeTab) {
       case 'today':
         this.startDate = this.formatDate(currentDate);
-        this.endDate = this.formatDate(new Date(currentDate.getTime() + 24 * 60 * 60 * 1000)); // Next day
+        this.endDate = this.formatDate(new Date(currentDate.getTime() + 24 * 60 * 60 * 1000));
         break;
       case 'yesterday':
-        this.startDate = this.formatDate(new Date(currentDate.getTime() - 24 * 60 * 60 * 1000)); // Previous day
+        this.startDate = this.formatDate(new Date(currentDate.getTime() - 24 * 60 * 60 * 1000));
         this.endDate = this.formatDate(currentDate);
         break;
       case 'dayBeforeYesterday':
-        this.startDate = this.formatDate(new Date(currentDate.getTime() - 2 * 24 * 60 * 60 * 1000)); // Two days ago
-        this.endDate = this.formatDate(new Date(currentDate.getTime() - 24 * 60 * 60 * 1000)); // Previous day
+        this.startDate = this.formatDate(new Date(currentDate.getTime() - 2 * 24 * 60 * 60 * 1000)); 
+        this.endDate = this.formatDate(new Date(currentDate.getTime() - 24 * 60 * 60 * 1000));
         break;
     }
 
@@ -112,19 +112,17 @@ export class EmployeeDetailComponent implements OnInit {
         .getActivityRecordsInByUserId(employeeId, this.startDate, this.endDate)
         .subscribe((dataIn) => {
           this.activityInRecords = this.formatActivityRecords(dataIn);
-          // console.log('Activity In Records:', this.activityInRecords);
         });
 
       this.attendanceLogService.getActivityRecordsOutByUserId(employeeId, this.startDate, this.endDate)
         .subscribe((dataOut) => {
           this.activityOutRecords = this.formatActivityRecords(dataOut);
-          // console.log('Activity Out Records:', this.activityOutRecords);
         });
     }
   }
 
   formatDate(date: Date): string {
-    return date.toISOString().split('T')[0]; // Format date as 'YYYY-MM-DD'
+    return date.toISOString().split('T')[0];
   }
 
   formatActivityRecords(records: ActivityRecordModel[]): ActivityRecordModel[] {
@@ -133,19 +131,15 @@ export class EmployeeDetailComponent implements OnInit {
     }));
   }
 
-  // Subscribe to SignalR updates
   private subscribeToItemUpdates(employeeId: string): void {
     this.signalRService.itemUpdate$.subscribe(update => {
       if (update) {
-        // Reload employee, user, and activity records when an update is received
         this.employeeService.getEmployeeByUserId(employeeId).subscribe(data => {
           this.employee = data;
-          // console.log('Updated Employee Data:', this.employee);
         });
 
         // this.userService.getUserById(employeeId).subscribe(data => {
         //   this.user = data;
-        //   // console.log('Updated User Data:', this.user);
         // });
 
         this.fetchActivityRecords();

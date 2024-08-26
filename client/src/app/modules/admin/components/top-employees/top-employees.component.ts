@@ -22,10 +22,7 @@ export class TopEmployeesComponent implements OnInit {
     { key: 'fullName', label: 'Employee Name' },
     { key: 'totalHours', label: 'Total Hours' }
   ];
-  // columns2 = [
-  //   { key: 'fullName', label: 'Employee Name' },
-  //   { key: 'totalHours', label: 'Total Hours' }
-  // ];
+
   tabs = ['Daily', 'Weekly', 'Monthly', 'Yearly', 'All-Time'];
   tabNames = ['Daily', 'Weekly', 'Monthly', 'Yearly', 'All Time'];
   activeTab: string = 'Daily';
@@ -46,11 +43,11 @@ export class TopEmployeesComponent implements OnInit {
     this.subscribeToItemUpdates();
   }
 
+  
   loadEmployeeInData(reportType: string): void {
     this.isTabChanged = true;
     this.attendanceLogService.getAllEmployeesInHours(reportType).subscribe((data) => {
       this.top5EmployeeIn = data.slice(0, 5);
-      // this.allEmployeesInData = data;
       this.isTabChanged = false;
       console.log(`Top 5 Employee Data in for ${reportType}:`, this.top5EmployeeIn);
     });
@@ -60,7 +57,6 @@ export class TopEmployeesComponent implements OnInit {
     this.isTabChanged = true;
     this.attendanceLogService.getAllEmployeesOutHours().subscribe((data) => {
       this.top5EmployeeOut = data.slice(0, 5);
-      // this.allEmployeesOutData = data;
       this.isTabChanged = false;
       console.log(`Top 5 Employee out Data for ${reportType}:`, this.top5EmployeeOut);
     });
@@ -78,8 +74,8 @@ export class TopEmployeesComponent implements OnInit {
   private subscribeToItemUpdates(): void {
     this.signalRService.itemUpdate$.subscribe(update => {
       if (update) {
-        const activeTab = this.hoursTable?.activeTab || 'Daily'; // Get the currently active tab
-        this.loadEmployeeInData(activeTab); // Reload data for the active tab
+        const activeTab = this.hoursTable?.activeTab || 'Daily';
+        this.loadEmployeeInData(activeTab);
         this.loadEmployeeOutData('', '', activeTab);
       }
     });

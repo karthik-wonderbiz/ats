@@ -152,14 +152,12 @@
       </tr>
     </thead>
     <tbody>
-      <!-- Check if data is empty -->
       <tr *ngIf="!data.length">
         <td [attr.colspan]="columns.length" class="text-center py-4">
           No data found.
         </td>
       </tr>
 
-      <!-- Display data rows if available -->
       <tr *ngFor="let row of data"
         class="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-blue-600 cursor-pointer transition-colors duration-200 ease-in-out"
         (click)="onRowClick(row)">
