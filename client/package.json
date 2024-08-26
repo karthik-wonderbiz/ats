@@ -25,7 +25,6 @@
     "@fullcalendar/daygrid": "^6.1.15",
     "@microsoft/signalr": "^8.0.7",
     "angular-calendar": "^0.31.1",
-    "bootstrap": "^5.3.3",
     "chart.js": "^4.4.3",
     "chartjs-plugin-datalabels": "^2.2.0",
     "crypto-js": "^4.2.0",

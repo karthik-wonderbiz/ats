@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'sign-up', component: SignUpComponent },
+  
   {
     path: 'enrolment', component: EnrolmentComponent,
     children: [
@@ -23,12 +24,21 @@ const routes: Routes = [
       { path: 'enrol', component: EnrolComponent },
     ]
   },
+
   {
     path: 'admin',
     canActivate: [authGuard],
     loadChildren: () =>
       import('./modules/admin/admin.module').then((m) => m.AdminModule),
   },
+
+  {
+    path: 'user',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./modules/user/user.module').then((m) => m.UserModule),
+  },
+
   { path: '**', component: NotFoundComponent },
 ];
 

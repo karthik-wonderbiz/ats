@@ -88,7 +88,7 @@ export class LoginComponent {
             if(this.loginData.email === "admin@gmail.com" && this.loginData.password ==="Admin@123"){
               this.router.navigate(['admin']);
             } else{
-              this.router.navigate(['/']);
+              this.router.navigate(['user']);
             }
           });
           setTimeout(() => { this.isLoginSuccessful = false }, 1000);
