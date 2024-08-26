@@ -23,8 +23,6 @@ import { LineComponent } from './components/generic-components/line/line.compone
 import { PieComponent } from './components/generic-components/pie/pie.component';
 import { TableWithTabsComponent } from './components/generic-components/table-with-tabs/table-with-tabs.component';
 import { TableComponent } from './components/generic-components/table/table.component';
-import { HeaderComponent } from './components/header/header.component';
-import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { SectionComponent } from '../../shared/components/section/section.component';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
@@ -39,9 +37,7 @@ import { LoaderComponent } from './components/loader/loader.component';
 @NgModule({
   declarations: [
     AdminDashboardComponent,
-    HeaderComponent,
     FooterComponent,
-    HomeComponent,
     AboutComponent,
     ContactComponent,
     PieComponent,

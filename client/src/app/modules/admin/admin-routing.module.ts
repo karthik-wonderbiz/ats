@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
-import { HomeComponent } from './components/home/home.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { AboutComponent } from './components/about/about.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -14,12 +13,12 @@ import { AllEmployeesComponent } from './components/all-employees/all-employees.
 import { AllTopEmployeesComponent } from './components/all-top-employees/all-top-employees.component';
 import { UpdateEmployeeDetailsComponent } from './components/update-employee-details/update-employee-details.component';
 
+
 const routes: Routes = [
   {
     path: '',
     component: AdminDashboardComponent,
     children: [
-      { path: 'home', component: HomeComponent },
       { path: 'contact', component: ContactComponent },
       { path: 'about', component: AboutComponent },
       { path: '', redirectTo: '/admin/dashboard', pathMatch: 'full' },
