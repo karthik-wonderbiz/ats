@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AttendanceLogService } from '../../../../services/attendanceLog/attendance-log.service';
 import { AttendanceLogModel } from '../../../../model/AttendanceLog.model';
 import { SignalRService } from '../../../../services/signalR/signal-r.service';
-import { UpdateEmployeeDetailsComponent } from '../update-employee-details/update-employee-details.component';
 import { Router } from '@angular/router';
 
 @Component({
@@ -22,7 +21,14 @@ export class EmployeeStatusComponent implements OnInit {
 
   isDataLoaded: boolean = false;
 
-  constructor(private attendanceLogService: AttendanceLogService, private signalRService: SignalRService, private router: Router) {}
+  // Data for the pie chart
+  pieChartData: any[] = [];
+
+  constructor(
+    private attendanceLogService: AttendanceLogService,
+    private signalRService: SignalRService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.subscribeToItemUpdates();
@@ -58,10 +64,8 @@ export class EmployeeStatusComponent implements OnInit {
     inTime: ''
   };
   
-
   private subscribeToItemUpdates(): void {
     this.signalRService.itemUpdate$.subscribe(update => {
-      console.log('Item update received:', update);
       if (update) {
         this.isDataLoaded = false;
         this.getSummaryData();
@@ -71,7 +75,6 @@ export class EmployeeStatusComponent implements OnInit {
 
   private subscribeToUserUpdates(): void {
     this.signalRService.userUpdate$.subscribe(update =>{
-      console.log('User update received:', update);
       if (update) {
         this.isDataLoaded = false;
         this.getSummaryData();
@@ -85,8 +88,15 @@ export class EmployeeStatusComponent implements OnInit {
   
     this.attendanceLogService.getSummaryAttendance(startDate, endDate).subscribe((data) => {
       this.attendanceLogModel = data;
+      this.updatePieChartData();
       this.isDataLoaded = true;
-      console.log('Summary data updated:', this.attendanceLogModel);
     });
-  }  
+  }
+
+  private updatePieChartData(): void {
+    this.pieChartData = [
+      { label: 'Present', value: this.attendanceLogModel.present || 0 },
+      { label: 'Absent', value: this.attendanceLogModel.absent || 0 }
+    ];
+  }
 }

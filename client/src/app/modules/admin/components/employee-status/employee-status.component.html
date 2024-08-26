@@ -17,14 +17,7 @@
       <hr class="my-2 border-blue-300 dark:border-blue-600">
       <h3 class="text-2xl font-bold text-green-500">{{ attendanceLogModel.present || 0}}</h3>
     </button>
-    <!-- <button (click)="setFilter('wfh')" -->
-    <!-- <button
-      class="p-6 bg-white border border-blue-200 rounded-lg dark:bg-blue-800 dark:border-blue-700 text-center focus:outline-none">
-      <h3 class="text-base font-semibold">Work From Home</h3>
-      <hr class="my-2 border-blue-300 dark:border-blue-600">
-      <h3 class="text-2xl font-bold text-yellow-500">{{ attendanceLogModel.wfh || 0}}</h3>
-    </button> -->
-    <!-- <button (click)="setFilter('absent')" -->
+
     <button (click)="navigateToDetails('absent')"
       class="p-6 bg-white border border-blue-200 rounded-lg dark:bg-blue-800 dark:border-blue-700 text-center focus:outline-none">
       <h3 class="text-base font-semibold">Absent Employees</h3>
@@ -32,6 +25,15 @@
       <h3 class="text-2xl font-bold text-red-500">{{ attendanceLogModel.absent || 0}}</h3>
     </button>
   </div>
+
+  <!-- Pie chart for visualizing summary data with reduced size -->
+  <!-- <div class="mt-4 flex justify-center">
+    <app-pie *ngIf="isDataLoaded" [title]="''" [pieChartDataJson]="pieChartData" [pieChartLabelsKey]="'label'"
+      [pieChartValuesKey]="'value'">
+    </app-pie>
+  </div> -->
+
+
   <div class="flex justify-center" [ngClass]="{'hidden':isDataLoaded}">
     <app-loader></app-loader>
   </div>
