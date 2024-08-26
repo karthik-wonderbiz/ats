@@ -60,7 +60,7 @@
                             [(ngModel)]="loginData.password" #password="ngModel" required autocomplete="off"
                             [ngClass]="{ ' border-red-500': (this.isInvalid), ' border-gray-300': ! (this.isInvalid ) }"
                             class="bg-gray-50 input input-bordered text-gray-900 rounded-lg focus:ring-gray-600 focus:border-gray-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500">
-                        <svg *ngIf="eye" class="w-4 absolute top-4 right-4" (click)="viewPass()" fill="#000000"
+                        <svg *ngIf="!eye" class="w-4 absolute top-4 right-4" (click)="viewPass()" fill="#000000"
                             version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 612 612" xml:space="preserve">
                             <g>
@@ -75,7 +75,7 @@
                                 </g>
                             </g>
                         </svg>
-                        <svg *ngIf="!eye" class="w-4 absolute top-4 right-4" (click)="viewPass()" viewBox="0 0 24 24"
+                        <svg *ngIf="eye" class="w-4 absolute top-4 right-4" (click)="viewPass()" viewBox="0 0 24 24"
                             fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M2 2L22 22" stroke="#000000" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round" />
