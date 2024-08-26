@@ -33,6 +33,8 @@ export class UpdateEmployeeDetailsComponent {
     confirmPassword: '',
   };
 
+  fName = ''
+
   errors = {
     firstName: 'First name must be at least 3 chars!',
     lastName: 'Last name must be at least 1 char!',
@@ -76,6 +78,7 @@ export class UpdateEmployeeDetailsComponent {
           this.employee.id = data[0].id;
           this.employee.userId = data[0].userId;
           this.employee.firstName = data[0].firstName;
+          this.fName = data[0].firstName;
           this.employee.lastName = data[0].lastName;
           this.employee.email = data[0].email;
           this.employee.contactNo = data[0].contactNo;

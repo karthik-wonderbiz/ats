@@ -66,8 +66,8 @@ export class LoginComponent {
         },
         error: (error) => {
           this.isInvalid = true
-          // this.loginError = error.error
-          this.loginError = 'Invalid Credentials!'
+          this.loginError = 'Invalid Credentials'
+          this.loginError = error.error
           this.loginStatusChange.emit(false);
           this.isLogSubmitted = true;
           setTimeout(() => { this.isLogSubmitted = false }, 900);
@@ -99,12 +99,6 @@ export class LoginComponent {
       this.isInvalid = true;
       this.loginStatusChange.emit(false);
       this.isLogSubmitted = true;
-      Swal.fire({
-        icon: 'warning',
-        title: 'Invalid Credentials',
-        text: 'Please enter valid email and password.',
-        timer: 2000
-      });
       setTimeout(() => { this.isLogSubmitted = false }, 900);
     }
   }

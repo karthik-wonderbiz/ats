@@ -60,6 +60,8 @@ export class SignUpComponent implements OnInit {
   isSubmitted = false;
   isServerError = false;
 
+  serverError = ''
+
   viaCapture = false;
 
   pType: string = "password";
@@ -112,6 +114,7 @@ export class SignUpComponent implements OnInit {
             },
             error: (error) => {
               console.log(JSON.stringify(error))
+              this.serverError = error.error
               this.isServerError = true
               setTimeout(() => { this.isServerError = false }, 1000);
               // alert(JSON.stringify(error));
@@ -309,7 +312,7 @@ export class SignUpComponent implements OnInit {
   onProfilePicInput(event: Event): void {
     this.isCaptured = true
     this.thumbnail = ""
-    this.employee.profilePic = ""
+    this.employee.profilePic = "";
 
     const input = event.target as HTMLInputElement;
     const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
