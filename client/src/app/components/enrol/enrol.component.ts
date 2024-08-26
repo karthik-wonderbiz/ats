@@ -6,10 +6,13 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as faceapi from 'face-api.js';
 import { FaceService } from '../../services/enrolment/face.service';
 import Toast from '../../model/enrolment/toast.model';
 import User from '../../model/enrolment/user.model';
+import * as tf from '@tensorflow/tfjs';
+import '@tensorflow/tfjs-backend-webgl';
+import '@tensorflow/tfjs-backend-cpu';
+import * as blazeface from '@tensorflow-models/blazeface';
 
 @Component({
   selector: 'app-enrol',
@@ -19,7 +22,6 @@ import User from '../../model/enrolment/user.model';
 export class EnrolComponent {
   detectedFace: number = 0;
   constructor(private router: Router, private faceService: FaceService) {}
-  detectFaceInterval: any;
   isClose: boolean = false;
   isEncodingDisabled: boolean = false;
   isCapturedDisabled: boolean = false;
@@ -29,6 +31,11 @@ export class EnrolComponent {
   responseElement!: ElementRef<HTMLDivElement>;
   @Output() closeToast = new EventEmitter();
   private stream: MediaStream | null = null;
+
+  private model: blazeface.BlazeFaceModel | null = null;
+  private modelInterval: any;
+  isCameraOpen: boolean = false;
+  isModelLoaded: boolean = false;
 
   res: string = '';
   toast: Toast = {
@@ -62,54 +69,80 @@ export class EnrolComponent {
   }
 
   async ngOnInit() {
-    await Promise.all([
-      faceapi.nets.tinyFaceDetector.loadFromUri('assets/models'),
-    ]).then((v) => {
-      console.log(v);
+    try {
+      await tf.setBackend('webgl');
+      await tf.ready();
+      console.log('Using WebGL backend');
+    } catch (err) {
+      console.warn('WebGL backend failed, falling back to CPU:', err);
+      await tf.setBackend('cpu');
+      await tf.ready();
+      console.log('Using CPU backend');
+    } finally {
+      this.model = await blazeface.load();
+      this.isModelLoaded = true;
       this.loadUser();
       this.initializeWebcam();
-    });
+      console.log('Model loaded');
+    }
   }
   ngOnDestroy(): void {
     this.stopWebcam();
   }
 
-  private initializeWebcam(): void {
+  private async initializeWebcam(): Promise<void> {
+    if (this.isCameraOpen) {
+      this.stopWebcam();
+    }
     const video: HTMLVideoElement | null = document.getElementById(
       'video'
     ) as HTMLVideoElement;
 
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream: MediaStream) => {
-          if (video) {
-            video.srcObject = stream;
-            this.stream = stream;
-            video.addEventListener('playing', () => {
-              this.detectFaceInterval = setInterval(async () => {
-                const detections = await faceapi.detectAllFaces(
-                  video,
-                  new faceapi.TinyFaceDetectorOptions()
-                );
-                this.detectedFace = detections.length;
-              }, 100);
-            });
-          }
-        })
-        .catch((error: any) => {
-          console.error('Error accessing webcam: ', error);
+      try {
+        this.stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
         });
+        this.videoElement.nativeElement.srcObject = this.stream;
+        console.log('hello');
+        video.addEventListener('playing', this.detectFaces.bind(this));
+      } catch (error) {
+        console.log('Error accessing webcam: ', error);
+      }
     } else {
       console.error('getUserMedia not supported in this browser.');
     }
   }
 
+  detectFaces() {
+    if (this.modelInterval) {
+      clearInterval(this.modelInterval);
+    }
+    this.modelInterval = setInterval(async () => {
+      console.log('ddddkdk');
+      try {
+        const faces = await this.model!.estimateFaces(
+          this.videoElement.nativeElement,
+          false
+        );
+        console.log(faces.length, faces);
+        this.detectedFace = faces.length;
+      } catch (error) {
+        console.error(error);
+      }
+    }, 100);
+  }
+
   private stopWebcam(): void {
     if (this.stream) {
       const tracks = this.stream.getTracks();
-      clearInterval(this.detectFaceInterval);
+      clearInterval(this.modelInterval);
       tracks.forEach((track) => track.stop());
+      this.isCameraOpen = false;
+      this.videoElement.nativeElement.srcObject = null;
+      this.videoElement.nativeElement.removeEventListener('playing', () => {
+        this.detectFaces.bind(this);
+      });
     }
   }
 
@@ -160,7 +193,7 @@ export class EnrolComponent {
     this.isEncodingDisabled = true;
     this.isCapturedDisabled = true;
     const formData = new FormData();
-    clearInterval(this.detectFaceInterval);
+    this.stopWebcam();
     formData.append('employee_id', this.user.id.toString());
     this.faceService.saveEncodings(formData).subscribe(
       (data) => {
