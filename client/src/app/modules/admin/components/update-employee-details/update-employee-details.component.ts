@@ -133,6 +133,12 @@ export class UpdateEmployeeDetailsComponent {
     }
   }
   
+  onUpdateEncoding(){
+    setTimeout(() => {
+      const encryptedId = EncryptDescrypt.encrypt(this.employee.userId.toString());
+      this.router.navigate(['/enrolment/home/', encryptedId]);
+    }, 1000);
+  }
 
   setImageFromCamera(e: string) {
     this.thumbnail = e
