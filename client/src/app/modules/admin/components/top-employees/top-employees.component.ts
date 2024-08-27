@@ -12,13 +12,18 @@ import Swal from 'sweetalert2';
   styleUrls: ['./top-employees.component.css']
 })
 export class TopEmployeesComponent implements OnInit {
-  @ViewChild('hoursTable') hoursTableIn: TableWithTabsComponent | undefined;
-  @ViewChild('hoursTable') hoursTableOut: TableWithTabsComponent | undefined;
+  @ViewChild('hoursTable') hoursTableMaxIn: TableWithTabsComponent | undefined;
+  @ViewChild('hoursTable') hoursTableMaxOut: TableWithTabsComponent | undefined;
+  @ViewChild('hoursTable') hoursTableMinIn: TableWithTabsComponent | undefined;
+  @ViewChild('hoursTable') hoursTableMinOut: TableWithTabsComponent | undefined;
 
-  top5EmployeeIn: any[] = [];
-  top5EmployeeOut: any[] = [];
-  allEmployeesInData: any[] = [];
-  allEmployeesOutData: any[] = [];
+  top5EmployeeMaxIn: any[] = [];
+  top5EmployeeMaxOut: any[] = [];
+  top5EmployeeMinIn: any[] = [];
+  top5EmployeeMinOut: any[] = [];
+  
+  // allEmployeesInData: any[] = [];
+  // allEmployeesOutData: any[] = [];
   columns = [
     { key: 'fullName', label: 'Employee Name' },
     { key: 'totalHours', label: 'Total Hours' }
@@ -26,8 +31,11 @@ export class TopEmployeesComponent implements OnInit {
 
   tabs = ['Daily', 'Weekly', 'Monthly', 'Yearly', 'All-Time'];
   tabNames = ['Daily', 'Weekly', 'Monthly', 'Yearly', 'All Time'];
-  activeTabIn: string = 'Daily';
-  activeTabOut: string = 'Daily';
+
+  activeTabMaxIn: string = 'Daily';
+  activeTabMaxOut: string = 'Daily';
+  activeTabMinIn: string = 'Daily';
+  activeTabMinOut: string = 'Daily';
 
   isTabChanged: boolean = false;
 
@@ -38,52 +46,81 @@ export class TopEmployeesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const startDate = '';
-    const endDate = '';
-    this.loadEmployeeInData(this.activeTabIn);
-    this.loadEmployeeOutData(this.activeTabOut);
+    this.loadEmployeeMaxInData(this.activeTabMaxIn);
+    this.loadEmployeeMaxOutData(this.activeTabMaxOut);
+    this.loadEmployeeMinInData(this.activeTabMinIn);
+    this.loadEmployeeMinOutData(this.activeTabMinOut);
     this.subscribeToItemUpdates();
   }
 
   
-  loadEmployeeInData(reportTypeIn: string): void {
+  loadEmployeeMaxInData(reportTypeIn: string): void {
     this.isTabChanged = true;
     this.attendanceLogService.getAllEmployeesInHours(reportTypeIn).subscribe((data) => {
-      this.top5EmployeeIn = data.slice(0, 5);
+      this.top5EmployeeMaxIn = data.slice(0, 5);
       this.isTabChanged = false;
-      console.log(`Top 5 Employee Data in for ${reportTypeIn}:`, this.top5EmployeeIn);
+      console.log(`Top 5 Employee Data max in for ${reportTypeIn}:`, this.top5EmployeeMaxIn);
     });
   }
+  onTabChangedMaxIn(reportTypeIn: string): void {
+    this.activeTabMaxIn = reportTypeIn;
+    this.isTabChanged = true;
+    this.loadEmployeeMaxInData(reportTypeIn);
+  }
 
-  loadEmployeeOutData(reportTypeOut: string): void {
+  loadEmployeeMinInData(reportTypeIn: string): void {
+    this.isTabChanged = true;
+    this.attendanceLogService.getAllEmployeesInHours(reportTypeIn).subscribe((data) => {
+      this.top5EmployeeMinIn = data.reverse().slice(0, 5);
+      this.isTabChanged = false;
+      console.log(`Top 5 Employee Data min in for ${reportTypeIn}:`, this.top5EmployeeMinIn);
+    });
+  }
+  onTabChangedMinIn(reportTypeIn: string): void {
+    this.activeTabMaxIn = reportTypeIn;
+    this.isTabChanged = true;
+    this.loadEmployeeMinInData(reportTypeIn);
+  }
+
+  loadEmployeeMaxOutData(reportTypeOut: string): void {
     this.isTabChanged = true;
     this.attendanceLogService.getAllEmployeesOutHours(reportTypeOut).subscribe((data) => {
-      this.top5EmployeeOut = data.slice(0, 5);
+      this.top5EmployeeMaxOut = data.slice(0, 5);
       this.isTabChanged = false;
-      console.log(`Top 5 Employee out Data for ${reportTypeOut}:`, this.top5EmployeeOut);
+      console.log(`Top 5 Employee Data max out for ${reportTypeOut}:`, this.top5EmployeeMaxOut);
     });
   }
-
-  onTabChangedIn(reportTypeIn: string): void {
-    this.activeTabIn = reportTypeIn;
+  onTabChangedMaxOut(reportTypeOut: string): void{
+    this.activeTabMaxOut = reportTypeOut;
     this.isTabChanged = true;
-    this.loadEmployeeInData(reportTypeIn);
-    // this.loadEmployeeOutData(reportType);
+    this.loadEmployeeMaxOutData(reportTypeOut);
   }
 
-  onTabChangedOut(reportTypeOut: string): void{
-    this.activeTabOut = reportTypeOut;
+  loadEmployeeMinOutData(reportTypeOut: string): void {
     this.isTabChanged = true;
-    this.loadEmployeeOutData(reportTypeOut);
+    this.attendanceLogService.getAllEmployeesOutHours(reportTypeOut).subscribe((data) => {
+      this.top5EmployeeMinOut = data.reverse().slice(0, 5);
+      this.isTabChanged = false;
+      console.log(`Top 5 Employee Data min out for ${reportTypeOut}:`, this.top5EmployeeMinOut);
+    });
+  }
+  onTabChangedMinOut(reportTypeOut: string): void{
+    this.activeTabMaxOut = reportTypeOut;
+    this.isTabChanged = true;
+    this.loadEmployeeMinOutData(reportTypeOut);
   }
 
   private subscribeToItemUpdates(): void {
     this.signalRService.itemUpdate$.subscribe(update => {
       if (update) {
-        const activeTabIn = this.hoursTableIn?.activeTab || 'Daily';
-        const activeTabOut = this.hoursTableOut?.activeTab || 'Daily';
-        this.loadEmployeeInData(activeTabIn);
-        this.loadEmployeeOutData(activeTabOut);
+        const activeTabMaxIn = this.hoursTableMaxIn?.activeTab || 'Daily';
+        const activeTabMaxOut = this.hoursTableMaxOut?.activeTab || 'Daily';
+        const activeTabMinIn = this.hoursTableMinIn?.activeTab || 'Daily';
+        const activeTabMinOut = this.hoursTableMinOut?.activeTab || 'Daily';
+        this.loadEmployeeMaxInData(activeTabMaxIn);
+        this.loadEmployeeMaxOutData(activeTabMaxOut);
+        this.loadEmployeeMinInData(activeTabMinIn);
+        this.loadEmployeeMinOutData(activeTabMinOut);
       }
     });
   }
@@ -101,7 +138,7 @@ export class TopEmployeesComponent implements OnInit {
       'All-Time': `${filenamePrefix}-all-time`
     };
   
-    const filename = filenameMap[this.activeTabIn as keyof typeof filenameMap] || filenamePrefix;
+    const filename = filenameMap[this.activeTabMaxIn as keyof typeof filenameMap] || filenamePrefix;
   
     const dataToExport = data.map(({ fullName, totalHours }) => ({
       'Employee Name': fullName,

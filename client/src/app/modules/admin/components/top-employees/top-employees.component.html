@@ -5,12 +5,12 @@
             <div class="flex space-x-5">
                 <div class="relative group">
                     <button title="Export to CSV"
-                        (click)="exportToCSV(top5EmployeeIn, 'Top 5 Employees with Max In Hours')"
+                        (click)="exportToCSV(top5EmployeeMaxIn, 'Top 5 Employees with Max In Hours')"
                         class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
                         <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
                     </button>
                     <span
-                    class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-green-600 rounded-lg shadow-sm">
+                        class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-green-600 rounded-lg shadow-sm">
                         Export to CSV
                     </span>
                 </div>
@@ -35,8 +35,8 @@
             </div>
         </div>
         <hr class="my-2 border-gray-400 dark:border-gray-700">
-        <app-table-with-tabs #hoursTableIn [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeIn" [columns]="columns"
-            (tabChanged)="onTabChangedIn($event)" class="w-full"
+        <app-table-with-tabs #hoursTableMaxIn [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeMaxIn"
+            [columns]="columns" (tabChanged)="onTabChangedMaxIn($event)" class="w-full"
             [ngClass]="{'hidden':isTabChanged}"></app-table-with-tabs>
         <div class="flex justify-center" *ngIf="isTabChanged">
             <app-loader></app-loader>
@@ -48,12 +48,12 @@
             <div class="flex space-x-5">
                 <div class="relative group">
                     <button title="Export to CSV"
-                        (click)="exportToCSV(top5EmployeeOut, 'Top 5 Employees with Max Out Hours')"
+                        (click)="exportToCSV(top5EmployeeMaxOut, 'Top 5 Employees with Max Out Hours')"
                         class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
                         <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
                     </button>
                     <span
-                    class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-green-600 rounded-lg shadow-sm">
+                        class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-green-600 rounded-lg shadow-sm">
                         Export to CSV
                     </span>
                 </div>
@@ -79,8 +79,8 @@
             </div>
         </div>
         <hr class="my-2 border-gray-400 dark:border-gray-700">
-        <app-table-with-tabs #hoursTableOut [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeOut"
-            [columns]="columns" (tabChanged)="onTabChangedOut($event)" class="w-full"
+        <app-table-with-tabs #hoursTableMaxOut [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeMaxOut"
+            [columns]="columns" (tabChanged)="onTabChangedMaxOut($event)" class="w-full"
             [ngClass]="{'hidden':isTabChanged}"></app-table-with-tabs>
         <div class="flex justify-center" *ngIf="isTabChanged">
             <app-loader></app-loader>
@@ -89,40 +89,92 @@
 </div>
 
 
+<div class="md:p-4 space-y-4 md:space-y-0 md:grid md:grid-cols-1 lg:grid-cols-2 md:gap-8 lg:gap-4 animate-slideDown">
+    <div class="bg-white shadow-md shadow-yellow-300 rounded-lg p-4 border border-gray-200 w-full">
+        <div class="flex justify-between">
+            <h1 class="text-xs font-bold text-blue-900 uppercase">Top Employees with Min In Hours</h1>
+            <div class="flex space-x-5">
+                <div class="relative group">
+                    <button title="Export to CSV"
+                        (click)="exportToCSV(top5EmployeeMinIn, 'Top 5 Employees with Min In Hours')"
+                        class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+                        <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
+                    </button>
+                    <span
+                        class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-green-600 rounded-lg shadow-sm">
+                        Export to CSV
+                    </span>
+                </div>
+                <div class="relative group">
+                    <button (click)="viewAll('min in Hours')"
+                        class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+                        <svg class="w-7 h-7 text-yellow-500 dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+                            <path
+                                d="M17 0h-5.768a1 1 0 1 0 0 2h3.354L8.4 8.182A1.003 1.003 0 1 0 9.818 9.6L16 3.414v3.354a1 1 0 0 0 2 0V1a1 1 0 0 0-1-1Z">
+                            </path>
+                            <path
+                                d="m14.258 7.985-3.025 3.025A3 3 0 1 1 6.99 6.768l3.026-3.026A3.01 3.01 0 0 1 8.411 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V9.589a3.011 3.011 0 0 1-1.742-1.604Z">
+                            </path>
+                        </svg>
+                    </button>
+                    <span
+                        class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-yellow-500 rounded-lg shadow-sm">
+                        View All
+                    </span>
+                </div>
+            </div>
+        </div>
+        <hr class="my-2 border-gray-400 dark:border-gray-700">
+        <app-table-with-tabs #hoursTableMinIn [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeMinIn"
+            [columns]="columns" (tabChanged)="onTabChangedMinIn($event)" class="w-full"
+            [ngClass]="{'hidden':isTabChanged}"></app-table-with-tabs>
+        <div class="flex justify-center" *ngIf="isTabChanged">
+            <app-loader></app-loader>
+        </div>
+    </div>
+    <div class="bg-white shadow-md shadow-yellow-300 rounded-lg p-4 border border-gray-200 w-full">
+        <div class="flex justify-between">
+            <h1 class="text-xs font-bold text-blue-900 uppercase">Top Employees with Min Out Hours</h1>
+            <div class="flex space-x-5">
+                <div class="relative group">
+                    <button title="Export to CSV"
+                        (click)="exportToCSV(top5EmployeeMinOut, 'Top 5 Employees with Min Out Hours')"
+                        class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+                        <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
+                    </button>
+                    <span
+                        class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-green-600 rounded-lg shadow-sm">
+                        Export to CSV
+                    </span>
+                </div>
+                <div class="relative group">
+                    <button title="View All" (click)="viewAll('min out Hours')"
+                        class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+                        <svg class="w-7 h-7 text-yellow-500 dark:text-white" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+                            <path
+                                d="M17 0h-5.768a1 1 0 1 0 0 2h3.354L8.4 8.182A1.003 1.003 0 1 0 9.818 9.6L16 3.414v3.354a1 1 0 0 0 2 0V1a1 1 0 0 0-1-1Z">
+                            </path>
+                            <path
+                                d="m14.258 7.985-3.025 3.025A3 3 0 1 1 6.99 6.768l3.026-3.026A3.01 3.01 0 0 1 8.411 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V9.589a3.011 3.011 0 0 1-1.742-1.604Z">
+                            </path>
+                        </svg>
+                    </button>
+                    <span
+                        class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-yellow-500 rounded-lg shadow-sm">
+                        View All
+                    </span>
+                </div>
 
-<!-- <div class="md:p-4 space-y-4 md:space-y-0 md:grid md:grid-cols-1 lg:grid-cols-2 md:gap-8 lg:gap-4">
-    <div class="bg-white shadow-md shadow-yellow-300 rounded-lg p-4 border border-gray-200 w-full">
-        <div class="flex justify-between ">
-            <h1 class="text-xs font-bold text-blue-900 uppercase">Top Employees with Early Entry</h1>
-            <div class="flex space-x-5">
-                <button title="View All" (click)="viewAll('early Entry')"
-                    class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
-                    <i class="fa-solid fa-users-viewfinder fa-xl" style="color: #0040ff;"></i>
-                </button>
             </div>
         </div>
         <hr class="my-2 border-gray-400 dark:border-gray-700">
-        <app-table-with-tabs [tabs]="tabs" [tabNames]="tabNames" [data]="top5Employee" [columns]="columns3"
-            (tabChanged)="onTabChanged($event)" class="w-full" [ngClass]="{'hidden':isTabChanged}"></app-table-with-tabs>
-            <div class="flex justify-center" *ngIf="isTabChanged">
-                <app-loader></app-loader>
-              </div>
-    </div>
-    <div class="bg-white shadow-md shadow-yellow-300 rounded-lg p-4 border border-gray-200 w-full">
-        <div class="flex justify-between ">
-            <h1 class="text-xs font-bold text-blue-900 uppercase">Top Employees with Late Entry</h1>
-            <div class="flex space-x-5">
-                <button title="View All" (click)="viewAll('late Entry')"
-                    class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
-                    <i class="fa-solid fa-users-viewfinder fa-xl" style="color: #0040ff;"></i>
-                </button>
-            </div>
+        <app-table-with-tabs #hoursTableMinOut [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeMinOut"
+            [columns]="columns" (tabChanged)="onTabChangedMinOut($event)" class="w-full"
+            [ngClass]="{'hidden':isTabChanged}"></app-table-with-tabs>
+        <div class="flex justify-center" *ngIf="isTabChanged">
+            <app-loader></app-loader>
         </div>
-        <hr class="my-2 border-gray-400 dark:border-gray-700">
-        <app-table-with-tabs [tabs]="tabs" [tabNames]="tabNames" [data]="top5Employee" [columns]="columns4"
-            (tabChanged)="onTabChanged($event)" class="w-full" [ngClass]="{'hidden':isTabChanged}"></app-table-with-tabs>
-            <div class="flex justify-center" *ngIf="isTabChanged">
-                <app-loader></app-loader>
-              </div>
     </div>
-</div> -->
+</div>
