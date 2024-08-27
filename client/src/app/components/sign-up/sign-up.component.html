@@ -69,25 +69,45 @@
                                     [ngClass]="{'absolute': !isCamOpen && !isCaptured}" />
 
                                 <i *ngIf="!thumbnail" class="absolute fa-regular fa-user fa-xl z-10"
-                                    (click)="openCamera()" [ngClass]="{'hidden':isCamOpen || isCaptured}"></i>
+                                     [ngClass]="{'hidden':isCamOpen || isCaptured}"></i>
                                 <div class="flex justify-center items-center w-full h-full">
                                     <video #video id="video"
-                                        class="rounded-full w-[180px] h-[180px] object-cover border-2 border-gray-300 mt-1" autoplay
-                                        (click)="capture()" [ngClass]="{'hidden':isCaptured}"></video>
+                                        class="rounded-full w-[180px] h-[180px] object-cover border-2 border-gray-300 mt-1"
+                                        autoplay [ngClass]="{'hidden':isCaptured}"></video>
                                 </div>
                             </div>
-                            <button *ngIf="!isCamOpen && !thumbnail" type="button" (click)="openCamera()"
-                                class="btn btn-xs mt-2 btn-primary">
-                                Camera
-                            </button>
-                            <button *ngIf="isCamOpen && !thumbnail" type="button" (click)="capture()"
-                                class="btn btn-xs mt-2 btn-success">
-                                Capture
-                            </button>
-                            <button *ngIf="thumbnail" type="button" (click)="openCamera()"
-                                class="btn btn-xs mt-2 btn-primary">
-                                Retake
-                            </button>
+                            <div class="flex justify-around bottom-0">
+                                <button *ngIf="!isCamOpen && !thumbnail" type="button" (click)="openCamera()"
+                                    class="btn btn-xs mt-2 btn-primary">
+                                    Camera
+                                </button>
+
+                                <button *ngIf="!isCamOpen && !thumbnail" type="button" (click)="onDelete()"
+                                    class="btn btn-xs mt-2 btn-error">
+                                    Delete
+                                </button>
+                            </div>
+                            <div class="flex justify-around bottom-0">
+                                <button *ngIf="isCamOpen && !thumbnail" type="button" (click)="capture()"
+                                    class="btn btn-xs mt-2 btn-success">
+                                    Capture
+                                </button>
+                                <button *ngIf="isCamOpen && !thumbnail" type="button" (click)="stopWebcam()"
+                                    class="btn btn-xs mt-2 btn-error">
+                                    Close
+                                </button>
+                            </div>
+                            <div class="flex justify-around bottom-0">
+                                <button *ngIf="thumbnail" type="button" (click)="openCamera()"
+                                    class="btn btn-xs mt-2 btn-primary">
+                                    Retake
+                                </button>
+                                <button *ngIf="thumbnail" type="button" (click)="onDelete()"
+                                    class="btn btn-xs mt-2 btn-error">
+                                    Delete
+                                </button>
+                            </div>
+
                         </div>
 
 
@@ -96,11 +116,12 @@
 
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                 for="profilePic">Upload Photo</label>
+                            <label class="flex btn btn-sm btn-primary items-center" for="profilePic">Browse</label>
                             <input (change)="onProfilePicInput($event)" type="file" name="profilePic" id="profilePic"
                                 [(ngModel)]="employee.profilePic" #profilePic="ngModel" required autocomplete="off"
                                 accept=".png,.jpg,.jpeg"
                                 [ngClass]="{'file-input-error': (this.isInvalid && !this.validateProfilePic()), 'file-input-primary':  !(this.isInvalid && !this.validateProfilePic()) }"
-                                class="file-input-sm w-full text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+                                class="hidden file-input-sm w-full text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">(JPG, JPEG, or PNG)</p>
                             <div class="sm:h-0 h-8">
                                 <div *ngIf="(!this.validateProfilePic() && (profilePic.dirty || profilePic.touched)) || (this.isInvalid && !this.validateProfilePic() )"
@@ -198,9 +219,9 @@
                                 #password="ngModel" required autocomplete="off" placeholder="••••••••"
                                 [ngClass]="{ ' border-red-500': (this.isInvalid && !this.validatePassword() ), 'border-gray-300': ! (this.isInvalid && !this.validatePassword() ) }"
                                 class="bg-gray-50 input input-bordered text-gray-900 rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ">
-                            <svg *ngIf="!eye" class="w-4 absolute top-4 right-3" (click)="viewPass()" fill="#000000" version="1.1" id="Capa_1"
-                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                viewBox="0 0 612 612" xml:space="preserve">
+                            <svg *ngIf="!eye" class="w-4 absolute top-4 right-3" (click)="viewPass()" fill="#000000"
+                                version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
+                                xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 612 612" xml:space="preserve">
                                 <g>
                                     <g>
                                         <path d="M609.608,315.426c3.19-5.874,3.19-12.979,0-18.853c-58.464-107.643-172.5-180.72-303.607-180.72
@@ -213,8 +234,8 @@
                                     </g>
                                 </g>
                             </svg>
-                            <svg *ngIf="eye" class="w-4 absolute top-4 right-3" (click)="viewPass()" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
+                            <svg *ngIf="eye" class="w-4 absolute top-4 right-3" (click)="viewPass()" viewBox="0 0 24 24"
+                                fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M2 2L22 22" stroke="#000000" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" />
                                 <path

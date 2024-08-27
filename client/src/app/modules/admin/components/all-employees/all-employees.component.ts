@@ -89,6 +89,7 @@ export class AllEmployeesComponent implements OnInit {
   }
 
   onRowClicked(employee: any) {
+    console.log('clicked')
     if (employee && employee.userId) {
       console.log(employee.userId);
       const encryptedId = EncryptDescrypt.encrypt(employee.userId.toString());
