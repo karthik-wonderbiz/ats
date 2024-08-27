@@ -55,6 +55,7 @@ import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { SectionComponent } from './shared/components/section/section.component';
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { AdminDashboardComponent } from './modules/admin/components/admin-dashboard/admin-dashboard.component';
+import { PageAccessComponent } from './modules/admin/components/page-access/page-access.component';
 
 
 @NgModule({
@@ -97,7 +98,8 @@ import { AdminDashboardComponent } from './modules/admin/components/admin-dashbo
     AllTopEmployeesComponent,
     UpdateEmployeeDetailsComponent,
     LoaderComponent,
-    AdminDashboardComponent
+    AdminDashboardComponent,
+    PageAccessComponent
   ],
   imports: [
     BrowserModule,

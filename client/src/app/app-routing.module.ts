@@ -19,6 +19,7 @@ import { EmployeeAttendanceRecordsComponent } from './modules/admin/components/e
 import { AllEmployeesComponent } from './modules/admin/components/all-employees/all-employees.component';
 import { AllTopEmployeesComponent } from './modules/admin/components/all-top-employees/all-top-employees.component';
 import { EmployeeLogRecordsComponent } from './modules/admin/components/employee-log-records/employee-log-records.component';
+import { PageAccessComponent } from './modules/admin/components/page-access/page-access.component';
 
 const routes: Routes = [
 
@@ -52,7 +53,7 @@ const routes: Routes = [
       { path: 'employees', component: AllEmployeesComponent },
       { path: 'employee-log-records', component: EmployeeLogRecordsComponent },
       { path: 'all-top-employees/:type', component: AllTopEmployeesComponent },
-      { path: 'updateEmployee', component: UpdateEmployeeDetailsComponent }
+      {path: 'page-access', component:PageAccessComponent}
     ],
 
   },
