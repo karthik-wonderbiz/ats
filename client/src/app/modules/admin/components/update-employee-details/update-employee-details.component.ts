@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
   templateUrl: './update-employee-details.component.html',
   styleUrl: './update-employee-details.component.css'
 })
+
 export class UpdateEmployeeDetailsComponent {
 
   employee: EmployeeModel = {
@@ -133,6 +134,12 @@ export class UpdateEmployeeDetailsComponent {
     }
   }
   
+  onUpdateEncoding(){
+    setTimeout(() => {
+      const encryptedId = EncryptDescrypt.encrypt(this.employee.userId.toString());
+      this.router.navigate(['/enrolment/home/', encryptedId]);
+    }, 1000);
+  }
 
   setImageFromCamera(e: string) {
     this.thumbnail = e
