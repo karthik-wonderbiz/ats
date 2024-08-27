@@ -347,6 +347,13 @@ export class SignUpComponent implements OnInit {
     }
   }
 
+  onDelete(){
+    this.errors.profilePic = 'Profile Photo is required!';
+      this.employee.profilePic = ''; // Clear the model value
+      this.thumbnail = '';
+      this.isCamOpen = false
+      this.isCaptured =false
+  }
 
   imageToByte(base64String: string): void {
     const imageData = { imageData: base64String };
@@ -372,24 +379,6 @@ export class SignUpComponent implements OnInit {
   //       });
   //   }
   // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   isCamOpen: boolean = false;
   isCaptured: boolean = false;

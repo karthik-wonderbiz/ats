@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { authGuard } from './guards/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 import { DetectComponent } from './components/detect/detect.component';
 import { EnrolComponent } from './components/enrol/enrol.component';
@@ -51,18 +50,28 @@ const routes: Routes = [
       { path: 'todays-attendance', component: EmployeeStatusDetailsComponent },
       { path: 'employees-today-working', component: EmployeeAttendanceRecordsComponent },
       { path: 'employees', component: AllEmployeesComponent },
-      { path: 'employee-log-records', component: EmployeeLogRecordsComponent },
+      { path: 'log-records', component: EmployeeLogRecordsComponent },
       { path: 'all-top-employees/:type', component: AllTopEmployeesComponent },
-      {path: 'page-access', component:PageAccessComponent}
+      { path: 'page-access', component: PageAccessComponent }
     ],
 
   },
 
   {
-    path: 'user',
-    canActivate: [authGuard],
-    loadChildren: () =>
-      import('./modules/user/user.module').then((m) => m.UserModule),
+    path: 'user', component: AdminDashboardComponent,
+    children: [
+      { path: '', redirectTo: '/user/log-records', pathMatch: 'full' },
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'employee-detail/:id', component: EmployeeDetailComponent },
+      { path: 'update-employee-details/:id', component: UpdateEmployeeDetailsComponent },
+      { path: 'employee-status-details', component: EmployeeStatusDetailsComponent },
+      { path: 'todays-attendance', component: EmployeeStatusDetailsComponent },
+      { path: 'employees-today-working', component: EmployeeAttendanceRecordsComponent },
+      { path: 'employees', component: AllEmployeesComponent },
+      { path: 'log-records', component: EmployeeLogRecordsComponent },
+      { path: 'all-top-employees/:type', component: AllTopEmployeesComponent },
+      { path: 'page-access', component: PageAccessComponent }
+    ]
   },
 
   { path: '**', component: NotFoundComponent },
