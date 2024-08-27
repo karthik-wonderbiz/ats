@@ -32,6 +32,7 @@ import { AllEmployeesComponent } from './components/all-employees/all-employees.
 import { AllTopEmployeesComponent } from './components/all-top-employees/all-top-employees.component';
 import { UpdateEmployeeDetailsComponent } from './components/update-employee-details/update-employee-details.component';
 import { LoaderComponent } from './components/loader/loader.component';
+import { PageAccessComponent } from './components/page-access/page-access.component';
 
 
 @NgModule({
@@ -60,7 +61,8 @@ import { LoaderComponent } from './components/loader/loader.component';
     AllEmployeesComponent,
     AllTopEmployeesComponent,
     UpdateEmployeeDetailsComponent,
-    LoaderComponent
+    LoaderComponent,
+    PageAccessComponent
   ],
   imports: [
     CommonModule,
