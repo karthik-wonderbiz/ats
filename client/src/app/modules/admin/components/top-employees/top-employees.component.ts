@@ -12,7 +12,8 @@ import Swal from 'sweetalert2';
   styleUrls: ['./top-employees.component.css']
 })
 export class TopEmployeesComponent implements OnInit {
-  @ViewChild('hoursTable') hoursTable: TableWithTabsComponent | undefined;
+  @ViewChild('hoursTable') hoursTableIn: TableWithTabsComponent | undefined;
+  @ViewChild('hoursTable') hoursTableOut: TableWithTabsComponent | undefined;
 
   top5EmployeeIn: any[] = [];
   top5EmployeeOut: any[] = [];
@@ -25,7 +26,8 @@ export class TopEmployeesComponent implements OnInit {
 
   tabs = ['Daily', 'Weekly', 'Monthly', 'Yearly', 'All-Time'];
   tabNames = ['Daily', 'Weekly', 'Monthly', 'Yearly', 'All Time'];
-  activeTab: string = 'Daily';
+  activeTabIn: string = 'Daily';
+  activeTabOut: string = 'Daily';
 
   isTabChanged: boolean = false;
 
@@ -38,45 +40,50 @@ export class TopEmployeesComponent implements OnInit {
   ngOnInit(): void {
     const startDate = '';
     const endDate = '';
-    this.loadEmployeeInData(this.activeTab);
-    this.loadEmployeeOutData(startDate, endDate, this.activeTab);
+    this.loadEmployeeInData(this.activeTabIn);
+    this.loadEmployeeOutData(this.activeTabOut);
     this.subscribeToItemUpdates();
   }
 
   
-  loadEmployeeInData(reportType: string): void {
+  loadEmployeeInData(reportTypeIn: string): void {
     this.isTabChanged = true;
-    this.attendanceLogService.getAllEmployeesInHours(reportType).subscribe((data) => {
+    this.attendanceLogService.getAllEmployeesInHours(reportTypeIn).subscribe((data) => {
       this.top5EmployeeIn = data.slice(0, 5);
       this.isTabChanged = false;
-      console.log(`Top 5 Employee Data in for ${reportType}:`, this.top5EmployeeIn);
+      console.log(`Top 5 Employee Data in for ${reportTypeIn}:`, this.top5EmployeeIn);
     });
   }
 
-  loadEmployeeOutData(startDate: string, endDate: string, reportType: string): void {
+  loadEmployeeOutData(reportTypeOut: string): void {
     this.isTabChanged = true;
-    this.attendanceLogService.getAllEmployeesOutHours().subscribe((data) => {
+    this.attendanceLogService.getAllEmployeesOutHours(reportTypeOut).subscribe((data) => {
       this.top5EmployeeOut = data.slice(0, 5);
       this.isTabChanged = false;
-      console.log(`Top 5 Employee out Data for ${reportType}:`, this.top5EmployeeOut);
+      console.log(`Top 5 Employee out Data for ${reportTypeOut}:`, this.top5EmployeeOut);
     });
   }
 
-  onTabChanged(reportType: string): void {
-    const startDate = ''; 
-    const endDate = '';
-    this.activeTab = reportType;
+  onTabChangedIn(reportTypeIn: string): void {
+    this.activeTabIn = reportTypeIn;
     this.isTabChanged = true;
-    this.loadEmployeeInData(reportType);
-    this.loadEmployeeOutData(startDate, endDate, reportType);
+    this.loadEmployeeInData(reportTypeIn);
+    // this.loadEmployeeOutData(reportType);
+  }
+
+  onTabChangedOut(reportTypeOut: string): void{
+    this.activeTabOut = reportTypeOut;
+    this.isTabChanged = true;
+    this.loadEmployeeOutData(reportTypeOut);
   }
 
   private subscribeToItemUpdates(): void {
     this.signalRService.itemUpdate$.subscribe(update => {
       if (update) {
-        const activeTab = this.hoursTable?.activeTab || 'Daily';
-        this.loadEmployeeInData(activeTab);
-        this.loadEmployeeOutData('', '', activeTab);
+        const activeTabIn = this.hoursTableIn?.activeTab || 'Daily';
+        const activeTabOut = this.hoursTableOut?.activeTab || 'Daily';
+        this.loadEmployeeInData(activeTabIn);
+        this.loadEmployeeOutData(activeTabOut);
       }
     });
   }
@@ -94,7 +101,7 @@ export class TopEmployeesComponent implements OnInit {
       'All-Time': `${filenamePrefix}-all-time`
     };
   
-    const filename = filenameMap[this.activeTab as keyof typeof filenameMap] || filenamePrefix;
+    const filename = filenameMap[this.activeTabIn as keyof typeof filenameMap] || filenamePrefix;
   
     const dataToExport = data.map(({ fullName, totalHours }) => ({
       'Employee Name': fullName,

@@ -35,8 +35,8 @@
             </div>
         </div>
         <hr class="my-2 border-gray-400 dark:border-gray-700">
-        <app-table-with-tabs #hoursTable [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeIn" [columns]="columns"
-            (tabChanged)="onTabChanged($event)" class="w-full"
+        <app-table-with-tabs #hoursTableIn [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeIn" [columns]="columns"
+            (tabChanged)="onTabChangedIn($event)" class="w-full"
             [ngClass]="{'hidden':isTabChanged}"></app-table-with-tabs>
         <div class="flex justify-center" *ngIf="isTabChanged">
             <app-loader></app-loader>
@@ -79,8 +79,8 @@
             </div>
         </div>
         <hr class="my-2 border-gray-400 dark:border-gray-700">
-        <app-table-with-tabs #hoursTable [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeOut"
-            [columns]="columns" (tabChanged)="onTabChanged($event)" class="w-full"
+        <app-table-with-tabs #hoursTableOut [tabs]="tabs" [tabNames]="tabNames" [data]="top5EmployeeOut"
+            [columns]="columns" (tabChanged)="onTabChangedOut($event)" class="w-full"
             [ngClass]="{'hidden':isTabChanged}"></app-table-with-tabs>
         <div class="flex justify-center" *ngIf="isTabChanged">
             <app-loader></app-loader>
