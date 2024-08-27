@@ -90,7 +90,6 @@ export class AttendanceLogService {
   }
 
   getAllEmployeesInHours(reportType: string): Observable<AttendanceLogModel[]> {
-    console.log("in hours");
     const attUrl = `${this.urlMain}/total-hours/in?reportType=${reportType}`;
     return this.http.get<AttendanceLogModel[]>(attUrl).pipe(
       map(employees => 
@@ -107,8 +106,23 @@ export class AttendanceLogService {
   }
 
   getAllEmployeesOutHours(reportType: string): Observable<AttendanceLogModel[]> {
-    console.log("out hours");
     const attUrl = `${this.urlMain}/total-hours/out?reportType=${reportType}`;
+    return this.http.get<AttendanceLogModel[]>(attUrl).pipe(
+      map(employees => 
+        employees.map(employee => ({
+          ...employee,
+          fullName: ConcatName.concatName(employee.firstName, employee.lastName)
+        }))
+      ),
+      catchError(error => {
+        console.error('Error fetching all employee hours', error);
+        return of([]);
+      })
+    );
+  }
+
+  getMisEntriesByUserId(userdId: string, date: string): Observable<AttendanceLogModel[]> {
+    const attUrl = `${this.urlMain}/misentry?userId=${userdId}&date=${date}`;
     return this.http.get<AttendanceLogModel[]>(attUrl).pipe(
       map(employees => 
         employees.map(employee => ({
