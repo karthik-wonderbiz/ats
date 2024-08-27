@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-top-employees',
   templateUrl: './top-employees.component.html',
-  styleUrls: ['./top-employees.component.css']
+  styleUrls: ['./top-employees.component.css'],
 })
 export class TopEmployeesComponent implements OnInit {
   @ViewChild('hoursTable') hoursTableMaxIn: TableWithTabsComponent | undefined;
@@ -21,12 +21,12 @@ export class TopEmployeesComponent implements OnInit {
   top5EmployeeMaxOut: any[] = [];
   top5EmployeeMinIn: any[] = [];
   top5EmployeeMinOut: any[] = [];
-  
+
   // allEmployeesInData: any[] = [];
   // allEmployeesOutData: any[] = [];
   columns = [
     { key: 'fullName', label: 'Employee Name' },
-    { key: 'totalHours', label: 'Total Hours' }
+    { key: 'totalHours', label: 'Total Hours' },
   ];
 
   tabs = ['Daily', 'Weekly', 'Monthly', 'Yearly', 'All-Time'];
@@ -53,65 +53,84 @@ export class TopEmployeesComponent implements OnInit {
     this.subscribeToItemUpdates();
   }
 
-  
-  loadEmployeeMaxInData(reportTypeIn: string): void {
+  loadEmployeeMaxInData(reportTypeMaxIn: string): void {
     this.isTabChanged = true;
-    this.attendanceLogService.getAllEmployeesInHours(reportTypeIn).subscribe((data) => {
-      this.top5EmployeeMaxIn = data.slice(0, 5);
-      this.isTabChanged = false;
-      console.log(`Top 5 Employee Data max in for ${reportTypeIn}:`, this.top5EmployeeMaxIn);
-    });
+    this.attendanceLogService
+      .getAllEmployeesInHours(reportTypeMaxIn)
+      .subscribe((data) => {
+        this.top5EmployeeMaxIn = data.slice(0, 5);
+        this.isTabChanged = false;
+        console.log(
+          `Top 5 Employee Data max in for ${reportTypeMaxIn}:`,
+          this.top5EmployeeMaxIn
+        );
+      });
   }
-  onTabChangedMaxIn(reportTypeIn: string): void {
-    this.activeTabMaxIn = reportTypeIn;
+  onTabChangedMaxIn(reportTypeMaxIn: string): void {
+    this.activeTabMaxIn = reportTypeMaxIn;
     this.isTabChanged = true;
-    this.loadEmployeeMaxInData(reportTypeIn);
-  }
-
-  loadEmployeeMinInData(reportTypeIn: string): void {
-    this.isTabChanged = true;
-    this.attendanceLogService.getAllEmployeesInHours(reportTypeIn).subscribe((data) => {
-      this.top5EmployeeMinIn = data.reverse().slice(0, 5);
-      this.isTabChanged = false;
-      console.log(`Top 5 Employee Data min in for ${reportTypeIn}:`, this.top5EmployeeMinIn);
-    });
-  }
-  onTabChangedMinIn(reportTypeIn: string): void {
-    this.activeTabMaxIn = reportTypeIn;
-    this.isTabChanged = true;
-    this.loadEmployeeMinInData(reportTypeIn);
+    this.loadEmployeeMaxInData(reportTypeMaxIn);
   }
 
-  loadEmployeeMaxOutData(reportTypeOut: string): void {
+  loadEmployeeMinInData(reportTypeMinIn: string): void {
     this.isTabChanged = true;
-    this.attendanceLogService.getAllEmployeesOutHours(reportTypeOut).subscribe((data) => {
-      this.top5EmployeeMaxOut = data.slice(0, 5);
-      this.isTabChanged = false;
-      console.log(`Top 5 Employee Data max out for ${reportTypeOut}:`, this.top5EmployeeMaxOut);
-    });
+    this.attendanceLogService
+      .getAllEmployeesInHours(reportTypeMinIn)
+      .subscribe((data) => {
+        this.top5EmployeeMinIn = data.slice(0, 5);
+        this.isTabChanged = false;
+        console.log(
+          `Top 5 Employee Data min in for ${reportTypeMinIn}:`,
+          this.top5EmployeeMinIn
+        );
+      });
   }
-  onTabChangedMaxOut(reportTypeOut: string): void{
-    this.activeTabMaxOut = reportTypeOut;
+  onTabChangedMinIn(reportTypeMinIn: string): void {
+    this.activeTabMaxIn = reportTypeMinIn;
     this.isTabChanged = true;
-    this.loadEmployeeMaxOutData(reportTypeOut);
+    this.loadEmployeeMinInData(reportTypeMinIn);
   }
 
-  loadEmployeeMinOutData(reportTypeOut: string): void {
+  loadEmployeeMaxOutData(reportTypeMaxOut: string): void {
     this.isTabChanged = true;
-    this.attendanceLogService.getAllEmployeesOutHours(reportTypeOut).subscribe((data) => {
-      this.top5EmployeeMinOut = data.reverse().slice(0, 5);
-      this.isTabChanged = false;
-      console.log(`Top 5 Employee Data min out for ${reportTypeOut}:`, this.top5EmployeeMinOut);
-    });
+    this.attendanceLogService
+      .getAllEmployeesOutHours(reportTypeMaxOut)
+      .subscribe((data) => {
+        this.top5EmployeeMaxOut = data.slice(0, 5);
+        this.isTabChanged = false;
+        console.log(
+          `Top 5 Employee Data max out for ${reportTypeMaxOut}:`,
+          this.top5EmployeeMaxOut
+        );
+      });
   }
-  onTabChangedMinOut(reportTypeOut: string): void{
-    this.activeTabMaxOut = reportTypeOut;
+  onTabChangedMaxOut(reportTypeMaxOut: string): void {
+    this.activeTabMaxOut = reportTypeMaxOut;
     this.isTabChanged = true;
-    this.loadEmployeeMinOutData(reportTypeOut);
+    this.loadEmployeeMaxOutData(reportTypeMaxOut);
+  }
+
+  loadEmployeeMinOutData(reportTypeMinOut: string): void {
+    this.isTabChanged = true;
+    this.attendanceLogService
+      .getAllEmployeesOutHours(reportTypeMinOut)
+      .subscribe((data) => {
+        this.top5EmployeeMinOut = data.reverse().slice(0, 5);
+        this.isTabChanged = false;
+        console.log(
+          `Top 5 Employee Data min out for ${reportTypeMinOut}:`,
+          this.top5EmployeeMinOut
+        );
+      });
+  }
+  onTabChangedMinOut(reportTypeMinOut: string): void {
+    this.activeTabMaxOut = reportTypeMinOut;
+    this.isTabChanged = true;
+    this.loadEmployeeMinOutData(reportTypeMinOut);
   }
 
   private subscribeToItemUpdates(): void {
-    this.signalRService.itemUpdate$.subscribe(update => {
+    this.signalRService.itemUpdate$.subscribe((update) => {
       if (update) {
         const activeTabMaxIn = this.hoursTableMaxIn?.activeTab || 'Daily';
         const activeTabMaxOut = this.hoursTableMaxOut?.activeTab || 'Daily';
@@ -124,27 +143,53 @@ export class TopEmployeesComponent implements OnInit {
       }
     });
   }
-  
+
   viewAll(type: string): void {
     this.router.navigate(['/admin/all-top-employees', type]);
   }
 
   exportToCSV(data: any[], filenamePrefix: string): void {
     const filenameMap = {
-      'Daily': `${filenamePrefix}-daily`,
-      'Weekly': `${filenamePrefix}-weekly`,
-      'Monthly': `${filenamePrefix}-monthly`,
-      'Yearly': `${filenamePrefix}-yearly`,
-      'All-Time': `${filenamePrefix}-all-time`
+      Daily: `${filenamePrefix}-daily`,
+      Weekly: `${filenamePrefix}-weekly`,
+      Monthly: `${filenamePrefix}-monthly`,
+      Yearly: `${filenamePrefix}-yearly`,
+      'All-Time': `${filenamePrefix}-all-time`,
     };
-  
-    const filename = filenameMap[this.activeTabMaxIn as keyof typeof filenameMap] || filenamePrefix;
-  
+
+    let filename = filenamePrefix;
+
+    switch (filenamePrefix) {
+      case 'Top 5 Employees with Max In Hours':
+        filename =
+          filenameMap[this.activeTabMaxIn as keyof typeof filenameMap] ||
+          filenamePrefix;
+        break;
+      case 'Top 5 Employees with Max Out Hours':
+        filename =
+          filenameMap[this.activeTabMaxOut as keyof typeof filenameMap] ||
+          filenamePrefix;
+        break;
+      case 'Top 5 Employees with Min In Hours':
+        filename =
+          filenameMap[this.activeTabMinIn as keyof typeof filenameMap] ||
+          filenamePrefix;
+        break;
+      case 'Top 5 Employees with Min Out Hours':
+        filename =
+          filenameMap[this.activeTabMinOut as keyof typeof filenameMap] ||
+          filenamePrefix;
+        break;
+      default:
+        filename = filenamePrefix;
+        break;
+    }
+
     const dataToExport = data.map(({ fullName, totalHours }) => ({
       'Employee Name': fullName,
-      'Total Hours': totalHours
+      'Total Hours': totalHours,
     }));
-  
+
     new ngxCsv(dataToExport, filename, {
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -155,15 +200,14 @@ export class TopEmployeesComponent implements OnInit {
       useBom: true,
       headers: ['Employee Name', 'Total Hours'],
       noDownload: false,
-      removeEmptyValues: true
+      removeEmptyValues: true,
     });
-  
-    Swal.fire({
-      icon: 'success',
-      title: 'Export Successful',
-      text: `Data has been successfully exported as ${filename}.csv`,
-      timer: 3000
-    });
+
+    // Swal.fire({
+    //     icon: 'success',
+    //     title: 'Export Successful',
+    //     text: `Data has been successfully exported as ${filename}.csv`,
+    //     timer: 3000
+    // });
   }
-  
 }
