@@ -57,7 +57,7 @@ export class AllTopEmployeesComponent implements OnInit {
 
   loadOutData(reportType: string): void {
     this.isTabChanged = true;
-    this.attendanceLogService.getAllEmployeesOutHours().subscribe((data) => {
+    this.attendanceLogService.getAllEmployeesOutHours(reportType).subscribe((data) => {
       this.allEmployeeOutData = data;
       this.isTabChanged = false;
       console.log(

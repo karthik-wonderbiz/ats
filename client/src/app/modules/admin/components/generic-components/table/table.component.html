@@ -141,12 +141,12 @@
 
 <div class="flex overflow-auto" [ngClass]="columns.length >= 2 ? 'max-h-[60vh]' : ''">
   <table
-    class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border border-gray-300 dark:border-gray-600 animate-slideDown">
+    class="w-full text-xs sm:text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 border border-gray-300 dark:border-gray-600 animate-slideDown">
     <thead
       class="text-xs sticky -top-[0.5px] sm:-top[1px] text-gray-700 uppercase bg-blue-100 dark:bg-blue-900 dark:text-gray-400 border-b border-blue-200 dark:border-blue-700">
       <tr>
         <th *ngFor="let column of columns" scope="col"
-          class="px-6 py-2 bg-blue-200 dark:bg-blue-800 text-black dark:text-blue-200 border-b border-gray-300 dark:border-gray-600">
+          class="px-3 py-1 sm:px-6 sm:py-2 bg-blue-200 dark:bg-blue-800 text-black dark:text-blue-200 border-b border-gray-300 dark:border-gray-600">
           {{ column.label }}
         </th>
       </tr>
@@ -159,12 +159,11 @@
       </tr>
 
       <tr *ngFor="let row of data"
-        class="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-blue-600 cursor-pointer transition-colors duration-200 ease-in-out"
-        (click)="onRowClick(row)">
-        <td *ngFor="let column of columns" class="px-6 py-1 border-b border-gray-300 dark:border-gray-600">
+        class="bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-blue-600 cursor-pointer transition-colors duration-200 ease-in-out">
+        <td *ngFor="let column of columns" class="px-3 py-1 sm:px-6 sm:py-2 border-b border-gray-300 dark:border-gray-600">
           <ng-container *ngIf="isObject(row[column.key]); else simpleContent">
             <div *ngIf="column.subColumns" class="space-y-1">
-              <div *ngFor="let subColumn of column.subColumns" class="text-sm text-gray-600 dark:text-gray-300">
+              <div *ngFor="let subColumn of column.subColumns" class="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                 {{ row[column.key][subColumn.key] }}
               </div>
             </div>
@@ -172,44 +171,44 @@
           <ng-template #simpleContent>
             <ng-container *ngIf="column.key === 'fullName'; else defaultContent">
               <div class="flex items-center">
-                <img class="w-12 h-12 rounded-full border-3" [src]="'data:image/jpeg;base64,' + row.profilePic"
+                <img class="w-8 h-8 sm:w-12 sm:h-12 rounded-full border-2 sm:border-3" [src]="'data:image/jpeg;base64,' + row.profilePic"
                   alt="Employee image" [ngClass]="{
                   'border-green-500 dark:border-green-700': row.status === 'Present',
                   'border-red-500 dark:border-red-700': row.status === 'Absent',
                   'border-yellow-400 dark:border-yellow-700': !row.status
                 }">
-                <div class="ps-3">
-                  <div class="font-semibold text-base text-gray-800 dark:text-gray-200">{{ row[column.key] }}</div>
+                <div class="ps-2 sm:ps-3">
+                  <div class="font-semibold text-xs sm:text-base text-gray-800 dark:text-gray-200">{{ row[column.key] }}</div>
                 </div>
               </div>
             </ng-container>
             <ng-template #defaultContent>
               <ng-container *ngIf="column.key === 'status'">
                 <div class="flex items-center">
-                  <div class="h-2.5 w-2.5 rounded-full"
-                    [ngClass]="row[column.key] === 'Present' ? 'bg-green-500 me-2' : 'bg-red-500 me-2'"></div>
-                  <span [ngClass]="row[column.key] === 'Present' ? 'text-green-500' : 'text-red-500'">{{ row[column.key]
+                  <div class="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full"
+                    [ngClass]="row[column.key] === 'Present' ? 'bg-green-500 me-1 sm:me-2' : 'bg-red-500 me-1 sm:me-2'"></div>
+                  <span class="text-xs sm:text-sm" [ngClass]="row[column.key] === 'Present' ? 'text-green-500' : 'text-red-500'">{{ row[column.key]
                     }}</span>
                 </div>
               </ng-container>
               <ng-container *ngIf="column.key === 'checkType'">
                 <div class="flex items-center">
-                  <div class="h-2.5 w-2.5 rounded-full"
-                    [ngClass]="row[column.key] === 'IN' ? 'bg-green-500 me-2' : 'bg-red-500 me-2'"></div>
-                  <span [ngClass]="row[column.key] === 'IN' ? 'text-green-500' : 'text-red-500'">{{ row[column.key]
+                  <div class="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full"
+                    [ngClass]="row[column.key] === 'IN' ? 'bg-green-500 me-1 sm:me-2' : 'bg-red-500 me-1 sm:me-2'"></div>
+                  <span class="text-xs sm:text-sm" [ngClass]="row[column.key] === 'IN' ? 'text-green-500' : 'text-red-500'">{{ row[column.key]
                     }}</span>
                 </div>
               </ng-container>
               <ng-container *ngIf="column.key !== 'status' && column.key !== 'checkType' && column.key !== 'action'">
-                <span class="text-gray-700 dark:text-gray-300">{{ row[column.key] }}</span>
+                <span class="text-xs sm:text-sm text-gray-700 dark:text-gray-300">{{ row[column.key] }}</span>
               </ng-container>
-        <td *ngIf="column.key === 'action'" class="py-2 text-left flex flex-col sm:flex-row sm:items-center">
+        <td *ngIf="column.key === 'action'" class="py-1 sm:py-2 text-left flex flex-col sm:flex-row sm:items-center">
           <button (click)="onEditClick(row); $event.stopPropagation()"
-            class="bg-blue-300 text-white font-semibold py-1 px-3 rounded hover:bg-blue-500 transition-colors duration-200 ease-in-out mb-2 sm:mb-0 sm:mr-2">
+            class="bg-blue-300 text-white font-semibold text-xs sm:text-sm py-1 px-2 sm:px-3 rounded hover:bg-blue-500 transition-colors duration-200 ease-in-out mb-1 sm:mb-0 sm:mr-2">
             Edit
           </button>
           <button (click)="onDeleteClick(row); $event.stopPropagation()"
-            class="bg-red-300 text-white font-semibold py-1 px-3 rounded hover:bg-red-500 transition-colors duration-200 ease-in-out mb-2 sm:mb-0 sm:mr-2">
+            class="bg-red-300 text-white font-semibold text-xs sm:text-sm py-1 px-2 sm:px-3 rounded hover:bg-red-500 transition-colors duration-200 ease-in-out">
             Delete
           </button>
         </td>
@@ -220,3 +219,4 @@
     </tbody>
   </table>
 </div>
+
