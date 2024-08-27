@@ -31,6 +31,30 @@ import { ToastComponent } from './components/toast/toast.component';
 import { WebcamComponent } from './components/webcam/webcam.component';
 import { ProfileListComponent } from './components/profile-list/profile-list.component';
 import { EnrolmentComponent } from './components/enrolment/enrolment.component';
+import { AboutComponent } from './modules/admin/components/about/about.component';
+import { AllEmployeesComponent } from './modules/admin/components/all-employees/all-employees.component';
+import { AllTopEmployeesComponent } from './modules/admin/components/all-top-employees/all-top-employees.component';
+import { ContactComponent } from './modules/admin/components/contact/contact.component';
+import { DashboardComponent } from './modules/admin/components/dashboard/dashboard.component';
+import { EmployeeAttendanceRecordsComponent } from './modules/admin/components/employee-attendance-records/employee-attendance-records.component';
+import { EmployeeLogRecordsComponent } from './modules/admin/components/employee-log-records/employee-log-records.component';
+import { EmployeeStatusDetailsComponent } from './modules/admin/components/employee-status-details/employee-status-details.component';
+import { EmployeeStatusComponent } from './modules/admin/components/employee-status/employee-status.component';
+import { BarComponent } from './modules/admin/components/generic-components/bar/bar.component';
+import { CalendarComponent } from './modules/admin/components/generic-components/calendar/calendar.component';
+import { EmployeeDetailComponent } from './modules/admin/components/generic-components/employee-detail/employee-detail.component';
+import { LineComponent } from './modules/admin/components/generic-components/line/line.component';
+import { PieComponent } from './modules/admin/components/generic-components/pie/pie.component';
+import { TableWithTabsComponent } from './modules/admin/components/generic-components/table-with-tabs/table-with-tabs.component';
+import { TableComponent } from './modules/admin/components/generic-components/table/table.component';
+import { LoaderComponent } from './modules/admin/components/loader/loader.component';
+import { TopEmployeesComponent } from './modules/admin/components/top-employees/top-employees.component';
+import { UpdateEmployeeDetailsComponent } from './modules/admin/components/update-employee-details/update-employee-details.component';
+import { FooterComponent } from './shared/components/footer/footer.component';
+import { NavbarComponent } from './shared/components/navbar/navbar.component';
+import { SectionComponent } from './shared/components/section/section.component';
+import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
+import { AdminDashboardComponent } from './modules/admin/components/admin-dashboard/admin-dashboard.component';
 
 
 @NgModule({
@@ -49,6 +73,31 @@ import { EnrolmentComponent } from './components/enrolment/enrolment.component';
     WebcamComponent,
     ProfileListComponent,
     EnrolmentComponent,
+    FooterComponent,
+    AboutComponent,
+    ContactComponent,
+    PieComponent,
+    BarComponent,
+    LineComponent,
+    TableComponent,
+    CalendarComponent,
+    DashboardComponent,
+    EmployeeStatusComponent,
+    EmployeeStatusDetailsComponent,
+    NavbarComponent,
+    SidebarComponent,
+    FooterComponent,
+    SectionComponent,
+    TopEmployeesComponent,
+    TableWithTabsComponent,
+    EmployeeDetailComponent,
+    EmployeeAttendanceRecordsComponent,
+    EmployeeLogRecordsComponent,
+    AllEmployeesComponent,
+    AllTopEmployeesComponent,
+    UpdateEmployeeDetailsComponent,
+    LoaderComponent,
+    AdminDashboardComponent
   ],
   imports: [
     BrowserModule,

@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
   templateUrl: './update-employee-details.component.html',
   styleUrl: './update-employee-details.component.css'
 })
+
 export class UpdateEmployeeDetailsComponent {
 
   employee: EmployeeModel = {
