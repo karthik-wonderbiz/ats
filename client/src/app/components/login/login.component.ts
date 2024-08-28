@@ -55,7 +55,9 @@ export class LoginComponent {
   onLogin(loginForm: NgForm): void {
     const loginData: LoginModel = {
       email: this.loginData.email,
-      password: this.loginData.password
+      password: this.loginData.password,
+      roleId: 0,
+      pageList: []
     }
     console.log(loginData)
     if (this.validateEmail() && this.validatePassword()) {

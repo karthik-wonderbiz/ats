@@ -20,6 +20,7 @@ import { AllTopEmployeesComponent } from './modules/admin/components/all-top-emp
 import { EmployeeLogRecordsComponent } from './modules/admin/components/employee-log-records/employee-log-records.component';
 import { PageAccessComponent } from './modules/admin/components/page-access/page-access.component';
 import { ChangePasswordComponent } from './modules/admin/components/change-password/change-password.component';
+import { UnknownProfilesComponent } from './components/unknown-profiles/unknown-profiles.component';
 
 const routes: Routes = [
 
@@ -55,6 +56,7 @@ const routes: Routes = [
       { path: 'all-top-employees/:type', component: AllTopEmployeesComponent },
       { path: 'page-access', component: PageAccessComponent },
       { path: 'change-password', component: ChangePasswordComponent },
+      { path: 'unknown-profiles', component: UnknownProfilesComponent },
     ],
 
   },
