@@ -73,29 +73,49 @@
                                         autoplay (click)="capture()" [ngClass]="{'hidden':isCaptured}"></video>
                                 </div>
                             </div>
-                            <button *ngIf="!isCamOpen && !thumbnail" type="button" (click)="openCamera()"
-                                class="btn btn-xs mt-2 btn-primary">
-                                Camera
-                            </button>
-                            <button *ngIf="isCamOpen && !thumbnail" type="button" (click)="capture()"
-                                class="btn btn-xs mt-2 btn-success">
-                                Capture
-                            </button>
-                            <button *ngIf="thumbnail" type="button" (click)="openCamera()"
-                                class="btn btn-xs mt-2 btn-primary">
-                                Retake
-                            </button>
+                            <div class="flex justify-around bottom-0">
+                                <button *ngIf="!isCamOpen && !thumbnail" type="button" (click)="openCamera()"
+                                    class="btn btn-xs mt-2 btn-primary w-5/12">
+                                    Camera
+                                </button>
+
+                                <button *ngIf="!isCamOpen && !thumbnail" type="button" (click)="onDelete()"
+                                    class="btn btn-xs mt-2 btn-error w-5/12">
+                                    Delete
+                                </button>
+                            </div>
+                            <div class="flex justify-around bottom-0">
+                                <button *ngIf="isCamOpen && !thumbnail" type="button" (click)="capture()"
+                                    class="btn btn-xs mt-2 btn-success w-5/12">
+                                    Capture
+                                </button>
+                                <button *ngIf="isCamOpen && !thumbnail" type="button" (click)="stopWebcam()"
+                                    class="btn btn-xs mt-2 btn-error w-5/12">
+                                    Close
+                                </button>
+                            </div>
+                            <div class="flex justify-around bottom-0">
+                                <button *ngIf="thumbnail" type="button" (click)="openCamera()"
+                                    class="btn btn-xs mt-2 btn-primary w-5/12">
+                                    Retake
+                                </button>
+                                <button *ngIf="thumbnail" type="button" (click)="onDelete()"
+                                    class="btn btn-xs mt-2 btn-error w-5/12">
+                                    Delete
+                                </button>
+                            </div>
                         </div>
 
                         <div class="row-span-1">
 
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                 for="profilePic">Upload Photo</label>
-                            <input (change)="onProfilePicInput($event)" type="file" name="profilePic" id="profilePic"
+                            <label class="flex btn btn-xs btn-primary items-center" for="profilePic">Browse</label>
+                            <input (click)="onBrowse()" (change)="onProfilePicInput($event)" type="file" name="profilePic" id="profilePic"
                                 [(ngModel)]="employee.profilePic" #profilePic="ngModel" required autocomplete="off"
                                 accept=".png,.jpg,.jpeg"
                                 [ngClass]="{'file-input-error': (this.isInvalid && !this.validateProfilePic()), 'file-input-primary':  !(this.isInvalid && !this.validateProfilePic()) }"
-                                class="file-input-sm w-full text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
+                                class="hidden file-input-sm w-full text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400">
                             <p class="mt-1 text-xs text-gray-500 dark:text-gray-300">(JPG, JPEG, or PNG)</p>
                             <div class="sm:h-0 h-8">
                                 <div *ngIf="(!this.validateProfilePic() && (profilePic.dirty || profilePic.touched)) || (this.isInvalid && !this.validateProfilePic() )"

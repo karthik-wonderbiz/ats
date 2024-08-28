@@ -124,10 +124,10 @@ export class UpdateEmployeeDetailsComponent {
               text: 'The update process has completed.',
               timer: 1000
             });
-            setTimeout(() => {
-              this.router.navigate(['/admin/employees']);
+            // setTimeout(() => {
+            //   this.router.navigate(['/admin/employees']);
               
-            }, 1000);
+            // }, 1000);
           }
         });
       }
@@ -303,7 +303,6 @@ export class UpdateEmployeeDetailsComponent {
 
   openCamera() {
     console.log("call")
-
     this.thumbnail = ''
     this.isCaptured = false
     this.initializeWebcam()
@@ -374,4 +373,16 @@ export class UpdateEmployeeDetailsComponent {
       this.isCamOpen = false
     }
   }
+  onDelete(){
+    this.errors.profilePic = 'Profile Photo is required!';
+      this.employee.profilePic = ''; // Clear the model value
+      this.thumbnail = '';
+      this.isCamOpen = false
+      this.isCaptured =false
+  }
+
+  onBrowse(){
+    this.stopWebcam()
+  }
+
 }

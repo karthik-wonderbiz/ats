@@ -189,7 +189,6 @@ export class SignUpComponent implements OnInit {
     return namePattern.test(this.employee.firstName);
   }
 
-
   validateLastName(): boolean {
     const namePattern = /^[a-zA-Z ]{1,}$/;
     this.errors.lastName = 'Last name must be min 1 char!';
@@ -237,7 +236,6 @@ export class SignUpComponent implements OnInit {
     return true;
   }
 
-
   validateConfirmPassword(): boolean {
     return this.employee.password === this.confirmPass.confirmPassword;
   }
@@ -261,8 +259,6 @@ export class SignUpComponent implements OnInit {
   }
 
   thumbnail: SafeUrl | undefined;
-  // imageId: number | undefined;
-
 
   convertImage = () => {
     const img = new Image();
@@ -389,7 +385,6 @@ export class SignUpComponent implements OnInit {
 
   openCamera() {
     console.log("call")
-
     this.thumbnail = ''
     this.isCaptured = false
     this.initializeWebcam()
@@ -401,7 +396,6 @@ export class SignUpComponent implements OnInit {
   ngOnDestroy(): void {
     this.stopWebcam();
   }
-
 
   async capture(): Promise<void> {
     const video: HTMLVideoElement = this.videoElement.nativeElement;
@@ -431,8 +425,6 @@ export class SignUpComponent implements OnInit {
     }
   }
 
-
-
   initializeWebcam(): void {
     const video: HTMLVideoElement | null = document.getElementById(
       'video'
@@ -455,6 +447,7 @@ export class SignUpComponent implements OnInit {
       console.error('getUserMedia not supported in this browser.');
     }
   }
+
   stopWebcam(): void {
     if (this.stream) {
       const tracks = this.stream.getTracks();
@@ -462,29 +455,9 @@ export class SignUpComponent implements OnInit {
       this.isCamOpen = false
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
+  onBrowse(){
+    this.stopWebcam()
+  }
 
 }

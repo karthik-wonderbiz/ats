@@ -85,6 +85,10 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  onChangePassword(){
+    this.router.navigate(['/admin/change-password']);
+  }
+
   onToggle(): void {
     this.toggle.emit();
   }
