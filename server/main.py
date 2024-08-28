@@ -16,6 +16,10 @@ from pydantic import BaseModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 import base64
+from signalrcore.hub_connection_builder import HubConnectionBuilder
+import logging
+from contextlib import asynccontextmanager
+
 
 app = FastAPI()
 
@@ -29,6 +33,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Global variables to hold known face data
+known_face_id, known_face_names, known_face_encodings = [], [], []
 
 # Directory to save unknown faces
 unknown_faces_dir = "unknown_faces"
@@ -40,6 +46,7 @@ recent_unknown_faces = []
 recent_detection_interval = 30  # seconds
 
 last_attendance_time = {}
+
 # Directory for storing images
 IMAGES_PATH = 'images/'
 
@@ -101,7 +108,7 @@ def detect_known_faces(known_face_id, known_face_names, known_face_encodings, fr
             print("multiple")
             face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
             best_match_index = np.argmin(face_distances)
-            print(known_face_id,known_face_names)
+            print(known_face_id[-1],known_face_names[-1])
             print(face_distances[best_match_index])
             if matches[best_match_index] and face_distances[best_match_index] < 0.32:
                 name = known_face_names[best_match_index]
@@ -181,9 +188,6 @@ async def save_encoding(employee_id: str = Form(...)):
 
     if encodings:
         avg_encoding = np.mean(encodings, axis=0)
-        # cursor = conn.cursor()
-        # cursor.execute('UPDATE EmployeeDetails SET FaceEncoding = ? WHERE UserId = ?', (pickle.dumps(avg_encoding), employee_id))
-        # conn.commit()
         serialized_encoding = pickle.dumps(avg_encoding)
         base64_encoding = base64.b64encode(serialized_encoding).decode('utf-8')
         payload = {
@@ -203,15 +207,80 @@ async def save_encoding(employee_id: str = Form(...)):
         return {"status": "success", "message": "Face encoding saved!"}
     else:
         raise HTTPException(status_code=400, detail="No faces detected in the images!")
+    
 
-# Mark attendance endpoint
+
+@app.on_event("startup")
+async def startup_event():
+    global known_face_id, known_face_names, known_face_encodings
+    # Load the initial encodings from the database
+    known_face_id, known_face_names, known_face_encodings = load_encodings_from_db()
+    # Connect to SignalR hub and listen for updates
+    hub_connection = HubConnectionBuilder().with_url("http://192.168.29.46:5000/atsHub").configure_logging(logging.CRITICAL)\
+    .with_automatic_reconnect({
+        "type": "raw",
+        "keep_alive_interval": 10,
+        "reconnect_interval": 5,
+        "max_attempts": 5
+    }).build()
+    
+    def on_encodings_updated(data):
+        try:
+            user_id = data[1]
+            name = data[2]
+            encoding = pickle.loads(base64.b64decode(data[-1]))  # Ensure this matches the expected format
+
+            print(f"User ID: {user_id}")
+            print(f"Name: {name}")
+            print(f"Encoding: {encoding}")
+
+            if user_id in known_face_id:
+                index = known_face_id.index(user_id)
+                known_face_names[index] = name
+                known_face_encodings[index] = encoding
+                print(f"Updated encoding for user {user_id}.")
+            else:
+                known_face_id.append(user_id)
+                known_face_names.append(name)
+                known_face_encodings.append(encoding)
+                print(f"Added new encoding for user {user_id}.")
+        except Exception as e:
+            print(f"Error in processing encodings: {e}")
+
+
+    def on_delete_user_update(data):
+        global known_face_id, known_face_names, known_face_encodings
+        user_id = data[0]
+        print(f'user_id: {user_id}')
+        # Find the index of the user_id to delete
+        if user_id in known_face_id:
+            index = known_face_id.index(user_id)
+
+            # Remove the user's data from all lists
+            known_face_id.pop(index)
+            known_face_names.pop(index)
+            known_face_encodings.pop(index)
+            print(f"User {user_id} removed successfully.")
+        else:
+            print(f"User {user_id} not found.")
+
+
+
+    hub_connection.on("ReceiveUpdateEncoding", on_encodings_updated)
+    hub_connection.on("DeleteUserUpdate", on_delete_user_update)
+
+    hub_connection.on_open(lambda: print("connection opened and handshake received ready to send messages"))
+    hub_connection.on_close(lambda: print("connection closed"))
+    hub_connection.start()
+
+
 @app.post("/mark-attendance/IN")
 async def mark_attendance(file: UploadFile = File(...)):
     contents = await file.read()
     nparr = np.frombuffer(contents, np.uint8)
     frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    known_face_id, known_face_names, known_face_encodings = load_encodings_from_db()
+    # known_face_id, known_face_names, known_face_encodings = load_encodings_from_db()
     face_locations, face_names, attendance = detect_known_faces(known_face_id, known_face_names, known_face_encodings, frame,"IN")
 
     # Draw the boundary box and label for each detected face
@@ -224,6 +293,7 @@ async def mark_attendance(file: UploadFile = File(...)):
     _, img_encoded = cv2.imencode('.jpg', frame)
     img_bytes = io.BytesIO(img_encoded.tobytes())
     img_base64 = base64.b64encode(img_bytes.getvalue()).decode('utf-8')
+    print(known_face_encodings[-1])
 
     # Create the response model
     response_data = FaceDetectionResponse(
@@ -239,7 +309,7 @@ async def mark_attendance(file: UploadFile = File(...)):
     nparr = np.frombuffer(contents, np.uint8)
     frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    known_face_id, known_face_names, known_face_encodings = load_encodings_from_db()
+    # known_face_id, known_face_names, known_face_encodings = load_encodings_from_db()
     face_locations, face_names, attendance = detect_known_faces(known_face_id, known_face_names, known_face_encodings, frame,"OUT")
 
     # Draw the boundary box and label for each detected face
@@ -260,8 +330,3 @@ async def mark_attendance(file: UploadFile = File(...)):
     )
 
     return JSONResponse(content=response_data.model_dump())
-
-
-@app.get("/camera-type")
-def get_camera_type():
-    return cameraType
