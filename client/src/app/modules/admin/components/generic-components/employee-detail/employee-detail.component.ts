@@ -6,6 +6,7 @@ import { EncryptDescrypt } from '../../../../../utils/genericFunction';
 import { EmployeeService } from '../../../../../services/employee/employee.service';
 import { UserService } from '../../../../../services/user/user.service';
 import { SignalRService } from '../../../../../services/signalR/signal-r.service';
+import { data } from '@tensorflow/tfjs';
 
 @Component({
   selector: 'app-employee-detail',
@@ -16,6 +17,7 @@ export class EmployeeDetailComponent implements OnInit {
   employee: any = {};
   // user: any = {};
   inOutData: any[] = [];
+  misEntriesData: any[] = [];
   selectedDate: Date = new Date();
   formattedDate: string = '';
 
@@ -79,6 +81,7 @@ export class EmployeeDetailComponent implements OnInit {
     } else {
       console.error('Employee ID is missing in the URL');
     }
+    this.loadMisEntriesData();
   }
 
   onEdit() {
@@ -130,6 +133,19 @@ export class EmployeeDetailComponent implements OnInit {
         });
     }
   }
+
+  loadMisEntriesData(): void {
+    const encryptedId = this.route.snapshot.paramMap.get('id');
+    if (encryptedId) {
+      const employeeId = EncryptDescrypt.decrypt(encryptedId);
+      const date = new Date().toISOString().slice(0, 10); // Format: YYYY-MM-DD
+      this.attendanceLogService.getMisEntriesByUserId(employeeId, date).subscribe((data) => {
+        this.misEntriesData = data;
+        console.log("MisEntries", this.misEntriesData);
+      });
+    }
+  }
+  
 
   formatDate(date: Date): string {
     return date.toISOString().split('T')[0];
