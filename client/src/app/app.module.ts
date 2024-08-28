@@ -56,6 +56,7 @@ import { SectionComponent } from './shared/components/section/section.component'
 import { SidebarComponent } from './shared/components/sidebar/sidebar.component';
 import { AdminDashboardComponent } from './modules/admin/components/admin-dashboard/admin-dashboard.component';
 import { PageAccessComponent } from './modules/admin/components/page-access/page-access.component';
+import { ChangePasswordComponent } from './modules/admin/components/change-password/change-password.component';
 
 
 @NgModule({
@@ -99,7 +100,8 @@ import { PageAccessComponent } from './modules/admin/components/page-access/page
     UpdateEmployeeDetailsComponent,
     LoaderComponent,
     AdminDashboardComponent,
-    PageAccessComponent
+    PageAccessComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,

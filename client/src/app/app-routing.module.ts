@@ -19,6 +19,7 @@ import { AllEmployeesComponent } from './modules/admin/components/all-employees/
 import { AllTopEmployeesComponent } from './modules/admin/components/all-top-employees/all-top-employees.component';
 import { EmployeeLogRecordsComponent } from './modules/admin/components/employee-log-records/employee-log-records.component';
 import { PageAccessComponent } from './modules/admin/components/page-access/page-access.component';
+import { ChangePasswordComponent } from './modules/admin/components/change-password/change-password.component';
 
 const routes: Routes = [
 
@@ -52,7 +53,8 @@ const routes: Routes = [
       { path: 'employees', component: AllEmployeesComponent },
       { path: 'log-records', component: EmployeeLogRecordsComponent },
       { path: 'all-top-employees/:type', component: AllTopEmployeesComponent },
-      { path: 'page-access', component: PageAccessComponent }
+      { path: 'page-access', component: PageAccessComponent },
+      { path: 'change-password', component: ChangePasswordComponent },
     ],
 
   },
@@ -70,7 +72,8 @@ const routes: Routes = [
       { path: 'employees', component: AllEmployeesComponent },
       { path: 'log-records', component: EmployeeLogRecordsComponent },
       { path: 'all-top-employees/:type', component: AllTopEmployeesComponent },
-      { path: 'page-access', component: PageAccessComponent }
+      { path: 'page-access', component: PageAccessComponent },
+      { path: 'change-password', component: ChangePasswordComponent },
     ]
   },
 

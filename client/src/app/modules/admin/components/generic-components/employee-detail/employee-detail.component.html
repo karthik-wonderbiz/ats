@@ -9,7 +9,11 @@
     </div>
     <!-- Employee Details Section -->
     <div class="flex-1">
-      <p class="text-2xl font-semibold text-blue-900 mb-2 inline-block">{{ employee[0]?.firstName }} {{ employee[0]?.lastName }}</p>
+      <div class="flex justify-around text-sm max-sm:text-xs max-sm:p-2 font-light text-gray-500 dark:text-gray-400 items-center space-x-2">
+        <p class="text-2xl font-semibold text-blue-900 mb-2 inline-block">{{ employee[0]?.firstName }} {{ employee[0]?.lastName }}</p>
+        <a (click)="onEdit()" class="btn btn-xs">Edit
+      </a>
+      </div>
       <p class="text-gray-700"><strong class="mr-2 text-yellow-500">Email:</strong> <span>{{ employee[0].email ||
           'john.doe@gmail.com' }}</span></p>
       <p class="text-gray-700"><strong class="mr-2 text-yellow-500">Phone:</strong> <span>{{ employee[0].contactNo ||

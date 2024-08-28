@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AttendanceLogService } from '../../../../../services/attendanceLog/attendance-log.service';
 import { ActivityRecordModel } from '../../../../../model/ActivityRecord.model';
 import { EncryptDescrypt } from '../../../../../utils/genericFunction';
@@ -40,11 +40,12 @@ export class EmployeeDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private attendanceLogService: AttendanceLogService,
     private employeeService: EmployeeService,
     private userService: UserService,
-    private signalRService: SignalRService 
-  ) {}
+    private signalRService: SignalRService
+  ) { }
 
   activityInRecords: ActivityRecordModel[] = [];
   activityOutRecords: ActivityRecordModel[] = [];
@@ -52,7 +53,7 @@ export class EmployeeDetailComponent implements OnInit {
   startDate: string = '';
   endDate: string = '';
 
-  
+
   ngOnInit() {
     const encryptedId = this.route.snapshot.paramMap.get('id');
     if (encryptedId) {
@@ -63,6 +64,9 @@ export class EmployeeDetailComponent implements OnInit {
 
       this.employeeService.getEmployeeByUserId(employeeId).subscribe(data => {
         this.employee = data;
+        if(data){
+          this.employee.userId = data[0].userId
+        }
         console.log('Employee Data:', this.employee);
       });
 
@@ -73,11 +77,17 @@ export class EmployeeDetailComponent implements OnInit {
 
       this.formattedDate = this.selectedDate.toLocaleDateString();
 
-      this.subscribeToItemUpdates(employeeId); 
+      this.subscribeToItemUpdates(employeeId);
     } else {
       console.error('Employee ID is missing in the URL');
     }
     this.loadMisEntriesData();
+  }
+
+  onEdit() {
+    console.log(this.employee.userId)
+    const encryptedId = EncryptDescrypt.encrypt(this.employee.userId.toString());
+    this.router.navigate(['/admin/update-employee-details', encryptedId]);
   }
 
   setActiveTab(tab: string): void {
@@ -98,7 +108,7 @@ export class EmployeeDetailComponent implements OnInit {
         this.endDate = this.formatDate(currentDate);
         break;
       case 'dayBeforeYesterday':
-        this.startDate = this.formatDate(new Date(currentDate.getTime() - 2 * 24 * 60 * 60 * 1000)); 
+        this.startDate = this.formatDate(new Date(currentDate.getTime() - 2 * 24 * 60 * 60 * 1000));
         this.endDate = this.formatDate(new Date(currentDate.getTime() - 24 * 60 * 60 * 1000));
         break;
     }

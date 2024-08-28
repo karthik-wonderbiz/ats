@@ -62,8 +62,13 @@
   <ul [ngClass]="{ 'hidden': !view, 'visible': view }"
       class="menu menu-sm dropdown-content bg-blue-50 rounded-box z-[1] mt-3 w-52 p-2 shadow text-black">
     <li>
-      <button class="justify-between hover:bg-blue-50" (click)="navigateToProfile()">
+      <button class=" hover:bg-blue-50" (click)="navigateToProfile()">
         My Profile
+      </button>
+    </li>
+    <li>
+      <button class="hover:bg-blue-50" (click)="onChangePassword()">
+        Change Password
       </button>
     </li>
     <li>

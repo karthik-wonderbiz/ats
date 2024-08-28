@@ -78,32 +78,32 @@
                             </div>
                             <div class="flex justify-around bottom-0">
                                 <button *ngIf="!isCamOpen && !thumbnail" type="button" (click)="openCamera()"
-                                    class="btn btn-xs mt-2 btn-primary">
+                                    class="btn btn-xs mt-2 btn-primary w-5/12">
                                     Camera
                                 </button>
 
                                 <button *ngIf="!isCamOpen && !thumbnail" type="button" (click)="onDelete()"
-                                    class="btn btn-xs mt-2 btn-error">
+                                    class="btn btn-xs mt-2 btn-error w-5/12">
                                     Delete
                                 </button>
                             </div>
                             <div class="flex justify-around bottom-0">
                                 <button *ngIf="isCamOpen && !thumbnail" type="button" (click)="capture()"
-                                    class="btn btn-xs mt-2 btn-success">
+                                    class="btn btn-xs mt-2 btn-success w-5/12">
                                     Capture
                                 </button>
                                 <button *ngIf="isCamOpen && !thumbnail" type="button" (click)="stopWebcam()"
-                                    class="btn btn-xs mt-2 btn-error">
+                                    class="btn btn-xs mt-2 btn-error w-5/12">
                                     Close
                                 </button>
                             </div>
                             <div class="flex justify-around bottom-0">
                                 <button *ngIf="thumbnail" type="button" (click)="openCamera()"
-                                    class="btn btn-xs mt-2 btn-primary">
+                                    class="btn btn-xs mt-2 btn-primary w-5/12">
                                     Retake
                                 </button>
                                 <button *ngIf="thumbnail" type="button" (click)="onDelete()"
-                                    class="btn btn-xs mt-2 btn-error">
+                                    class="btn btn-xs mt-2 btn-error w-5/12">
                                     Delete
                                 </button>
                             </div>
@@ -116,8 +116,8 @@
 
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                 for="profilePic">Upload Photo</label>
-                            <label class="flex btn btn-sm btn-primary items-center" for="profilePic">Browse</label>
-                            <input (change)="onProfilePicInput($event)" type="file" name="profilePic" id="profilePic"
+                            <label class="flex btn btn-xs btn-primary items-center" for="profilePic">Browse</label>
+                            <input (click)="onBrowse()" (change)="onProfilePicInput($event)" type="file" name="profilePic" id="profilePic"
                                 [(ngModel)]="employee.profilePic" #profilePic="ngModel" required autocomplete="off"
                                 accept=".png,.jpg,.jpeg"
                                 [ngClass]="{'file-input-error': (this.isInvalid && !this.validateProfilePic()), 'file-input-primary':  !(this.isInvalid && !this.validateProfilePic()) }"
@@ -272,105 +272,6 @@
                     </div>
 
                 </div>
-
-
-
-                <!-- <div class=" sm:gap-8  sm:grid sm:grid-cols-3">
-                    <div>
-                        <label for="email"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                        <input type="text" name="email" id="email" [(ngModel)]="employee.email"
-                            #email="ngModel" required autocomplete="off"
-                            [ngClass]="{ ' border-red-500': (this.isInvalid && !this.validateEmail() ), 'border-gray-300': ! (this.isInvalid && !this.validateEmail() ) }"
-                            class="bg-gray-50 input input-bordered text-gray-900 rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="name@company.com">
-                        <div class="sm:h-4 h-8">
-                            <div *ngIf="(!this.validateEmail() && (email.dirty || email.touched)) || (this.isInvalid && !validateEmail())"
-                                class="text-red-500 text-xs p-2">{{
-                                errors.email }}</div>
-                        </div>
-
-                    </div>
-
-                    <div class="relative">
-                        <label for="contactNo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Phone
-                        </label>
-
-                        <div
-                            class="absolute inset-y-0 left-0 sm:top-3 max-sm:bottom-1 flex items-center pl-3 pointer-events-none">
-                            <span class="text-gray-500 dark:text-gray-400">+91</span>
-                        </div>
-
-                        <input type="text" name="contactNo" id="contactNo" [(ngModel)]="employee.contactNo"
-                            #phone="ngModel" required autocomplete="off"
-                            [ngClass]="{ 'border-red-500': (this.isInvalid && !this.validatePhone()), 'border-gray-300': !(this.isInvalid && !this.validatePhone()) }"
-                            class="bg-gray-50 input input-bordered text-gray-900 rounded-lg block w-full pl-12 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Enter phone number">
-
-                        <div class="sm:h-4 h-8">
-                            <div *ngIf="(!this.validatePhone() && (phone.dirty || phone.touched)) || (this.isInvalid && !validatePhone())"
-                                class="text-red-500 text-xs p-2">
-                                {{ errors.contactNo }}
-                            </div>
-                        </div>
-                    </div>
-
-                </div> -->
-
-
-                <!-- <div class=" sm:gap-8  sm:grid sm:grid-cols-3">
-                    <div>
-                        <label for="password"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                        <input type="password" name="password" id="password" [(ngModel)]="employee.password"
-                            #password="ngModel" required autocomplete="off" placeholder="••••••••"
-                            [ngClass]="{ ' border-red-500': (this.isInvalid && !this.validatePassword() ), 'border-gray-300': ! (this.isInvalid && !this.validatePassword() ) }"
-                            class="bg-gray-50 input input-bordered text-gray-900 rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <div class="sm:h-4 h-8">
-                            <div *ngIf="(!this.validatePassword() && (password.dirty || password.touched)) || (this.isInvalid && !validatePassword())"
-                                class="text-red-500 text-xs p-2">{{
-                                errors.password }}</div>
-                        </div>
-
-                    </div>
-
-                    <div>
-                        <label for="confirmPassword"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirm
-                            Password</label>
-                        <input type="password" name="confirmPassword" id="confirmPassword"
-                            [(ngModel)]="employee.confirmPassword" #confirmPassword="ngModel" required
-                            autocomplete="off" placeholder="••••••••"
-                            [ngClass]="{ ' border-red-500': (this.isInvalid && !this.validateConfirmPassword() ), 'border-gray-300': ! (this.isInvalid && !this.validateConfirmPassword() ) }"
-                            class="bg-gray-50 input input-bordered text-gray-900 rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <div class="sm:h-4 h-8">
-                            <div *ngIf="(!this.validateConfirmPassword() && (confirmPassword.dirty || confirmPassword.touched)) || (this.isInvalid && !validateConfirmPassword())"
-                                class="text-red-500 text-xs p-2">{{
-                                errors.confirmPassword }}</div>
-                        </div>
-
-                    </div>
-                </div>   -->
-
-                <!-- <div class=" sm:gap-8  sm:grid sm:grid-cols-3">
-
-                    <div>
-                        <label for="firstName"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Profile Photo</label>
-                        <input type="file" (change)="onFileSelected($event)" />
-                        <div class="sm:h-4 h-8">
-                            <div *ngIf="(!this.validateName() && (name.dirty || name.touched)) || (this.isInvalid && !this.validateName() )"
-                                class="text-red-500 text-xs p-2">{{
-                                errors.firstName }}
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div> -->
-
 
                 <div class="flex justify-between max-sm:flex-col-reverse ">
 
