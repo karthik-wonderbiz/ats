@@ -55,7 +55,7 @@ export class HomeComponent {
         this.user.profilePic = profilePic;
         this.isUser = true;
         this.user.id = id;
-        localStorage.setItem('user', JSON.stringify(this.user));
+        // localStorage.setItem('user', JSON.stringify(this.user));
       },
       error: (err) => {
         this.toast.message = err.message || 'User not found';

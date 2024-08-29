@@ -16,8 +16,8 @@ import { RoutingService } from '../../services/routing/routing.service';
 })
 export class LoginComponent {
   // loginData = {
-  //   email: 'demotest@gmail.com',
-  //   password: 'Test@1234'
+  //   email: 'karthik@wonder.com',
+  //   password: '80io*)IO'
   // };
 
   loginData = {
