@@ -1,32 +1,16 @@
-import { Component } from '@angular/core';
+// src/app/app.component.ts
+import { Component, OnInit } from '@angular/core';
+import { AppRoutingModule } from './app-routing.module';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
-  isLogged = true;
-  isNewUser = false;
-  isOn = true;
+export class AppComponent implements OnInit {
+  constructor(private appRoutingModule: AppRoutingModule) { }
 
-  toggle() {
-    this.isOn = !this.isOn;
+  ngOnInit(): void {
+    // this.appRoutingModule.loadUserRoutes();
   }
-
-  toggleOff() {
-    if (!this.isOn) {
-      this.isOn = !this.isOn;
-    }
-  }
-
-  onLoginStatusChange(loggedIn: boolean) {
-    this.isLogged = loggedIn;
-  }
-
-  onSignUpStatusChange(isNewUser: boolean) {
-    this.isNewUser = isNewUser;
-  }
-
-  constructor() { }
 }

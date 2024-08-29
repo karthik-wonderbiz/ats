@@ -118,7 +118,7 @@ import { MisEntriesListComponent } from './modules/admin/components/mis-entries-
     HttpClientModule,
     BrowserAnimationsModule, // required animations module
   ],
-  providers: [provideCharts(withDefaultRegisterables()), provideHttpClient()],
+  providers: [provideCharts(withDefaultRegisterables()), provideHttpClient(),],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

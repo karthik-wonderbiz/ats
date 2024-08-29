@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import LoginModel from '../../../model/employee-login.model';
+import { LoginModel, Page } from '../../../model/employee-login.model';
 
 
 
@@ -10,7 +10,7 @@ import LoginModel from '../../../model/employee-login.model';
 })
 export class LoginService {
 
-  private loginApiUrl = 'http://192.168.29.242:5000/api/user/log-in';
+  private baseUrl = 'http://192.168.29.242:5000/api';
 
   constructor(private http: HttpClient) { }
 
@@ -20,12 +20,16 @@ export class LoginService {
       password,
 
     } = loginData
-    return this.http.post<LoginModel>(this.loginApiUrl,
+    return this.http.post<LoginModel>(this.baseUrl + "/user/log-in",
       {
         email,
         password,
       }
     );
+  }
+
+  getRoutes(roleId: number): Observable<Page[]> {
+    return this.http.get<Page[]>(this.baseUrl + '/accesspage/role/' + roleId);
   }
 
 }

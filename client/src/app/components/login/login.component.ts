@@ -2,10 +2,12 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../services/auth.service';
-import LoginModel from '../../model/employee-login.model';
+import { LoginModel } from '../../model/employee-login.model';
 import { LoginService } from '../../shared/services/login/login.service';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../services/authentication/auth.service';
+import { AppRoutingModule } from '../../app-routing.module';
+import { RoutingService } from '../../services/routing/routing.service';
 
 @Component({
   selector: 'app-login',
@@ -14,8 +16,8 @@ import Swal from 'sweetalert2';
 })
 export class LoginComponent {
   loginData = {
-    email: '',
-    password: ''
+    email: 'demotest@gmail.com',
+    password: 'Test@1234'
   };
 
   loginError = '';
@@ -50,6 +52,10 @@ export class LoginComponent {
     private http: HttpClient,
     private router: Router,
     private loginService: LoginService,
+    private authService: AuthService,
+    private appRoutingModule: AppRoutingModule,
+    private routingService: RoutingService
+
   ) { }
 
   onLogin(loginForm: NgForm): void {
@@ -65,6 +71,11 @@ export class LoginComponent {
         next: (response) => {
           console.log(JSON.stringify(response));
           localStorage.setItem('loginData', JSON.stringify(response));
+          localStorage.setItem("user", JSON.stringify({
+            roleId: response.roleId,
+            email: response.email
+          }))
+          this.routingService.setRoutes(response.pageList)
         },
         error: (error) => {
           this.isInvalid = true
@@ -86,11 +97,22 @@ export class LoginComponent {
             showConfirmButton: false,
             timer: 2000
           }).then(() => {
-            if(this.loginData.email === "admin@gmail.com" && this.loginData.password ==="Admin@123"){
-              this.router.navigate(['admin']);
-            } else{
-              this.router.navigate(['user']);
+            // if (this.loginData.email === "admin@gmail.com" && this.loginData.password === "Admin@123") {
+            //   this.router.navigate(['admin']);
+            // } else {
+            //   this.router.navigate(['user']);
+            // }
+            // this.appRoutingModule.loadUserRoutes();
+            let user = localStorage.getItem("user")
+            if (user) {
+              user = JSON.parse(user).roleId
+              if (parseInt(user!) == 2) {
+                this.router.navigate(['ats/dashboard'])
+              } else {
+                this.router.navigate(['ats/log-records']);
+              }
             }
+            // if(localStorage.setItem)
           });
           setTimeout(() => { this.isLoginSuccessful = false }, 1000);
         }
@@ -104,7 +126,7 @@ export class LoginComponent {
       setTimeout(() => { this.isLogSubmitted = false }, 900);
     }
   }
-  
+
 
   onSignUp() {
     this.signUpStatusChange.emit(true);

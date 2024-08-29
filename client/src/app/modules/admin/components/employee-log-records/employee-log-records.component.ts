@@ -22,6 +22,8 @@ export class EmployeeLogRecordsComponent implements OnInit {
   searchInput: string = '';
   selectedDate: string = '';
   selectedTab: string = '';
+  roleId: number = 0;
+  userId: number = 0;
 
   isDataLoaded: boolean = false;
 
@@ -51,12 +53,27 @@ export class EmployeeLogRecordsComponent implements OnInit {
     private attendanceLogService: AttendanceLogService,
     private signalRService: SignalRService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.selectedDate = this.getDefaultDate();
     this.selectedTab = this.tabs[0] || '';
     this.subscribeToItemUpdates();
+    let user = localStorage.getItem("loginData")
+    if (user) {
+      console.log("usermmm:", JSON.parse(user));
+      this.roleId = JSON.parse(user).roleId
+      if (this.roleId == 3) {
+        this.userId = JSON.parse(user).id
+      }
+      if (this.roleId == 2) {
+        this.tabNames = ['In Out', 'In', 'Out'];
+        this.tabs = ['', 'IN', 'OUT'];
+      } else {
+        this.tabNames = ['In Out'];
+        this.tabs = [''];
+      }
+    }
     this.fetchAttendanceLogs();
   }
 
@@ -103,8 +120,9 @@ export class EmployeeLogRecordsComponent implements OnInit {
   }
 
   getAllAttendanceLogs() {
+
     this.attendanceLogService
-      .getAllAttendanceLogs(this.selectedDate)
+      .getAllAttendanceLogs(this.selectedDate, this.userId)
       .subscribe((data) => {
         this.processAttendanceLogs(data);
         this.isDataLoaded = true;
@@ -135,22 +153,22 @@ export class EmployeeLogRecordsComponent implements OnInit {
         attendanceTime: TimeFormatter.formatTime(dateTime),
       };
     });
-  
+
     // Create a Map to store unique fullNames and their associated profilePic
     const uniqueLogs = new Map<string, { fullName: string; profilePic: string }>();
-  
+
     this.allLogRecords.forEach((log) => {
       if (!uniqueLogs.has(log.fullName)) {
         uniqueLogs.set(log.fullName, { fullName: log.fullName, profilePic: log.profilePic });
       }
     });
-  
+
     // Convert the Map values to an array
     this.allSuggestions = Array.from(uniqueLogs.values());
-  
+
     this.performSearch();
   }
-  
+
 
   onInputChange() {
     this.filteredSuggestions = this.allSuggestions.filter((suggestion) =>
@@ -214,15 +232,15 @@ export class EmployeeLogRecordsComponent implements OnInit {
       'Check Type': checkType,
       'Profile Picture': profilePic // Include profilePic in the export
     }));
-  
+
     const filenameMap: { [key: string]: string } = {
       '': 'employee-log-records-in-out',
       'IN': 'employee-log-records-in',
       'OUT': 'employee-log-records-out'
     };
-    
+
     const filename = filenameMap[this.selectedTab as keyof typeof filenameMap] || 'employee-log-records';
-  
+
     const options = {
       filename: filename,
       fieldSeparator: ',',
@@ -236,7 +254,7 @@ export class EmployeeLogRecordsComponent implements OnInit {
       noDownload: false,
       removeEmptyValues: true,
     };
-  
+
     new ngxCsv(dataToExport, options.filename, options);
 
     Swal.fire({

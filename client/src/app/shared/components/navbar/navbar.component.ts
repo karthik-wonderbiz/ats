@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    if(this.logindata){
+    if (this.logindata) {
       Swal.fire({
         title: 'Are you sure?',
         text: 'Do you really want to log out?',
@@ -52,6 +52,7 @@ export class NavbarComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed) {
           localStorage.removeItem('loginData');
+          localStorage.removeItem("user")
           this.logindata = null;
           this.employeeInfo = {};
           this.isOn = false;
@@ -67,7 +68,7 @@ export class NavbarComponent implements OnInit {
           });
         }
       });
-    }    
+    }
   }
 
   fetchEmployeeInfo(id: string): void {
@@ -79,14 +80,14 @@ export class NavbarComponent implements OnInit {
   navigateToProfile(): void {
     if (this.logindata && this.logindata.id) {
       const encryptedId = EncryptDescrypt.encrypt(this.logindata.id.toString());
-      this.router.navigate(['/admin/employee-detail', encryptedId]);
+      this.router.navigate(['/ats/employee-detail', encryptedId]);
     } else {
       console.error('User ID is missing or data is incorrect');
     }
   }
 
-  onChangePassword(){
-    this.router.navigate(['/admin/change-password']);
+  onChangePassword() {
+    this.router.navigate(['/ats/change-password']);
   }
 
   onToggle(): void {

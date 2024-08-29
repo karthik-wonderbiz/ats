@@ -123,6 +123,10 @@ export class UpdateEmployeeDetailsComponent {
               text: 'The update process has completed.',
               timer: 1000
             });
+            // setTimeout(() => {
+            //   this.router.navigate(['/ats/employees']);
+              
+            // }, 1000);
           }
         });
       }
