@@ -6,7 +6,7 @@ import { Observable, map, catchError, of } from 'rxjs';
   providedIn: 'root',
 })
 export class AccessPageService {
-  private urlMain = 'http://192.168.29.46:5000/api/accesspage';
+  private urlMain = 'http://192.168.29.242:5000/api/accesspage';
 
   constructor(private http: HttpClient) {}
 
@@ -26,7 +26,7 @@ export class AccessPageService {
   }  
 
   addNewPage(newPageData: { roleId: number, pageId: string }): Observable<AccessPageModel[]> {
-    const url = `http://192.168.29.46:5000/api/accesspage`;
+    const url = `http://192.168.29.242:5000/api/accesspage`;
     return this.http.post<AccessPageModel[]>(url, newPageData).pipe(
       catchError((error) => {
         console.error('Error adding new page', error);
@@ -36,7 +36,7 @@ export class AccessPageService {
   }
   
   getAllPages(): Observable<AccessPageModel[]> {
-    const getAllUrl = `http://192.168.29.46:5000/api/page`;
+    const getAllUrl = `http://192.168.29.242:5000/api/page`;
     return this.http.get<AccessPageModel[]>(getAllUrl).pipe(
       catchError((error) => {
         console.error('Error fetching all pages', error);
@@ -46,7 +46,7 @@ export class AccessPageService {
   }
 
   getAllRoles(): Observable<AccessPageModel[]> {
-    const getAllRolesUrl = `http://192.168.29.46:5000/api/role`;
+    const getAllRolesUrl = `http://192.168.29.242:5000/api/role`;
     return this.http.get<AccessPageModel[]>(getAllRolesUrl).pipe(
       catchError((error) => {
         console.error('Error fetching all roles', error);
@@ -56,7 +56,7 @@ export class AccessPageService {
   }
 
   deletePage(id: number): Observable<AccessPageModel[]> {
-    const deleteUrl = `http://192.168.29.46:5000/api/accesspage/${id}`;
+    const deleteUrl = `http://192.168.29.242:5000/api/accesspage/${id}`;
     return this.http.delete<AccessPageModel[]>(deleteUrl).pipe(
       catchError((error) => {
         console.error('Error deleting page', error);

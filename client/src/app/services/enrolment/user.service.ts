@@ -10,7 +10,7 @@ import User from '../../model/enrolment/user.model';
   providedIn: 'root',
 })
 export class UserService {
-  private baseURI = 'http://192.168.29.46:5000/api/employeedetail/user';
+  private baseURI = 'http://192.168.29.242:5000/api/employeedetail/user';
 
   constructor(private http: HttpClient) {}
 

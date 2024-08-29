@@ -125,7 +125,7 @@ export class UpdateEmployeeDetailsComponent {
               timer: 1000
             });
             // setTimeout(() => {
-            //   this.router.navigate(['/admin/employees']);
+            //   this.router.navigate(['/ats/employees']);
               
             // }, 1000);
           }

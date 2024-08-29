@@ -37,7 +37,7 @@ export class EmployeeStatusComponent implements OnInit {
   }
 
   navigateToDetails(status: 'all' | 'present' | 'absent'): void {
-    this.router.navigate(['/admin/employee-status-details'], {
+    this.router.navigate(['/ats/employee-status-details'], {
       queryParams: { status: status }
     });
   }

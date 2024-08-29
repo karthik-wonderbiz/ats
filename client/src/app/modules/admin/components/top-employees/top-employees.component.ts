@@ -145,7 +145,7 @@ export class TopEmployeesComponent implements OnInit {
   }
 
   viewAll(type: string): void {
-    this.router.navigate(['/admin/all-top-employees', type]);
+    this.router.navigate(['/ats/all-top-employees', type]);
   }
 
   exportToCSV(data: any[], filenamePrefix: string): void {

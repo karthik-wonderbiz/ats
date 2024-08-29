@@ -2,17 +2,18 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../services/auth.service';
-import LoginModel from '../../model/employee-login.model';
+import { LoginModel } from '../../model/employee-login.model';
 import { LoginService } from '../../shared/services/login/login.service';
 import Swal from 'sweetalert2';
+import { AuthService } from '../../services/authentication/auth.service';
+import { AppRoutingModule } from '../../app-routing.module';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent  {
   loginData = {
     email: '',
     password: ''
@@ -44,12 +45,14 @@ export class LoginComponent {
   @Output() loginStatusChange = new EventEmitter<boolean>();
   @Output() signUpStatusChange = new EventEmitter<boolean>();
 
-  private loginApiUrl = 'http://192.168.29.46:5000/api/user/log-in';
+  private loginApiUrl = 'http://192.168.29.242:5000/api/user/log-in';
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private loginService: LoginService,
+    private authService: AuthService,
+    private appRoutingModule: AppRoutingModule
   ) { }
 
   onLogin(loginForm: NgForm): void {
@@ -86,11 +89,13 @@ export class LoginComponent {
             showConfirmButton: false,
             timer: 2000
           }).then(() => {
-            if(this.loginData.email === "admin@gmail.com" && this.loginData.password ==="Admin@123"){
-              this.router.navigate(['admin']);
-            } else{
-              this.router.navigate(['user']);
-            }
+            // if (this.loginData.email === "admin@gmail.com" && this.loginData.password === "Admin@123") {
+            //   this.router.navigate(['admin']);
+            // } else {
+            //   this.router.navigate(['user']);
+            // }
+            this.appRoutingModule.loadUserRoutes();
+            this.router.navigate(['ats']);
           });
           setTimeout(() => { this.isLoginSuccessful = false }, 1000);
         }
@@ -104,7 +109,7 @@ export class LoginComponent {
       setTimeout(() => { this.isLogSubmitted = false }, 900);
     }
   }
-  
+
 
   onSignUp() {
     this.signUpStatusChange.emit(true);

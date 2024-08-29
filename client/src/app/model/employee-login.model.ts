@@ -1,4 +1,4 @@
-interface Page {
+export interface Page {
     id: number;
     roleId: number;
     roleName: string;
@@ -7,11 +7,11 @@ interface Page {
     isActive: boolean;
 }
 
-interface LoginModel {
+export interface LoginModel {
     email: string;
     password: string;
     roleId: number;
     pageList: Page[];
 }
 
-export default LoginModel;
+// export LoginModel;

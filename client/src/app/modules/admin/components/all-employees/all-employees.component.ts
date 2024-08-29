@@ -93,7 +93,7 @@ export class AllEmployeesComponent implements OnInit {
     if (employee && employee.userId) {
       console.log(employee.userId);
       const encryptedId = EncryptDescrypt.encrypt(employee.userId.toString());
-      this.router.navigate(['/admin/employee-detail', encryptedId]);
+      this.router.navigate(['/ats/employee-detail', encryptedId]);
     } else {
       console.error('Employee ID is missing or data is incorrect');
     }
@@ -103,7 +103,7 @@ export class AllEmployeesComponent implements OnInit {
     if (employee && employee.userId) {
       console.log(employee.userId);
       const encryptedId = EncryptDescrypt.encrypt(employee.userId.toString());
-      this.router.navigate(['/admin/update-employee-details', encryptedId]);
+      this.router.navigate(['/ats/update-employee-details', encryptedId]);
       
     } else {
       console.error('Employee ID is missing or data is incorrect');

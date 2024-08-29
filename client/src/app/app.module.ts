@@ -57,8 +57,6 @@ import { SidebarComponent } from './shared/components/sidebar/sidebar.component'
 import { AdminDashboardComponent } from './modules/admin/components/admin-dashboard/admin-dashboard.component';
 import { PageAccessComponent } from './modules/admin/components/page-access/page-access.component';
 import { ChangePasswordComponent } from './modules/admin/components/change-password/change-password.component';
-import { UnknownProfilesComponent } from './components/unknown-profiles/unknown-profiles.component';
-
 
 @NgModule({
   declarations: [
@@ -103,7 +101,6 @@ import { UnknownProfilesComponent } from './components/unknown-profiles/unknown-
     AdminDashboardComponent,
     PageAccessComponent,
     ChangePasswordComponent,
-    UnknownProfilesComponent
   ],
   imports: [
     BrowserModule,
@@ -116,7 +113,7 @@ import { UnknownProfilesComponent } from './components/unknown-profiles/unknown-
     HttpClientModule,
     BrowserAnimationsModule, // required animations module
   ],
-  providers: [provideCharts(withDefaultRegisterables()), provideHttpClient()],
+  providers: [provideCharts(withDefaultRegisterables()), provideHttpClient(),],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
