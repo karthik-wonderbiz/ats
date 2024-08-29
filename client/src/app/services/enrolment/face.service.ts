@@ -7,7 +7,7 @@ import FaceDetectionResponse from '../../model/enrolment/detection.model';
   providedIn: 'root',
 })
 export class FaceService {
-  private baseURI = 'http://192.168.29.207:8000';
+  private baseURI = 'http://192.168.29.242:8000';
   // http://192.168.29.207:8000
 
   constructor(private http: HttpClient) { }

@@ -2,8 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AttendanceLogService } from '../../../../services/attendanceLog/attendance-log.service';
 import { EmployeeService } from '../../../../services/employee/employee.service';
 import { ActivatedRoute } from '@angular/router';
-import { EncryptDescrypt } from '../../../../utils/genericFunction';
-import { data } from '@tensorflow/tfjs';
+import { EncryptDescrypt, TimeFormatter } from '../../../../utils/genericFunction';
 
 @Component({
   selector: 'app-mis-entries',
@@ -78,7 +77,11 @@ export class MisEntriesComponent implements OnInit {
       this.attendancelogservice.getMisEntriesByUserId(this.selectedUserId, this.selectedDate)
         .subscribe((data) => {
           console.log(this.selectedUserId, " ", this.selectedDate);
-          this.misEntriesData = data;
+          // Format attendanceLogTime here
+          this.misEntriesData = data.map(entry => ({
+            ...entry,
+            attendanceLogTime: TimeFormatter.formatTime(new Date(entry.attendanceLogTime)),
+          }));
           console.log(this.misEntriesData);
           this.isDataLoaded = true;
         });
