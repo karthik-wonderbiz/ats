@@ -76,7 +76,7 @@ export class EmployeeAttendanceRecordsComponent implements OnInit {
     if (employee && employee.userId) {
       console.log(employee.userId);
       const encryptedId = EncryptDescrypt.encrypt(employee.userId.toString());
-      this.router.navigate(['/admin/employee-detail', encryptedId]);
+      this.router.navigate(['/ats/employee-detail', encryptedId]);
     } else {
       console.error('Employee ID is missing or data is incorrect');
     }

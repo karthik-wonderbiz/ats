@@ -79,14 +79,14 @@ export class NavbarComponent implements OnInit {
   navigateToProfile(): void {
     if (this.logindata && this.logindata.id) {
       const encryptedId = EncryptDescrypt.encrypt(this.logindata.id.toString());
-      this.router.navigate(['/admin/employee-detail', encryptedId]);
+      this.router.navigate(['/ats/employee-detail', encryptedId]);
     } else {
       console.error('User ID is missing or data is incorrect');
     }
   }
 
   onChangePassword(){
-    this.router.navigate(['/admin/change-password']);
+    this.router.navigate(['/ats/change-password']);
   }
 
   onToggle(): void {

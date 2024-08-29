@@ -87,7 +87,7 @@ export class EmployeeDetailComponent implements OnInit {
   onEdit() {
     console.log(this.employee.userId)
     const encryptedId = EncryptDescrypt.encrypt(this.employee.userId.toString());
-    this.router.navigate(['/admin/update-employee-details', encryptedId]);
+    this.router.navigate(['/ats/update-employee-details', encryptedId]);
   }
 
   setActiveTab(tab: string): void {
