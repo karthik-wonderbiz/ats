@@ -3,12 +3,12 @@ import { Observable, of } from 'rxjs';
 import EmployeeModel from '../model/employee-sign-up.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EmployeeService {
   private storageKey = 'employeeData';
 
-  constructor() { }
+  constructor() {}
 
   saveEmployeeData(employee: EmployeeModel): Observable<boolean> {
     localStorage.setItem(this.storageKey, JSON.stringify(employee));
