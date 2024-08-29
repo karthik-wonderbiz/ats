@@ -16,6 +16,10 @@ from pydantic import BaseModel
 from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 import base64
+from signalrcore.hub_connection_builder import HubConnectionBuilder
+import logging
+from contextlib import asynccontextmanager
+
 
 app = FastAPI()
 
@@ -29,6 +33,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Global variables to hold known face data
+known_face_id, known_face_names, known_face_encodings = [], [], []
 
 # Directory to save unknown faces
 unknown_faces_dir = "unknown_faces"
@@ -40,6 +46,7 @@ recent_unknown_faces = []
 recent_detection_interval = 30  # seconds
 
 last_attendance_time = {}
+
 # Directory for storing images
 IMAGES_PATH = 'images/'
 
@@ -49,6 +56,7 @@ class FaceDetectionResponse(BaseModel):
 
 # Load known encodings from the api
 def load_encodings_from_db():
+    start_time = time.time()
     api_url = f"{apiBaseUrl}/employeedetail/face-encoding"
     try:
         response = requests.get(api_url)
@@ -57,7 +65,9 @@ def load_encodings_from_db():
         filtered_employees = [emp for emp in employees if emp.get('faceEncoding')]  
         user_ids = [emp['userId'] for emp in filtered_employees]
         names = [emp['firstName'] for emp in filtered_employees]
-        encodings = [pickle.loads(base64.b64decode(emp['faceEncoding'])) for emp in filtered_employees]        
+        encodings = [pickle.loads(base64.b64decode(emp['faceEncoding'])) for emp in filtered_employees]  
+        end_time = time.time()      
+        print(f'Time taken to load the face encodings from db: {end_time-start_time}')
         return user_ids, names, encodings
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data from API: {e}")
@@ -75,10 +85,10 @@ def is_recently_detected(face_encoding):
 
 # Face Detection function
 def detect_known_faces(known_face_id, known_face_names, known_face_encodings, frame, cameraType):
+    start_time = time.time()
     apiUrl = apiBaseUrl + "/attendanceLog/multiple"
     data_list= []
     def mark_attendance(d):
-        print("before", d)
         x = requests.post(url=apiUrl,json=d)
         response = x.json()
         return response 
@@ -98,11 +108,8 @@ def detect_known_faces(known_face_id, known_face_names, known_face_encodings, fr
         for i, face_encoding in enumerate(face_encodings):
             matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
             name = "Unknown"
-            print("multiple")
             face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
             best_match_index = np.argmin(face_distances)
-            print(known_face_id,known_face_names)
-            print(face_distances[best_match_index])
             if matches[best_match_index] and face_distances[best_match_index] < 0.32:
                 name = known_face_names[best_match_index]
                 detected_id = known_face_id[best_match_index]
@@ -122,14 +129,12 @@ def detect_known_faces(known_face_id, known_face_names, known_face_encodings, fr
             face_names.append(name)
     else:
         if face_encodings:
-            print("single")
             face_encoding = face_encodings[0]
             matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
             name = "Unknown"
             face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
             best_match_index = np.argmin(face_distances)
             if matches[best_match_index] and face_distances[best_match_index] < 0.32:
-                print(face_distances[best_match_index])
                 detected_id = known_face_id[best_match_index]
                 name = known_face_names[best_match_index]
                 if name not in last_attendance_time or (current_time - last_attendance_time[name]) > waitTime:
@@ -142,6 +147,8 @@ def detect_known_faces(known_face_id, known_face_names, known_face_encodings, fr
 
             face_names.append(name)
     attendance =mark_attendance(data_list)
+    end_time = time.time() 
+    print(f'Time taken to detect face: {end_time-start_time}')
     return face_locations, face_names, attendance
 
 # Capture Image endpoint
@@ -163,6 +170,7 @@ async def capture_image(file: UploadFile = File(...), employee_id: str = Form(..
 # Save the captured image face encodings
 @app.post("/save-encoding/")
 async def save_encoding(employee_id: str = Form(...)):
+    start_time = time.time()
     person_dir = os.path.join(IMAGES_PATH, str(employee_id))
     img_paths = [os.path.join(person_dir, fname) for fname in os.listdir(person_dir) if fname.endswith('.jpg')]
 
@@ -181,9 +189,6 @@ async def save_encoding(employee_id: str = Form(...)):
 
     if encodings:
         avg_encoding = np.mean(encodings, axis=0)
-        # cursor = conn.cursor()
-        # cursor.execute('UPDATE EmployeeDetails SET FaceEncoding = ? WHERE UserId = ?', (pickle.dumps(avg_encoding), employee_id))
-        # conn.commit()
         serialized_encoding = pickle.dumps(avg_encoding)
         base64_encoding = base64.b64encode(serialized_encoding).decode('utf-8')
         payload = {
@@ -195,6 +200,8 @@ async def save_encoding(employee_id: str = Form(...)):
         response.raise_for_status() 
         
         if response.status_code == 200:
+            end_time = time.time() 
+            print(f'Time taken to save the encodings: {end_time-start_time}')
             return {"status": "success", "message": "Face encoding saved!"}
         else:
             return {"status": "error", "message": f"Failed to save face encoding. Error: {response.text}"}
@@ -203,65 +210,99 @@ async def save_encoding(employee_id: str = Form(...)):
         return {"status": "success", "message": "Face encoding saved!"}
     else:
         raise HTTPException(status_code=400, detail="No faces detected in the images!")
+    
 
-# Mark attendance endpoint
-@app.post("/mark-attendance/IN")
-async def mark_attendance(file: UploadFile = File(...)):
+
+@app.on_event("startup")
+async def startup_event():
+    global known_face_id, known_face_names, known_face_encodings
+    # Load the initial encodings from the database
+    known_face_id, known_face_names, known_face_encodings = load_encodings_from_db()
+    # Connect to SignalR hub and listen for updates
+    hub_connection = HubConnectionBuilder().with_url("http://192.168.29.46:5000/atsHub").configure_logging(logging.CRITICAL)\
+    .with_automatic_reconnect({
+        "type": "raw",
+        "keep_alive_interval": 10,
+        "reconnect_interval": 5,
+        "max_attempts": 5
+    }).build()
+    
+    def on_encodings_updated(data):
+        try:
+            user_id = data[1]
+            name = data[2]
+            encoding = pickle.loads(base64.b64decode(data[-1]))  # Ensure this matches the expected format
+
+            print(f"User ID: {user_id}")
+            print(f"Name: {name}")
+
+            if user_id in known_face_id:
+                index = known_face_id.index(user_id)
+                known_face_names[index] = name
+                known_face_encodings[index] = encoding
+                print(f"Updated encoding for user {user_id}.")
+            else:
+                known_face_id.append(user_id)
+                known_face_names.append(name)
+                known_face_encodings.append(encoding)
+                print(f"Added new encoding for user {user_id}.")
+        except Exception as e:
+            print(f"Error in processing encodings: {e}")
+
+
+    def on_delete_user_update(data):
+        global known_face_id, known_face_names, known_face_encodings
+        user_id = data[0]
+        print(f'user_id: {user_id}')
+        # Find the index of the user_id to delete
+        if user_id in known_face_id:
+            index = known_face_id.index(user_id)
+
+            # Remove the user's data from all lists
+            known_face_id.pop(index)
+            known_face_names.pop(index)
+            known_face_encodings.pop(index)
+            print(f"User {user_id} removed successfully.")
+        else:
+            print(f"User {user_id} not found.")
+
+
+
+    hub_connection.on("ReceiveUpdateEncoding", on_encodings_updated)
+    hub_connection.on("DeleteUserUpdate", on_delete_user_update)
+
+    hub_connection.on_open(lambda: print("connection opened and handshake received ready to send messages"))
+    hub_connection.on_close(lambda: print("connection closed"))
+    hub_connection.start()
+
+
+async def mark_attendance(file: UploadFile = File(...), camera_type: str = "IN"):
     contents = await file.read()
     nparr = np.frombuffer(contents, np.uint8)
     frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    known_face_id, known_face_names, known_face_encodings = load_encodings_from_db()
-    face_locations, face_names, attendance = detect_known_faces(known_face_id, known_face_names, known_face_encodings, frame,"IN")
+    face_locations, face_names, attendance = detect_known_faces(known_face_id, known_face_names, known_face_encodings, frame, camera_type)
 
-    # Draw the boundary box and label for each detected face
     for (top, right, bottom, left), name in zip(face_locations, face_names):
         color = (0, 255, 0) if name != 'Unknown' else (0, 0, 255)
         cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
         cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 2)
 
-    # Convert the processed frame to a base64-encoded JPEG image
     _, img_encoded = cv2.imencode('.jpg', frame)
     img_bytes = io.BytesIO(img_encoded.tobytes())
     img_base64 = base64.b64encode(img_bytes.getvalue()).decode('utf-8')
 
-    # Create the response model
     response_data = FaceDetectionResponse(
         attendance=attendance,
         image_base64=img_base64,
     )
 
     return JSONResponse(content=response_data.model_dump())
+
+@app.post("/mark-attendance/IN")
+async def mark_attendance_in(file: UploadFile = File(...)):
+    return await mark_attendance(file, "IN")
 
 @app.post("/mark-attendance/OUT")
-async def mark_attendance(file: UploadFile = File(...)):
-    contents = await file.read()
-    nparr = np.frombuffer(contents, np.uint8)
-    frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-
-    known_face_id, known_face_names, known_face_encodings = load_encodings_from_db()
-    face_locations, face_names, attendance = detect_known_faces(known_face_id, known_face_names, known_face_encodings, frame,"OUT")
-
-    # Draw the boundary box and label for each detected face
-    for (top, right, bottom, left), name in zip(face_locations, face_names):
-        color = (0, 255, 0) if name != 'Unknown' else (0, 0, 255)
-        cv2.rectangle(frame, (left, top), (right, bottom), color, 2)
-        cv2.putText(frame, name, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 2)
-
-    # Convert the processed frame to a base64-encoded JPEG image
-    _, img_encoded = cv2.imencode('.jpg', frame)
-    img_bytes = io.BytesIO(img_encoded.tobytes())
-    img_base64 = base64.b64encode(img_bytes.getvalue()).decode('utf-8')
-
-    # Create the response model
-    response_data = FaceDetectionResponse(
-        attendance=attendance,
-        image_base64=img_base64,
-    )
-
-    return JSONResponse(content=response_data.model_dump())
-
-
-@app.get("/camera-type")
-def get_camera_type():
-    return cameraType
+async def mark_attendance_out(file: UploadFile = File(...)):
+    return await mark_attendance(file, "OUT")

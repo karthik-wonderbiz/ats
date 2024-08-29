@@ -14,6 +14,7 @@ import { AttendanceLogModel } from '../../../../model/AttendanceLog.model';
 import { SignalRService } from '../../../../services/signalR/signal-r.service';
 import Swal from 'sweetalert2';
 
+
 @Component({
   selector: 'app-employee-status-details',
   templateUrl: './employee-status-details.component.html',
@@ -23,8 +24,8 @@ export class EmployeeStatusDetailsComponent implements OnInit {
   @Input() employeeData: any[] = [];
   @Input() allEmployeeData: any[] = [];
   @Output() rowClicked = new EventEmitter<any>();
-  allSuggestions: string[] = [];
-  filteredSuggestions: string[] = [];
+  allSuggestions: { fullName: string; profilePic: string }[] = [];
+  filteredSuggestions: { fullName: string; profilePic: string }[] = [];
   searchTerms: string[] = [];
   searchInput: string = '';
   isLoaded: boolean = false;
@@ -118,9 +119,10 @@ export class EmployeeStatusDetailsComponent implements OnInit {
           this.attendanceLogModel.total - this.attendanceLogModel.present;
         this.allEmployeeData = this.filterData(data);
         this.employeeData = [...this.allEmployeeData];
-        this.allSuggestions = this.employeeData.map(
-          (employee) => employee.fullName
-        );
+        this.allSuggestions = this.employeeData.map((employee) => ({
+          fullName: employee.fullName,
+          profilePic: employee.profilePic,
+        }));
         this.isLoaded = false;
         console.log(
           "Filtered Employee Today's Entries: ",
@@ -148,33 +150,38 @@ export class EmployeeStatusDetailsComponent implements OnInit {
 
   onInputChange() {
     this.filteredSuggestions = this.allSuggestions.filter((suggestion) =>
-      suggestion.toLowerCase().includes(this.searchInput.toLowerCase())
+      suggestion.fullName
+        .toLowerCase()
+        .includes(this.searchInput.toLowerCase())
     );
   }
 
   addTerm() {
     const trimmedInput = this.searchInput.trim();
-    if (
-      trimmedInput &&
-      this.allSuggestions.includes(trimmedInput) &&
-      !this.searchTerms.includes(trimmedInput)
-    ) {
-      this.searchTerms.push(trimmedInput);
+    const selectedSuggestion = this.allSuggestions.find(
+      (suggestion) => suggestion.fullName === trimmedInput
+    );
+  
+    if (trimmedInput && selectedSuggestion && !this.searchTerms.includes(trimmedInput)) {
+      // Add the selected term to search terms
+      this.searchTerms = [trimmedInput]; // Ensure only one term is added
       this.searchInput = '';
-      this.filteredSuggestions = []; 
-      this.performSearch(); 
+      this.filteredSuggestions = [];
+      this.performSearch(); // Perform search with the updated term
     }
   }
+  
 
   removeTerm(term: string) {
     this.searchTerms = this.searchTerms.filter((t) => t !== term);
     this.performSearch();
   }
 
-  selectSuggestion(suggestion: string) {
-    this.searchInput = suggestion;
-    this.addTerm();
+  selectSuggestion(suggestion: { fullName: string; profilePic: string }) {
+    this.searchInput = suggestion.fullName;
+    this.addTerm(); // Add the term and update search
   }
+  
 
   handleKeyDown(event: KeyboardEvent) {
     if (event.key === 'Enter' && this.filteredSuggestions.length > 0) {
@@ -195,6 +202,7 @@ export class EmployeeStatusDetailsComponent implements OnInit {
     }
     console.log('Filtered employees:', this.employeeData);
   }
+  
 
   exportToCSV() {
     const dataToExport = this.employeeData.map(

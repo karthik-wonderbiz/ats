@@ -11,7 +11,7 @@ import { AdminDashboardComponent } from './modules/admin/components/admin-dashbo
 import { ContactComponent } from './modules/admin/components/contact/contact.component';
 import { AboutComponent } from './modules/admin/components/about/about.component';
 import { DashboardComponent } from './modules/admin/components/dashboard/dashboard.component';
-import { EmployeeDetailComponent } from './modules/admin/components/generic-components/employee-detail/employee-detail.component';
+import { EmployeeDetailComponent } from './modules/admin/components/employee-detail/employee-detail.component';
 import { UpdateEmployeeDetailsComponent } from './modules/admin/components/update-employee-details/update-employee-details.component';
 import { EmployeeStatusDetailsComponent } from './modules/admin/components/employee-status-details/employee-status-details.component';
 import { EmployeeAttendanceRecordsComponent } from './modules/admin/components/employee-attendance-records/employee-attendance-records.component';

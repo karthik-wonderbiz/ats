@@ -17,8 +17,8 @@ export class AllEmployeesComponent implements OnInit {
   @Output() rowClicked = new EventEmitter<any>();
   employees: any[] = [];
   allEmployees: any[] = [];
-  allSuggestions: string[] = [];
-  filteredSuggestions: string[] = [];
+  allSuggestions: { fullName: string; profilePic: string }[] = [];
+  filteredSuggestions: { fullName: string; profilePic: string }[] = [];
   searchTerms: string[] = [];
   searchInput: string = '';
 
@@ -80,9 +80,10 @@ export class AllEmployeesComponent implements OnInit {
       this.isDataLoaded = true;
       this.allEmployees = data;
       console.log(data)
-      this.allSuggestions = this.allEmployees.map(
-        (employee) => employee.fullName
-      );
+      this.allSuggestions = this.allEmployees.map((employee) => ({
+        fullName: employee.fullName,
+        profilePic: employee.profilePic,
+      }));
       this.performSearch();
       console.log('Employee Data:', this.allEmployees);
     });
@@ -150,21 +151,24 @@ export class AllEmployeesComponent implements OnInit {
 
   onInputChange() {
     this.filteredSuggestions = this.allSuggestions.filter((suggestion) =>
-      suggestion.toLowerCase().includes(this.searchInput.toLowerCase())
+      suggestion.fullName
+        .toLowerCase()
+        .includes(this.searchInput.toLowerCase())
     );
   }
 
   addTerm() {
     const trimmedInput = this.searchInput.trim();
-    if (
-      trimmedInput &&
-      this.allSuggestions.includes(trimmedInput) &&
-      !this.searchTerms.includes(trimmedInput)
-    ) {
-      this.searchTerms.push(trimmedInput);
+    const selectedSuggestion = this.allSuggestions.find(
+      (suggestion) => suggestion.fullName === trimmedInput
+    );
+  
+    if (trimmedInput && selectedSuggestion && !this.searchTerms.includes(trimmedInput)) {
+      // Add the selected term to search terms
+      this.searchTerms = [trimmedInput]; // Ensure only one term is added
       this.searchInput = '';
       this.filteredSuggestions = [];
-      this.performSearch();
+      this.performSearch(); // Perform search with the updated term
     }
   }
 
@@ -173,9 +177,9 @@ export class AllEmployeesComponent implements OnInit {
     this.performSearch();
   }
 
-  selectSuggestion(suggestion: string) {
-    this.searchInput = suggestion;
-    this.addTerm();
+  selectSuggestion(suggestion: { fullName: string; profilePic: string }) {
+    this.searchInput = suggestion.fullName;
+    this.addTerm(); // Add the term and update search
   }
 
   handleKeyDown(event: KeyboardEvent) {

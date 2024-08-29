@@ -22,8 +22,6 @@ export class TopEmployeesComponent implements OnInit {
   top5EmployeeMinIn: any[] = [];
   top5EmployeeMinOut: any[] = [];
 
-  // allEmployeesInData: any[] = [];
-  // allEmployeesOutData: any[] = [];
   columns = [
     { key: 'fullName', label: 'Employee Name' },
     { key: 'totalHours', label: 'Total Hours' },

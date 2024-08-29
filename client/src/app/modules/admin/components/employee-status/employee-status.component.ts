@@ -21,7 +21,6 @@ export class EmployeeStatusComponent implements OnInit {
 
   isDataLoaded: boolean = false;
 
-  // Data for the pie chart
   pieChartData: any[] = [];
 
   constructor(

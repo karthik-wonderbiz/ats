@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AttendanceLogService } from '../../../../../services/attendanceLog/attendance-log.service';
-import { ActivityRecordModel } from '../../../../../model/ActivityRecord.model';
-import { EncryptDescrypt } from '../../../../../utils/genericFunction';
-import { EmployeeService } from '../../../../../services/employee/employee.service';
-import { UserService } from '../../../../../services/user/user.service';
-import { SignalRService } from '../../../../../services/signalR/signal-r.service';
+import { AttendanceLogService } from '../../../../services/attendanceLog/attendance-log.service';
+import { ActivityRecordModel } from '../../../../model/ActivityRecord.model';
+import { EncryptDescrypt } from '../../../../utils/genericFunction';
+import { EmployeeService } from '../../../../services/employee/employee.service';
+import { UserService } from '../../../../services/user/user.service';
+import { SignalRService } from '../../../../services/signalR/signal-r.service';
 import { data } from '@tensorflow/tfjs';
 
 @Component({

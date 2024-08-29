@@ -1,0 +1,30 @@
+<div class="bg-white border border-gray-200 rounded-lg shadow-lg p-4 w-full animate-slideDown">
+  <div class="flex items-center justify-between mb-2">
+    <h1 class="text-xs font-bold text-blue-900 uppercase">Misentries Logs</h1>
+    <input type="date" 
+      class="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      [(ngModel)]="selectedDate" (change)="onDateChange($event)" name="selectedDate" required />
+    <div class="relative group inline-block">
+      <div class="relative group inline-block">
+        <button title="Export to CSV"
+          class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+          <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
+        </button>
+        <span class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-green-600 rounded-lg shadow-sm whitespace-nowrap">
+          Export to CSV
+        </span>
+      </div>
+      <span
+        class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-green-600 rounded-lg shadow-sm whitespace-nowrap">
+        Export to CSV
+      </span>
+    </div>
+  </div>
+  <hr class="my-2 border-gray-300 dark:border-gray-600">
+  <div class="flex justify-center" *ngIf="!isDataLoaded">
+    <app-loader></app-loader>
+  </div>
+  <div *ngIf="isDataLoaded">
+    <app-table [data]="misEntriesData" [columns]="columns"></app-table>
+  </div>
+</div>

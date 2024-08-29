@@ -136,6 +136,22 @@ export class AttendanceLogService {
       })
     );
   }
+
+  getMisEntriesList(date:string, userId: string): Observable<AttendanceLogModel[]>{
+    const url = `${this.urlMain}/misentry/summary?date=${date}&userId=${userId}`;
+    return this.http.get<AttendanceLogModel[]>(url).pipe(
+      map(employees => 
+        employees.map(employee => ({
+          ...employee,
+          fullName: ConcatName.concatName(employee.firstName, employee.lastName)
+        }))
+      ),
+      catchError(error => {
+        console.error('Error fetching all employee hours', error);
+        return of([]);
+      })
+    );
+  }
   
   getActivityRecordsInByUserId(userdId: string, startDate: string, endDate: string): Observable<ActivityRecordModel[]> {
     const attUrl = `${this.urlMain}/activity-record/in?userId=${userdId}&startDate=${startDate}&endDate=${endDate}`;

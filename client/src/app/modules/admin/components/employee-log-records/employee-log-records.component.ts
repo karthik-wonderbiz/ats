@@ -12,14 +12,12 @@ import Swal from 'sweetalert2';
   templateUrl: './employee-log-records.component.html',
   styleUrls: ['./employee-log-records.component.css'],
 })
-
-
 export class EmployeeLogRecordsComponent implements OnInit {
   @Input() employeeLogData: any[] = [];
 
   allLogRecords: any[] = [];
-  allSuggestions: string[] = [];
-  filteredSuggestions: string[] = [];
+  allSuggestions: { fullName: string; profilePic: string }[] = [];
+  filteredSuggestions: { fullName: string; profilePic: string }[] = [];
   searchTerms: string[] = [];
   searchInput: string = '';
   selectedDate: string = '';
@@ -44,7 +42,7 @@ export class EmployeeLogRecordsComponent implements OnInit {
   columns = [
     { key: 'fullName', label: 'Employee Name' },
     { key: 'attendanceTime', label: 'Attendance Time' },
-    { key: 'checkType', label: 'Check Type' },
+    { key: 'checkType', label: 'Check Type' }
   ];
   tabNames = ['In Out', 'In', 'Out'];
   tabs = ['', 'IN', 'OUT'];
@@ -128,6 +126,7 @@ export class EmployeeLogRecordsComponent implements OnInit {
   }
 
   processAttendanceLogs(data: AttendanceLogModel[]) {
+    // Process attendance logs to include formatted time and date
     this.allLogRecords = data.map((log) => {
       const dateTime = new Date(log.attendanceLogTime);
       return {
@@ -136,24 +135,38 @@ export class EmployeeLogRecordsComponent implements OnInit {
         attendanceTime: TimeFormatter.formatTime(dateTime),
       };
     });
-
-    const uniqueNames = new Set(this.allLogRecords.map((log) => log.fullName));
-    this.allSuggestions = Array.from(uniqueNames);
-
+  
+    // Create a Map to store unique fullNames and their associated profilePic
+    const uniqueLogs = new Map<string, { fullName: string; profilePic: string }>();
+  
+    this.allLogRecords.forEach((log) => {
+      if (!uniqueLogs.has(log.fullName)) {
+        uniqueLogs.set(log.fullName, { fullName: log.fullName, profilePic: log.profilePic });
+      }
+    });
+  
+    // Convert the Map values to an array
+    this.allSuggestions = Array.from(uniqueLogs.values());
+  
     this.performSearch();
   }
+  
 
   onInputChange() {
     this.filteredSuggestions = this.allSuggestions.filter((suggestion) =>
-      suggestion.toLowerCase().includes(this.searchInput.toLowerCase())
+      suggestion.fullName.toLowerCase().includes(this.searchInput.toLowerCase())
     );
   }
 
   addTerm() {
     const trimmedInput = this.searchInput.trim();
+    const selectedSuggestion = this.allSuggestions.find(
+      (suggestion) => suggestion.fullName === trimmedInput
+    );
+
     if (
       trimmedInput &&
-      this.allSuggestions.includes(trimmedInput) &&
+      selectedSuggestion &&
       !this.searchTerms.includes(trimmedInput)
     ) {
       this.searchTerms.push(trimmedInput);
@@ -168,8 +181,8 @@ export class EmployeeLogRecordsComponent implements OnInit {
     this.performSearch();
   }
 
-  selectSuggestion(suggestion: string) {
-    this.searchInput = suggestion;
+  selectSuggestion(suggestion: { fullName: string; profilePic: string }) {
+    this.searchInput = suggestion.fullName;
     this.addTerm();
   }
 
@@ -195,10 +208,11 @@ export class EmployeeLogRecordsComponent implements OnInit {
   }
 
   exportToCSV() {
-    const dataToExport = this.allLogRecords.map(({ fullName, attendanceTime, checkType }) => ({
+    const dataToExport = this.allLogRecords.map(({ fullName, attendanceTime, checkType, profilePic }) => ({
       'Employee Name': fullName,
       'Attendance Time': attendanceTime,
-      'Check Type': checkType
+      'Check Type': checkType,
+      'Profile Picture': profilePic // Include profilePic in the export
     }));
   
     const filenameMap: { [key: string]: string } = {
@@ -218,7 +232,7 @@ export class EmployeeLogRecordsComponent implements OnInit {
       showTitle: false,
       title: '',
       useBom: true,
-      headers: ['Employee Name','Attendance Time', 'Check Type'],
+      headers: ['Employee Name', 'Attendance Time', 'Check Type', 'Profile Picture'],
       noDownload: false,
       removeEmptyValues: true,
     };
@@ -232,5 +246,4 @@ export class EmployeeLogRecordsComponent implements OnInit {
       timer: 3000
     });
   }
-  
 }
