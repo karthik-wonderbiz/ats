@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class SignUpService {
 
-  private APIUrl = "http://192.168.29.46:5000/api/user/signup";
+  private APIUrl = "http://192.168.29.242:5000/api/user/signup";
   constructor(private http: HttpClient) {
 
   }

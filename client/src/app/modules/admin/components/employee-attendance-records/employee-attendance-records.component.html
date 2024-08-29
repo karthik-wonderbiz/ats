@@ -19,20 +19,26 @@
               class="flex-grow border-none outline-none bg-transparent placeholder-gray-500 text-sm "
               (keydown)="handleKeyDown($event)"
             />
-
-            <ul *ngIf="filteredSuggestions.length > 0" class="absolute top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-1 z-10 shadow-lg">
-              <li *ngFor="let suggestion of filteredSuggestions" 
-                  (click)="selectSuggestion(suggestion)" 
-                  class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                {{ suggestion }}
+            <ul *ngIf="filteredSuggestions.length > 0"
+              class="absolute overflow-x-auto max-h-[60vh] top-full left-0 w-full bg-white border border-gray-300 rounded-lg mt-1 z-10 shadow-lg">
+              <li *ngFor="let suggestion of filteredSuggestions" (click)="selectSuggestion(suggestion)"
+                class="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                <img [src]="'data:image/jpeg;base64,' + suggestion.profilePic" alt="Profile Picture"
+                  class="w-8 h-8 rounded-full mr-2" />
+                <span>{{ suggestion.fullName }}</span>
               </li>
             </ul>
           </div>
                
-          <button title="Export to CSV" (click)="exportToCSV()"
-          class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
-          <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
-        </button>
+          <div class="relative group inline-block">
+            <button title="Export to CSV" (click)="exportToCSV()"
+              class="transition ease-in-out hover:-translate-y-1 hover:scale-100 duration-300">
+              <i class="fa-solid fa-file-csv fa-2xl" style="color: #1fb141;"></i>
+            </button>
+            <span class="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:inline-block px-2 py-1 text-xs font-medium text-white bg-green-600 rounded-lg shadow-sm whitespace-nowrap">
+              Export to CSV
+            </span>
+          </div>
     </div>
     <hr class="my-2 border-gray-300 dark:border-gray-700">
     <app-table [data]="employees" [columns]="columns" (rowClicked)="onRowClicked($event)"

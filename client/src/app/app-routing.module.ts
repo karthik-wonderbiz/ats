@@ -11,7 +11,7 @@ import { AdminDashboardComponent } from './modules/admin/components/admin-dashbo
 import { ContactComponent } from './modules/admin/components/contact/contact.component';
 import { AboutComponent } from './modules/admin/components/about/about.component';
 import { DashboardComponent } from './modules/admin/components/dashboard/dashboard.component';
-import { EmployeeDetailComponent } from './modules/admin/components/generic-components/employee-detail/employee-detail.component';
+import { EmployeeDetailComponent } from './modules/admin/components/employee-detail/employee-detail.component';
 import { UpdateEmployeeDetailsComponent } from './modules/admin/components/update-employee-details/update-employee-details.component';
 import { EmployeeStatusDetailsComponent } from './modules/admin/components/employee-status-details/employee-status-details.component';
 import { EmployeeAttendanceRecordsComponent } from './modules/admin/components/employee-attendance-records/employee-attendance-records.component';
@@ -20,6 +20,9 @@ import { AllTopEmployeesComponent } from './modules/admin/components/all-top-emp
 import { EmployeeLogRecordsComponent } from './modules/admin/components/employee-log-records/employee-log-records.component';
 import { PageAccessComponent } from './modules/admin/components/page-access/page-access.component';
 import { ChangePasswordComponent } from './modules/admin/components/change-password/change-password.component';
+import { MisEntriesComponent } from './modules/admin/components/mis-entries/mis-entries.component';
+import { MisEntriesListComponent } from './modules/admin/components/mis-entries-list/mis-entries-list.component';
+import { UnsavedChangesGuard } from './guards/unsaved-changes.guard';
 
 const routes: Routes = [
 
@@ -46,7 +49,7 @@ const routes: Routes = [
       { path: '', redirectTo: '/admin/dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'employee-detail/:id', component: EmployeeDetailComponent },
-      { path: 'update-employee-details/:id', component: UpdateEmployeeDetailsComponent },
+      { path: 'update-employee-details/:id', component: UpdateEmployeeDetailsComponent, canDeactivate: [UnsavedChangesGuard], },
       { path: 'employee-status-details', component: EmployeeStatusDetailsComponent },
       { path: 'todays-attendance', component: EmployeeStatusDetailsComponent },
       { path: 'employees-today-working', component: EmployeeAttendanceRecordsComponent },
@@ -55,6 +58,8 @@ const routes: Routes = [
       { path: 'all-top-employees/:type', component: AllTopEmployeesComponent },
       { path: 'page-access', component: PageAccessComponent },
       { path: 'change-password', component: ChangePasswordComponent },
+      {path:'mis-entries', component: MisEntriesListComponent},
+      {path:'mis-entries/:id/:date', component: MisEntriesComponent}
     ],
 
   },

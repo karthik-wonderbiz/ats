@@ -48,6 +48,8 @@ export class UpdateEmployeeDetailsComponent {
 
   viaCapture = false;
 
+  private initialEmployeeData: EmployeeModel = { ...this.employee };
+
   constructor(
     private route: ActivatedRoute,
     private employeeService: EmployeeService,
@@ -60,14 +62,6 @@ export class UpdateEmployeeDetailsComponent {
   ) { }
 
   ngOnInit(): void {
-    // this.route.params.subscribe((params: Params) => {
-    //   const paramsId = params['id'];
-    //   if(paramsId != null){
-    //     this.userService.getUserById(paramsId).subscribe((data: UserModel) => {
-    //       this.user = data;
-    //     });
-    //   }
-    // });
     const encryptedId = this.route.snapshot.paramMap.get('id');
     console.log("EncryptedId", encryptedId);
     if (encryptedId) {
@@ -88,6 +82,11 @@ export class UpdateEmployeeDetailsComponent {
         this.thumbnail = 'data:image/jpeg;base64,' + this.employee.profilePic;
       });
     }
+    this.initialEmployeeData = { ...this.employee };
+  }
+
+  isFormDirty(): boolean {
+    return JSON.stringify(this.employee) !== JSON.stringify(this.initialEmployeeData);
   }
 
   toggleCapture() {
@@ -124,10 +123,6 @@ export class UpdateEmployeeDetailsComponent {
               text: 'The update process has completed.',
               timer: 1000
             });
-            // setTimeout(() => {
-            //   this.router.navigate(['/admin/employees']);
-              
-            // }, 1000);
           }
         });
       }

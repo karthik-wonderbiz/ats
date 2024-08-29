@@ -44,7 +44,7 @@ export class LoginComponent {
   @Output() loginStatusChange = new EventEmitter<boolean>();
   @Output() signUpStatusChange = new EventEmitter<boolean>();
 
-  private loginApiUrl = 'http://192.168.29.46:5000/api/user/log-in';
+  private loginApiUrl = 'http://192.168.29.242:5000/api/user/log-in';
 
   constructor(
     private http: HttpClient,

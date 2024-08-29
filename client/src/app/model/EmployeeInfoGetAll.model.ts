@@ -1,4 +1,5 @@
 export interface EmployeeInfoGetAll {
+    userId: any;
 
     contactNo: string;
     email: string;
@@ -8,5 +9,5 @@ export interface EmployeeInfoGetAll {
     firstName: string;
     lastName: string;
     profilePic: string;
-
+    fullName: string;
 }

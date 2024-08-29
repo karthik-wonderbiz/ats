@@ -42,7 +42,7 @@ import { EmployeeStatusDetailsComponent } from './modules/admin/components/emplo
 import { EmployeeStatusComponent } from './modules/admin/components/employee-status/employee-status.component';
 import { BarComponent } from './modules/admin/components/generic-components/bar/bar.component';
 import { CalendarComponent } from './modules/admin/components/generic-components/calendar/calendar.component';
-import { EmployeeDetailComponent } from './modules/admin/components/generic-components/employee-detail/employee-detail.component';
+import { EmployeeDetailComponent } from './modules/admin/components/employee-detail/employee-detail.component';
 import { LineComponent } from './modules/admin/components/generic-components/line/line.component';
 import { PieComponent } from './modules/admin/components/generic-components/pie/pie.component';
 import { TableWithTabsComponent } from './modules/admin/components/generic-components/table-with-tabs/table-with-tabs.component';
@@ -57,6 +57,8 @@ import { SidebarComponent } from './shared/components/sidebar/sidebar.component'
 import { AdminDashboardComponent } from './modules/admin/components/admin-dashboard/admin-dashboard.component';
 import { PageAccessComponent } from './modules/admin/components/page-access/page-access.component';
 import { ChangePasswordComponent } from './modules/admin/components/change-password/change-password.component';
+import { MisEntriesComponent } from './modules/admin/components/mis-entries/mis-entries.component';
+import { MisEntriesListComponent } from './modules/admin/components/mis-entries-list/mis-entries-list.component';
 
 
 @NgModule({
@@ -101,7 +103,9 @@ import { ChangePasswordComponent } from './modules/admin/components/change-passw
     LoaderComponent,
     AdminDashboardComponent,
     PageAccessComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
+    MisEntriesComponent,
+    MisEntriesListComponent
   ],
   imports: [
     BrowserModule,

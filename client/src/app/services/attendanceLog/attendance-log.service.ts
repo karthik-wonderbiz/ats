@@ -9,7 +9,7 @@ import { ConcatName, TimeFormatter } from '../../utils/genericFunction';
   providedIn: 'root'
 })
 export class AttendanceLogService {
-  private urlMain = "http://192.168.29.46:5000/api/attendanceLog";
+  private urlMain = "http://192.168.29.242:5000/api/attendanceLog";
 
   constructor(private http: HttpClient) 
   { }
@@ -124,6 +124,22 @@ export class AttendanceLogService {
   getMisEntriesByUserId(userdId: string, date: string): Observable<AttendanceLogModel[]> {
     const attUrl = `${this.urlMain}/misentry?userId=${userdId}&date=${date}`;
     return this.http.get<AttendanceLogModel[]>(attUrl).pipe(
+      map(employees => 
+        employees.map(employee => ({
+          ...employee,
+          fullName: ConcatName.concatName(employee.firstName, employee.lastName)
+        }))
+      ),
+      catchError(error => {
+        console.error('Error fetching all employee hours', error);
+        return of([]);
+      })
+    );
+  }
+
+  getMisEntriesList(date:string, userId: string): Observable<AttendanceLogModel[]>{
+    const url = `${this.urlMain}/misentry/summary?date=${date}&userId=${userId}`;
+    return this.http.get<AttendanceLogModel[]>(url).pipe(
       map(employees => 
         employees.map(employee => ({
           ...employee,

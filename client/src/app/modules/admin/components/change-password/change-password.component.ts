@@ -52,7 +52,8 @@ export class ChangePasswordComponent {
   serverError = ''
 
   pType: string = "password";
-  eye: boolean = true
+  eye: boolean = true;
+  eyeOld: boolean = true;
 
   constructor(
     private changePasswordService: ChangePasswordService,
@@ -62,12 +63,18 @@ export class ChangePasswordComponent {
   ) { }
 
   ngOnInit(): void { 
-    const userData = localStorage.getItem('loginData')
-    console.log(userData)
+    const userData = localStorage.getItem('loginData');
     if(userData){
-      this.changePassword.email = JSON.parse(userData).email
+      this.changePassword.email = JSON.parse(userData).email;
+      this.changePassword.userId = JSON.parse(userData).id;
+      console.log(this.changePassword.userId);
     }
     
+  }
+
+  viewPassOld(){
+    this.pType = this.pType == "password" ? "text" : 'password'
+    this.eyeOld = !this.eyeOld
   }
 
   viewPass() {
@@ -93,7 +100,7 @@ export class ChangePasswordComponent {
             Swal.fire({
               icon: 'error',
               title: 'Update Failed',
-              text: 'There was an error updating the password.',
+              text: error.error,
               timer: 1000
             });
           },
