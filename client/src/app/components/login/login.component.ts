@@ -15,9 +15,14 @@ import { RoutingService } from '../../services/routing/routing.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  // loginData = {
+  //   email: 'demotest@gmail.com',
+  //   password: 'Test@1234'
+  // };
+
   loginData = {
-    email: 'demotest@gmail.com',
-    password: 'Test@1234'
+    email: '',
+    password: ''
   };
 
   loginError = '';
