@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { Router, RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
@@ -22,6 +22,7 @@ import { PageAccessComponent } from './modules/admin/components/page-access/page
 import { ChangePasswordComponent } from './modules/admin/components/change-password/change-password.component';
 import { RouteService } from './services/route/route.service';
 import { ProfileComponent } from './components/profile/profile.component';
+import { RoutingService } from './services/routing/routing.service';
 
 const routes: Routes = [
 
@@ -99,53 +100,65 @@ const routes: Routes = [
 //   // Default route for dashboard or user-specific routes
 //   { path: 'dashboard', component: AdminDashboardComponent }, // or your main dashboard component
 // ];
-
+export function initializeApp(
+  routingService: RoutingService
+): () => Promise<void> {
+  return () => routingService.initializeRoutes(); // Ensure initializeRoutes returns a promise
+}
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeApp,
+      deps: [RoutingService],
+      multi: true
+    }
+  ]
 })
 
 export class AppRoutingModule {
-  constructor(private router: Router) { }
+  // constructor(private router: Router) { }
 
-  public loadUserRoutes(): void {
-    const user = JSON.parse(localStorage.getItem('loginData') || '{}');
-    if (user && user.pageList) {
-      const atsRoute = this.router.config.find(route => route.path === 'ats');
-      console.log(atsRoute)
-      if (atsRoute && atsRoute.children) {
-        // Clear existing child routes if necessary
-        atsRoute.children = [
-          { path: '', redirectTo: user.roleId === 2 ? 'dashboard' : 'log-records', pathMatch: 'full' }
-        ];
-  
-        user.pageList.forEach((page: any) => {
-          if (page.isActive) {
-            const childRoute = this.getRouteByTitle(page.pageTitle);
-            atsRoute.children?.push(childRoute);
-          }
-        });
-  
-        // Reset the router's navigation with the updated routes
-        this.router.resetConfig(this.router.config);
-      }
-    }
-  }
-  
-  
-  private getRouteByTitle(title: string): any {
-    const routeMapping: { [key: string]: { path: string, component: any } } = {
-      'Dashboard': { path: 'dashboard', component: DashboardComponent },
-      'Employees': { path: 'employees', component: AllEmployeesComponent },
-      'WorkingHours': { path: 'employees-today-working', component: EmployeeAttendanceRecordsComponent },
-      'UpdateProfile': { path: 'update-employee-details/:id', component: UpdateEmployeeDetailsComponent },
-      'Logs': { path: 'log-records', component: EmployeeLogRecordsComponent },
-      'Permissions': { path: 'page-access', component: PageAccessComponent },
-      'Attendance': { path: 'todays-attendance', component: EmployeeStatusDetailsComponent },
-      'Profile': { path: 'employee-detail/:id', component: EmployeeDetailComponent },
-      'UpdatePassword': { path: 'change-password', component: ChangePasswordComponent },
-    };
-  
-    return routeMapping[title] || { path: 'login', component: LoginComponent };
-  }
+  // public loadUserRoutes(): void {
+  //   const user = JSON.parse(localStorage.getItem('loginData') || '{}');
+  //   if (user && user.pageList) {
+  //     const atsRoute = this.router.config.find(route => route.path === 'ats');
+  //     console.log(atsRoute)
+  //     if (atsRoute && atsRoute.children) {
+  //       // Clear existing child routes if necessary
+  //       atsRoute.children = [
+  //         { path: '', redirectTo: user.roleId === 2 ? 'dashboard' : 'log-records', pathMatch: 'full' }
+  //       ];
+
+  //       user.pageList.forEach((page: any) => {
+  //         if (page.isActive) {
+  //           const childRoute = this.getRouteByTitle(page.pageTitle);
+  //           atsRoute.children?.push(childRoute);
+  //         }
+  //       });
+
+  //       // Reset the router's navigation with the updated routes
+  //       this.router.resetConfig(this.router.config);
+  //     }
+  //   }
+  // }
+
+
+  // private getRouteByTitle(title: string): any {
+  //   const routeMapping: { [key: string]: { path: string, component: any } } = {
+  //     'Dashboard': { path: 'dashboard', component: DashboardComponent },
+  //     'Employees': { path: 'employees', component: AllEmployeesComponent },
+  //     'WorkingHours': { path: 'employees-today-working', component: EmployeeAttendanceRecordsComponent },
+  //     'UpdateProfile': { path: 'update-employee-details/:id', component: UpdateEmployeeDetailsComponent },
+  //     'Logs': { path: 'log-records', component: EmployeeLogRecordsComponent },
+  //     'Permissions': { path: 'page-access', component: PageAccessComponent },
+  //     'Attendance': { path: 'todays-attendance', component: EmployeeStatusDetailsComponent },
+  //     'Profile': { path: 'employee-detail/:id', component: EmployeeDetailComponent },
+  //     'UpdatePassword': { path: 'change-password', component: ChangePasswordComponent },
+  //   };
+
+  //   return routeMapping[title] || { path: 'login', component: LoginComponent };
+  // }
 }

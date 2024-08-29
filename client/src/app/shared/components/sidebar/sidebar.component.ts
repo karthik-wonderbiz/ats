@@ -12,12 +12,24 @@ export class SidebarComponent {
   @Output() toggle = new EventEmitter<void>();
   @Output() toggleOff = new EventEmitter<void>();
 
+  roleId : number = 0
+
   onToggle(): void {
     this.toggle.emit();
   }
 
   onToggleOff(): void {
     this.toggleOff.emit();
+  }
+
+  ngOnInit(){
+    let user = localStorage.getItem('user')
+    if(user){
+      user = JSON.parse(user).roleId
+      this.roleId = parseInt(user!)
+
+    }
+    
   }
 
 }
