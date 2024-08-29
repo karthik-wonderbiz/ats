@@ -75,7 +75,7 @@ export class TopEmployeesComponent implements OnInit {
     this.attendanceLogService
       .getAllEmployeesInHours(reportTypeMinIn)
       .subscribe((data) => {
-        this.top5EmployeeMinIn = data.slice(0, 5);
+        this.top5EmployeeMinIn = data.reverse().slice(0, 5);
         this.isTabChanged = false;
         console.log(
           `Top 5 Employee Data min in for ${reportTypeMinIn}:`,

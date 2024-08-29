@@ -22,7 +22,6 @@ import { PageAccessComponent } from './modules/admin/components/page-access/page
 import { ChangePasswordComponent } from './modules/admin/components/change-password/change-password.component';
 import { MisEntriesComponent } from './modules/admin/components/mis-entries/mis-entries.component';
 import { MisEntriesListComponent } from './modules/admin/components/mis-entries-list/mis-entries-list.component';
-import { UnsavedChangesGuard } from './guards/unsaved-changes.guard';
 
 const routes: Routes = [
 
@@ -49,7 +48,7 @@ const routes: Routes = [
       { path: '', redirectTo: '/admin/dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'employee-detail/:id', component: EmployeeDetailComponent },
-      { path: 'update-employee-details/:id', component: UpdateEmployeeDetailsComponent, canDeactivate: [UnsavedChangesGuard], },
+      { path: 'update-employee-details/:id', component: UpdateEmployeeDetailsComponent},
       { path: 'employee-status-details', component: EmployeeStatusDetailsComponent },
       { path: 'todays-attendance', component: EmployeeStatusDetailsComponent },
       { path: 'employees-today-working', component: EmployeeAttendanceRecordsComponent },
