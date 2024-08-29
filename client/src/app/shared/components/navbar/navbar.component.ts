@@ -39,7 +39,7 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    if(this.logindata){
+    if (this.logindata) {
       Swal.fire({
         title: 'Are you sure?',
         text: 'Do you really want to log out?',
@@ -52,6 +52,7 @@ export class NavbarComponent implements OnInit {
       }).then((result) => {
         if (result.isConfirmed) {
           localStorage.removeItem('loginData');
+          localStorage.removeItem("user")
           this.logindata = null;
           this.employeeInfo = {};
           this.isOn = false;
@@ -67,7 +68,7 @@ export class NavbarComponent implements OnInit {
           });
         }
       });
-    }    
+    }
   }
 
   fetchEmployeeInfo(id: string): void {
@@ -85,7 +86,7 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  onChangePassword(){
+  onChangePassword() {
     this.router.navigate(['/ats/change-password']);
   }
 

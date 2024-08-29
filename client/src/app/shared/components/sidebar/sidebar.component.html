@@ -9,7 +9,7 @@
 >
   <div class="h-full pl-2 pr py-4 bg-blue-50 dark:bg-gray-800">
     <ul class="space-y-2 font-medium">
-      <li>
+      <li *ngIf="roleId===2">
         <a
           routerLink="./dashboard"
           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -40,7 +40,7 @@
           >
         </a>
       </li>
-      <li>
+      <li *ngIf="roleId===2">
         <a
           routerLink="./todays-attendance"
           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -70,7 +70,7 @@
           >
         </a>
       </li>
-      <li>
+      <li *ngIf="roleId===2">
         <a
           routerLink="./employees"
           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -131,8 +131,8 @@
             >Employee Logs</span
           >
         </a>
-      </li>
-      <li>
+      </li >
+      <li *ngIf="roleId===2">
         <a
           routerLink="./employees-today-working"
           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -163,7 +163,7 @@
           >
         </a>
       </li>
-      <li>
+      <li *ngIf="roleId===2">
         <a
           routerLink="./page-access"
           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -194,7 +194,7 @@
           >
         </a>
       </li>
-      <li>
+      <li *ngIf="roleId===2">
         <a routerLink="./mis-entries"
           class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
           <svg class="w-6 h-6 text-gray-500 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"

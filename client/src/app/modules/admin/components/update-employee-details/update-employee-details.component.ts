@@ -48,7 +48,7 @@ export class UpdateEmployeeDetailsComponent {
 
   viaCapture = false;
 
-  private initialEmployeeData: EmployeeModel = { ...this.employee };
+  // private initialEmployeeData: EmployeeModel = { ...this.employee };
 
   constructor(
     private route: ActivatedRoute,
@@ -82,12 +82,12 @@ export class UpdateEmployeeDetailsComponent {
         this.thumbnail = 'data:image/jpeg;base64,' + this.employee.profilePic;
       });
     }
-    this.initialEmployeeData = { ...this.employee };
+    // this.initialEmployeeData = { ...this.employee };
   }
 
-  isFormDirty(): boolean {
-    return JSON.stringify(this.employee) !== JSON.stringify(this.initialEmployeeData);
-  }
+  // isFormDirty(): boolean {
+  //   return JSON.stringify(this.employee) !== JSON.stringify(this.initialEmployeeData);
+  // }
 
   toggleCapture() {
     this.viaCapture = !this.viaCapture

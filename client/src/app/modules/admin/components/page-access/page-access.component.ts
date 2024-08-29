@@ -50,6 +50,8 @@ export class PageAccessComponent implements OnInit {
           text: 'Page access settings updated successfully.',
           icon: 'success',
           confirmButtonText: 'OK',
+          showConfirmButton: false,
+          timer: 2000
         });
       },
       (error) => {
@@ -57,7 +59,8 @@ export class PageAccessComponent implements OnInit {
           title: 'Error!',
           text: 'Failed to update page access settings.',
           icon: 'error',
-          confirmButtonText: 'OK',
+          showConfirmButton: false,
+          timer: 2000
         });
       }
     );

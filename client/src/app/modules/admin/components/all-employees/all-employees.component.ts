@@ -129,7 +129,8 @@ export class AllEmployeesComponent implements OnInit {
                 title: 'Deleted!',
                 text: `${employee.fullName} has been deleted.`,
                 showConfirmButton: false,
-                icon: 'success'
+                icon: 'success',
+                timer: 2000
               });
               this.getAllEmployees();
             },

@@ -8,9 +8,9 @@ import { AppRoutingModule } from './app-routing.module';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  constructor(private appRoutingModule: AppRoutingModule) {}
+  constructor(private appRoutingModule: AppRoutingModule) { }
 
   ngOnInit(): void {
-    this.appRoutingModule.loadUserRoutes();
+    // this.appRoutingModule.loadUserRoutes();
   }
 }

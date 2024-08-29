@@ -7,13 +7,19 @@ import { LoginService } from '../../shared/services/login/login.service';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../services/authentication/auth.service';
 import { AppRoutingModule } from '../../app-routing.module';
+import { RoutingService } from '../../services/routing/routing.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent  {
+export class LoginComponent {
+  // loginData = {
+  //   email: 'karthik@wonder.com',
+  //   password: '80io*)IO'
+  // };
+
   loginData = {
     email: '',
     password: ''
@@ -52,7 +58,9 @@ export class LoginComponent  {
     private router: Router,
     private loginService: LoginService,
     private authService: AuthService,
-    private appRoutingModule: AppRoutingModule
+    private appRoutingModule: AppRoutingModule,
+    private routingService: RoutingService
+
   ) { }
 
   onLogin(loginForm: NgForm): void {
@@ -68,6 +76,11 @@ export class LoginComponent  {
         next: (response) => {
           console.log(JSON.stringify(response));
           localStorage.setItem('loginData', JSON.stringify(response));
+          localStorage.setItem("user", JSON.stringify({
+            roleId: response.roleId,
+            email: response.email
+          }))
+          this.routingService.setRoutes(response.pageList)
         },
         error: (error) => {
           this.isInvalid = true
@@ -94,8 +107,17 @@ export class LoginComponent  {
             // } else {
             //   this.router.navigate(['user']);
             // }
-            this.appRoutingModule.loadUserRoutes();
-            this.router.navigate(['ats']);
+            // this.appRoutingModule.loadUserRoutes();
+            let user = localStorage.getItem("user")
+            if (user) {
+              user = JSON.parse(user).roleId
+              if (parseInt(user!) == 2) {
+                this.router.navigate(['ats/dashboard'])
+              } else {
+                this.router.navigate(['ats/log-records']);
+              }
+            }
+            // if(localStorage.setItem)
           });
           setTimeout(() => { this.isLoginSuccessful = false }, 1000);
         }
