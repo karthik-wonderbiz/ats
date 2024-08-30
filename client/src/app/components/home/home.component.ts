@@ -38,20 +38,42 @@ export class HomeComponent {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      const encryptedId = params['userId'];
-      this.user.userId = parseInt(EncryptDescrypt.decrypt((encryptedId)));
       this.getUser();
+      const encryptedId = params['userId'] || this.user.userId;
+      // if (!encryptedId) {
+      //   this.userService.getUserById(this.user.userId).subscribe({
+      //     next: (data) => {
+      //       const { email, firstName, lastName, profilePic, id } = data;
+      //       this.user.firstName = firstName;
+      //       this.user.lastName = lastName;
+      //       this.user.email = email;
+      //       this.user.profilePic = profilePic;
+      //       this.isUser = true;
+      //       this.user.id = id;
+      //     },
+      //     error: (err) => {
+      //       this.toast.message = err.message || 'User not found';
+      //       this.isClose = true;
+      //       setTimeout(() => {
+      //         this.isClose = false;
+      //       }, 4000);
+      //     },
+      //   });
+      // }
+      this.user.userId = parseInt(EncryptDescrypt.decrypt((encryptedId)));
     });
   }
 
   getUser = () => {
     let user = localStorage.getItem("user")
+    console.log(user)
     if (user) {
       this.user.id = JSON.parse(user).id
       this.user.email = JSON.parse(user).email
       this.user.firstName = JSON.parse(user).firstName
       this.user.lastName = JSON.parse(user).lastName
       this.user.profilePic = JSON.parse(user).profilePic
+      this.user.userId = JSON.parse(user).userId
       this.isUser = true
     }
     // this.userService.getUserById(this.user.userId).subscribe({

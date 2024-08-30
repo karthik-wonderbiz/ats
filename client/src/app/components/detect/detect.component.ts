@@ -83,7 +83,7 @@ export class DetectComponent {
             // video.srcObject = stream;
             this.stream = stream;
           }
-          this.isCameraOpen = true; 
+          this.isCameraOpen = true;
         })
         .catch((error: any) => {
           console.error('Error accessing webcam: ', error);
@@ -99,8 +99,9 @@ export class DetectComponent {
     if (this.stream) {
       const tracks = this.stream.getTracks();
       tracks.forEach((track) => track.stop());
+      this.videoElement.nativeElement.srcObject = null;
       this.stream = null;
-      this.isCameraOpen = false; 
+      this.isCameraOpen = false;
     }
   }
 
