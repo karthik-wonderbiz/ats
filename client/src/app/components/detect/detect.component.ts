@@ -136,8 +136,7 @@ export class DetectComponent {
               this.resElement.nativeElement.appendChild(image);
               let msg =
                 attendedNames.length > 0
-                  ? `Marked Attendance for ${attendedNames.join(', ')} at ${data.attendance[0].attendanceLogTime
-                  }`
+                  ? `Marked Attendance for ${attendedNames.join(', ')}`
                   : 'No attendance marked';
               this.displayElement.nativeElement.innerText = msg;
               this.isClose = true;
