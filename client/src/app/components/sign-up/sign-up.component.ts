@@ -16,7 +16,7 @@ import { EncryptDescrypt } from '../../utils/genericFunction';
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css'],
 })
-export class SignUpComponent implements OnInit {
+export class SignUpComponent {
 
   employee: EmployeeModel = {
     firstName: '',
@@ -61,8 +61,6 @@ export class SignUpComponent implements OnInit {
     private signupService: SignUpService,
     private imageCompress: NgxImageCompressService
   ) { }
-
-  ngOnInit(): void { }
 
   toggleCapture() {
     this.viaCapture = !this.viaCapture

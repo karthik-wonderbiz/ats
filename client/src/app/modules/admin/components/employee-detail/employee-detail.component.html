@@ -4,19 +4,19 @@
     <div class="flex md:flex-row items-center">
       <div class="w-24 h-24 flex-shrink-0 mb-4 md:mb-0 md:mr-6">
         <img class="w-full h-full rounded-full border-2 border-yellow-400 object-cover shadow-md"
-          [src]="'data:image/jpeg;base64,' + employee[0]?.profilePic" alt="Employee Logo">
+          [src]="'data:image/jpeg;base64,' + employee?.profilePic" alt="Employee Logo">
       </div>
       <div class="flex-1">
         <div
           class="flex justify-around text-sm max-sm:text-xs max-sm:p-2 font-light text-gray-500 dark:text-gray-400 items-center space-x-2">
-          <p class="text-2xl font-semibold text-blue-900 mb-2 inline-block">{{ employee[0]?.firstName }} {{
-            employee[0]?.lastName }}</p>
+          <p class="text-2xl font-semibold text-blue-900 mb-2 inline-block">{{ employee?.firstName }} {{
+            employee?.lastName }}</p>
           <a (click)="onEdit()" class="btn btn-xs">Edit
           </a>
         </div>
-        <p class="text-gray-700"><strong class="mr-2 text-yellow-500">Email:</strong> <span>{{ employee[0]?.email ||
+        <p class="text-gray-700"><strong class="mr-2 text-yellow-500">Email:</strong> <span>{{ employee?.email ||
             'john.doe@gmail.com' }}</span></p>
-        <p class="text-gray-700"><strong class="mr-2 text-yellow-500">Phone:</strong> <span>{{ employee[0]?.contactNo ||
+        <p class="text-gray-700"><strong class="mr-2 text-yellow-500">Phone:</strong> <span>{{ employee?.contactNo ||
             '8766545632' }}</span></p>
       </div>
     </div>

@@ -8,6 +8,7 @@ import { UserService } from '../../../../services/user/user.service';
 import { SignalRService } from '../../../../services/signalR/signal-r.service';
 import { data } from '@tensorflow/tfjs';
 import moment from 'moment';
+import EmployeeModel from '../../../../model/employee-sign-up.model';
 
 @Component({
   selector: 'app-employee-detail',
@@ -15,7 +16,17 @@ import moment from 'moment';
   styleUrls: ['./employee-detail.component.css'],
 })
 export class EmployeeDetailComponent implements OnInit {
-  employee: any = {};
+  // employee: EmployeeModel = {
+  //   id: '',
+  //   userId: '',
+  //   firstName: '',
+  //   lastName: '',
+  //   email: '',
+  //   contactNo: '',
+  //   password: '',
+  //   profilePic: ''
+  // };
+  employee:any = {}
   // user: any = {};
   inOutData: any[] = [];
   misEntriesData: any[] = [];
@@ -68,11 +79,12 @@ export class EmployeeDetailComponent implements OnInit {
 
       this.updateDatesAndFetchData();
       this.employeeService.getEmployeeByUserId(employeeId).subscribe(data => {
-        this.employee = data
-        console.log(data![0].userId)
-        if (data![0].userId) {
-          this.employee.userId = data![0].userId
-        }
+        console.log(data)
+        this.employee =data![0]
+        // console.log(data![0].userId)
+        // if (data![0].userId) {
+        //   this.employee.userId = data![0].userId
+        // }
         console.log('Employee Data:', this.employee);
       });
 
@@ -168,7 +180,7 @@ export class EmployeeDetailComponent implements OnInit {
     this.signalRService.itemUpdate$.subscribe(update => {
       if (update) {
         this.employeeService.getEmployeeByUserId(employeeId).subscribe(data => {
-          this.employee = data;
+          this.employee = data![0]
         });
 
         // this.userService.getUserById(employeeId).subscribe(data => {
@@ -203,7 +215,7 @@ export class EmployeeDetailComponent implements OnInit {
       const dayData = this.employeeHoursData.find(entry => entry.currentDate === date);
       return dayData ? this.convertTimeToHours(dayData.totalHours) : 0;
     });
-  
+
     this.lineChartDataJson = JSON.stringify({
       labels: dateLabels,
       datasets: [
@@ -225,7 +237,7 @@ export class EmployeeDetailComponent implements OnInit {
         },
       ],
     });
-  
+
     this.lineChartOptionsJson = JSON.stringify({
       responsive: true,
       plugins: {
@@ -256,7 +268,7 @@ export class EmployeeDetailComponent implements OnInit {
       },
     });
   }
-  
+
 
   private generateDateLabels(): string[] {
     const currentMonth = moment().format('YYYY-MM');
