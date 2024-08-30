@@ -21,6 +21,7 @@ import { EmployeeDetailComponent } from '../../modules/admin/components/employee
 import { ChangePasswordComponent } from '../../modules/admin/components/change-password/change-password.component';
 import { MisEntriesComponent } from '../../modules/admin/components/mis-entries/mis-entries.component';
 import { MisEntriesListComponent } from '../../modules/admin/components/mis-entries-list/mis-entries-list.component';
+import { AllTopEmployeesComponent } from '../../modules/admin/components/all-top-employees/all-top-employees.component';
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +46,8 @@ export class RoutingService {
     UpdatePassword: { path: 'change-password', component: ChangePasswordComponent },
     MisEntry: { path: 'mis-entries', component: MisEntriesListComponent },
     MisEntrySummary: { path: 'mis-entries/:id/:date', component: MisEntriesComponent },
-    EmployeeStatus: { path: "employee-status-details", component: EmployeeStatusDetailsComponent }
+    EmployeeStatus: { path: "employee-status-details", component: EmployeeStatusDetailsComponent },
+    AllTopEmployee: {path: "all-top-employees/:type", component:AllTopEmployeesComponent}
   };
   private defaultRoutes: Route[] = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
