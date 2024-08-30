@@ -98,6 +98,22 @@ export class AttendanceLogService {
     );
   }
 
+  getEmployeeHoursByUserId(userId: string, startDate: string, endDate: string): Observable<AttendanceLogModel[]>{
+    const attUrl = `${this.urlMain}/totalhours?userId=${userId}&startDate=${startDate}&endDate=${endDate}`;
+    return this.http.get<AttendanceLogModel[]>(attUrl).pipe(
+      map(employees =>
+        employees.map(employee => ({
+          ...employee,
+          fullName: ConcatName.concatName(employee.firstName, employee.lastName)
+        }))
+      ),
+      catchError(error => {
+        console.error('Error fetching all employee hours', error);
+        return of([]);
+      })
+    );
+  }
+
   getAllEmployeesInHours(reportType: string): Observable<AttendanceLogModel[]> {
     const attUrl = `${this.urlMain}/total-hours/in?reportType=${reportType}`;
     return this.http.get<AttendanceLogModel[]>(attUrl).pipe(

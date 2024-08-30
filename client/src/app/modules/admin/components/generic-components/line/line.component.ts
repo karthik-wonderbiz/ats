@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ChartOptions, ChartData, ChartDataset } from 'chart.js';
+import { ChartOptions, ChartData } from 'chart.js';
 
 @Component({
   selector: 'app-line',
@@ -7,7 +7,7 @@ import { ChartOptions, ChartData, ChartDataset } from 'chart.js';
   styleUrls: ['./line.component.css']
 })
 export class LineComponent implements OnChanges {
-  
+
   @Input() title: string = 'line-chart';
   @Input() lineChartDataJson: string = '{}';
   @Input() lineChartOptionsJson: string = '{}';
@@ -16,9 +16,9 @@ export class LineComponent implements OnChanges {
   public lineChartData: ChartData<'line'> = { labels: [], datasets: [] };
   public lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
-    plugins:{
-      legend:{
-        labels:{
+    plugins: {
+      legend: {
+        labels: {
           boxWidth: 12
         }
       }

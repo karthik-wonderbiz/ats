@@ -7,6 +7,7 @@ import { EmployeeService } from '../../../../services/employee/employee.service'
 import { UserService } from '../../../../services/user/user.service';
 import { SignalRService } from '../../../../services/signalR/signal-r.service';
 import { data } from '@tensorflow/tfjs';
+import moment from 'moment';
 
 @Component({
   selector: 'app-employee-detail',
@@ -37,6 +38,7 @@ export class EmployeeDetailComponent implements OnInit {
   tabs = ['today', 'yesterday', 'dayBeforeYesterday'];
 
   activeTab: string = 'today';
+  
 
   constructor(
     private route: ActivatedRoute,
@@ -52,7 +54,6 @@ export class EmployeeDetailComponent implements OnInit {
 
   startDate: string = '';
   endDate: string = '';
-
 
   ngOnInit() {
     const encryptedId = this.route.snapshot.paramMap.get('id');
@@ -82,6 +83,7 @@ export class EmployeeDetailComponent implements OnInit {
       console.error('Employee ID is missing in the URL');
     }
     this.loadMisEntriesData();
+    this.getEmployeeLogsByUserId();
   }
 
   onEdit() {
@@ -172,4 +174,73 @@ export class EmployeeDetailComponent implements OnInit {
       }
     });
   }
+  employeeHoursData: any[]=[];
+
+  getEmployeeLogsByUserId():void{
+    const encryptedId = this.route.snapshot.paramMap.get('id');
+    if (encryptedId) {
+      const employeeId = EncryptDescrypt.decrypt(encryptedId);
+      const startDate = '2024-08-01';
+      const endDate = '2024-08-31';
+      this.attendanceLogService.getEmployeeHoursByUserId(employeeId, startDate, endDate).subscribe((data) => {
+        this.employeeHoursData = data;
+        console.log("Employee hours daily data for a month", this.employeeHoursData);
+      });
+    }
+  }
+
+  private generateDateLabels(): string[] {
+    const currentMonth = moment().format('YYYY-MM');
+    const daysInMonth = moment(currentMonth).daysInMonth();
+
+    return Array.from({ length: daysInMonth }, (_, i) => 
+      moment(`${currentMonth}-${i + 1}`).format('YYYY-MM-DD')
+    );
+  }
+
+  lineChartDataJson = JSON.stringify({
+    labels: this.generateDateLabels(),
+    datasets: [
+      {
+        label: 'Threshold (9 hours)',
+        data: Array(this.generateDateLabels().length).fill(9),
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 2,
+        fill: false,
+        borderDash: [10, 5]
+      },
+      {
+        label: 'Daily Hours',
+        data: [
+          7, 8, 9.5, 8.5, 7, 6, 9, 8.2, 7.8, 9.1, 
+          8.7, 7.6, 9, 8.9, 7.5, 8.4, 9.2, 8.8, 7.4, 
+          6.5, 9, 8, 7.2, 6.9, 9, 8.3, 7.7, 9.5, 8.6, 
+          7
+        ],
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 2,
+        fill: false
+      }
+    ]
+  });
+
+  lineChartOptionsJson = JSON.stringify({
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+        },
+      },
+    },
+  });
 }
