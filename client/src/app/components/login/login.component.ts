@@ -33,7 +33,7 @@ export class LoginComponent {
 
   ngOnInit() {
     let user = localStorage.getItem("user")
-    if (user && JSON.parse(user).roleId && JSON.parse(user).pageList > 0) {
+    if (user && JSON.parse(user).roleId && JSON.parse(user).isLoggedIn) {
       if (JSON.parse(user).roleId == 2) {
         this.router.navigate(["ats/dashboard"])
       } else {
@@ -92,7 +92,7 @@ export class LoginComponent {
           console.log("Login user:", response)
           const { firstName, lastName, email, profilePic, userId, employeeDetailId, roleId } = response
           let user = {
-            firstName, lastName, email, profilePic, userId, id: employeeDetailId, roleId
+            firstName, lastName, email, profilePic, userId, id: employeeDetailId, roleId, isLoggedIn: true
           }
           localStorage.setItem("user", JSON.stringify(user))
           this.routingService.setRoutes(response.pageList)

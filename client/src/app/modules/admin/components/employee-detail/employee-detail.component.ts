@@ -21,7 +21,6 @@ export class EmployeeDetailComponent implements OnInit {
   misEntriesData: any[] = [];
   selectedDate: Date = new Date();
   formattedDate: string = '';
-
   columnsTable1 = [
     { key: 'inTime', label: 'In Time' },
     { key: 'outTime', label: 'Out Time' },
@@ -38,7 +37,7 @@ export class EmployeeDetailComponent implements OnInit {
   tabs = ['today', 'yesterday', 'dayBeforeYesterday'];
 
   activeTab: string = 'today';
-  
+
 
   constructor(
     private route: ActivatedRoute,
@@ -64,11 +63,11 @@ export class EmployeeDetailComponent implements OnInit {
       console.log('Decrypted Employee ID:', employeeId);
 
       this.updateDatesAndFetchData();
-
       this.employeeService.getEmployeeByUserId(employeeId).subscribe(data => {
-        this.employee = data;
-        if(data){
-          this.employee.userId = data[0].userId
+        this.employee = data
+        console.log(data![0].userId)
+        if (data![0].userId) {
+          this.employee.userId = data![0].userId
         }
         console.log('Employee Data:', this.employee);
       });
@@ -149,7 +148,7 @@ export class EmployeeDetailComponent implements OnInit {
       });
     }
   }
-  
+
 
   formatDate(date: Date): string {
     return date.toISOString().split('T')[0];
@@ -176,7 +175,7 @@ export class EmployeeDetailComponent implements OnInit {
       }
     });
   }
-  employeeHoursData: any[]=[];
+  employeeHoursData: any[] = [];
 
   getEmployeeHoursByUserId(): void {
     const encryptedId = this.route.snapshot.paramMap.get('id');
@@ -196,7 +195,7 @@ export class EmployeeDetailComponent implements OnInit {
     const currentMonth = moment().format('YYYY-MM');
     const daysInMonth = moment(currentMonth).daysInMonth();
 
-    return Array.from({ length: daysInMonth }, (_, i) => 
+    return Array.from({ length: daysInMonth }, (_, i) =>
       moment(`${currentMonth}-${i + 1}`).format('YYYY-MM-DD')
     );
   }
@@ -215,9 +214,9 @@ export class EmployeeDetailComponent implements OnInit {
       {
         label: 'Daily Hours',
         data: [
-          7, 8, 9.5, 8.5, 7, 6, 9, 8.2, 7.8, 9.1, 
-          8.7, 7.6, 9, 8.9, 7.5, 8.4, 9.2, 8.8, 7.4, 
-          6.5, 9, 8, 7.2, 6.9, 9, 8.3, 7.7, 9.5, 8.6, 
+          7, 8, 9.5, 8.5, 7, 6, 9, 8.2, 7.8, 9.1,
+          8.7, 7.6, 9, 8.9, 7.5, 8.4, 9.2, 8.8, 7.4,
+          6.5, 9, 8, 7.2, 6.9, 9, 8.3, 7.7, 9.5, 8.6,
           7
         ],
         borderColor: 'rgba(54, 162, 235, 1)',

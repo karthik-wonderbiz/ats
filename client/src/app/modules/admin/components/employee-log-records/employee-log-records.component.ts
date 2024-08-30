@@ -58,7 +58,6 @@ export class EmployeeLogRecordsComponent implements OnInit {
   ngOnInit(): void {
     this.selectedDate = this.getDefaultDate();
     this.selectedTab = this.tabs[0] || '';
-    this.subscribeToItemUpdates();
     let user = localStorage.getItem("user")
     if (user) {
       this.roleId = JSON.parse(user).roleId
@@ -73,13 +72,14 @@ export class EmployeeLogRecordsComponent implements OnInit {
         this.tabs = [''];
       }
     }
+    this.subscribeToItemUpdates();
     this.fetchAttendanceLogs();
   }
 
   onDateChange() {
     this.isDataLoaded = false;
-    
-    console.log("date changed",this.selectedDate)
+
+    console.log("date changed", this.selectedDate)
     this.fetchAttendanceLogs();
   }
 
@@ -93,7 +93,13 @@ export class EmployeeLogRecordsComponent implements OnInit {
       if (update) {
         if (this.selectedTab === '') {
           this.isDataLoaded = false;
-          this.getAllAttendanceLogs();
+          if (this.roleId == 2) {
+            console.log("admin", this.roleId)
+            this.getAllAttendanceLogs(0);
+          } else {
+            console.log("emo", this.roleId)
+            this.getAllAttendanceLogs(this.userId)
+          }
         } else if (this.selectedTab === 'IN' || this.selectedTab === 'OUT') {
           this.isDataLoaded = false;
           this.getAllAttendanceLogsInOut(this.selectedTab);
@@ -115,9 +121,13 @@ export class EmployeeLogRecordsComponent implements OnInit {
   fetchAttendanceLogs() {
     console.log("Fetching records")
     if (this.selectedTab === '') {
-      console.log("All records")
-
-      this.getAllAttendanceLogs();
+      if (this.roleId == 2) {
+        console.log("admin", this.roleId)
+        this.getAllAttendanceLogs(0);
+      } else {
+        console.log("emo", this.roleId)
+        this.getAllAttendanceLogs(this.userId)
+      }
     } else if (this.selectedTab === 'IN' || this.selectedTab === 'OUT') {
       console.log("tab records")
 
@@ -125,10 +135,10 @@ export class EmployeeLogRecordsComponent implements OnInit {
     }
   }
 
-  getAllAttendanceLogs() {
+  getAllAttendanceLogs(id: number) {
 
     this.attendanceLogService
-      .getAllAttendanceLogs(this.selectedDate, this.userId)
+      .getAllAttendanceLogs(this.selectedDate, id)
       .subscribe((data) => {
         this.processAttendanceLogs(data);
         this.isDataLoaded = true;

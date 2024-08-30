@@ -43,10 +43,8 @@ export class AttendanceLogService {
   getAllAttendanceLogs(startDate: string, id: number): Observable<AttendanceLogModel[]> {
     let url;
     if (id > 0) {
-      console.log("fiffiif")
       url = `${this.urlMain}/user/${id}?date=${startDate}`
     } else {
-      console.log("00000000000000000")
       url = `${this.urlMain}?startDate=${startDate}`
     }
     console.log("services", id)
@@ -98,7 +96,7 @@ export class AttendanceLogService {
     );
   }
 
-  getEmployeeHoursByUserId( userId: string, startDate: string, endDate: string): Observable<AttendanceLogModel[]> {
+  getEmployeeHoursByUserId(userId: string, startDate: string, endDate: string): Observable<AttendanceLogModel[]> {
     const attUrl = `${this.urlMain}/totalhours?userId=${userId}&startDate=${startDate}&endDate=${endDate}`;
     return this.http.get<AttendanceLogModel[]>(attUrl).pipe(
       map(employees =>

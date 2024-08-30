@@ -97,7 +97,7 @@ export class SignUpComponent implements OnInit {
 
           const { firstName, lastName, email, profilePic, userId, employeeDetailId, roleId } = response
           let user = {
-            firstName, lastName, email, profilePic, userId, id: employeeDetailId, roleId
+            firstName, lastName, email, profilePic, userId, id: employeeDetailId, roleId, isLoggedIn: false
           }
 
           localStorage.setItem("user", JSON.stringify(user))

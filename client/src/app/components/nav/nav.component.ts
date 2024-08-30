@@ -11,9 +11,10 @@ export class NavComponent {
   ngOnInit() {
     let user = localStorage.getItem("user")
     if (user) {
+      this.isLoggedIn = JSON.parse(user ? user : JSON.stringify({ isLoggedIn: false })).isLoggedIn
       user = JSON.parse(user).roleId
       this.roleId = parseInt(user!)
-      this.isLoggedIn = JSON.parse(user!).pageList.length > 0
+      console.log(this.isLoggedIn)
     }
   }
 }
