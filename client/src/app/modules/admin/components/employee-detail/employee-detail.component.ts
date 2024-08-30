@@ -61,35 +61,29 @@ export class EmployeeDetailComponent implements OnInit {
   endDate: string = '';
 
   ngOnInit() {
-    const encryptedId = this.route.snapshot.paramMap.get('id');
-    if (encryptedId) {
-      const employeeId = EncryptDescrypt.decrypt(encryptedId);
-      console.log('Decrypted Employee ID:', employeeId);
-
-      this.updateDatesAndFetchData();
-      this.employeeService.getEmployeeByUserId(employeeId).subscribe(data => {
-        this.employee = data
-        console.log(data![0].userId)
-        if (data![0].userId) {
-          this.employee.userId = data![0].userId
-        }
-        console.log('Employee Data:', this.employee);
-      });
-
-      // this.userService.getUserById(employeeId).subscribe(data => {
-      //   this.user = data;
-      //   console.log('User Data:', this.user);
-      // });
-
-      this.formattedDate = this.selectedDate.toLocaleDateString();
-
-      this.subscribeToItemUpdates(employeeId);
-    } else {
-      console.error('Employee ID is missing in the URL');
-    }
-    this.loadMisEntriesData();
-    this.getEmployeeHoursByUserId();
-  }
+    this.route.paramMap.subscribe(params => {
+      const encryptedId = params.get('id');
+      if (encryptedId) {
+        const employeeId = EncryptDescrypt.decrypt(encryptedId);
+        console.log('Decrypted Employee ID:', employeeId);
+        this.updateDatesAndFetchData();
+        this.employeeService.getEmployeeByUserId(employeeId).subscribe(data => {
+          this.employee = data;
+          console.log(data![0].userId);
+          if (data![0].userId) {
+            this.employee.userId = data![0].userId;
+          }
+          console.log('Employee Data:', this.employee);
+        });
+        this.formattedDate = this.selectedDate.toLocaleDateString();
+        this.subscribeToItemUpdates(employeeId);
+      } else {
+        console.error('Employee ID is missing in the URL');
+      }
+      this.loadMisEntriesData();
+      this.getEmployeeHoursByUserId();
+    });
+  }  
 
   onEdit() {
     console.log(this.employee.userId)
