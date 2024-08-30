@@ -18,8 +18,8 @@
         <li>
           <a *ngIf="roleId == 2" routerLink="/ats/dashboard" class="block text-white rounded bg-transparent"
             aria-current="page">Dashboard</a>
-          <a *ngIf="roleId == 3" routerLink="/ats/log-records" class="block text-white rounded bg-transparent"
-            aria-current="page">Logs</a>
+          <a *ngIf="isLoggedIn && roleId == 3" routerLink="/ats/log-records"
+            class="block text-white rounded bg-transparent" aria-current="page">Logs</a>
         </li>
       </ul>
     </div>
