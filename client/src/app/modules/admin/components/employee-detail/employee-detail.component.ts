@@ -85,7 +85,7 @@ export class EmployeeDetailComponent implements OnInit {
       console.error('Employee ID is missing in the URL');
     }
     this.loadMisEntriesData();
-    this.getEmployeeLogsByUserId();
+    this.getEmployeeHoursByUserId();
   }
 
   onEdit() {
@@ -178,16 +178,16 @@ export class EmployeeDetailComponent implements OnInit {
   }
   employeeHoursData: any[] = [];
 
-  getEmployeeLogsByUserId(): void {
+  getEmployeeHoursByUserId(): void {
     const encryptedId = this.route.snapshot.paramMap.get('id');
     if (encryptedId) {
       const employeeId = EncryptDescrypt.decrypt(encryptedId);
       const startDate = '2024-08-01';
       const endDate = '2024-08-31';
-      // this.attendanceLogService.getEmployeeHoursByUserId(employeeId, startDate, endDate).subscribe((data:any) => {
-      //   this.employeeHoursData = data;
-      //   console.log("Employee hours daily data for a month", this.employeeHoursData);
-      // });
+      this.attendanceLogService.getEmployeeHoursByUserId(employeeId, startDate, endDate).subscribe((data) => {
+        this.employeeHoursData = data;
+        console.log("Employee hours daily data for a month", this.employeeHoursData);
+      });
     }
   }
 
