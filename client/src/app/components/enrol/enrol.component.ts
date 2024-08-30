@@ -203,7 +203,7 @@ export class EnrolComponent {
         this.toast.position = 'top';
         this.toast.type = 'success';
         this.isCapturedDisabled = false;
-        this.router.navigate(['/enrolment/detect']);
+        this.router.navigate(['/ats/login']);
         setTimeout(() => {
           this.isClose = false;
         }, 4000);
