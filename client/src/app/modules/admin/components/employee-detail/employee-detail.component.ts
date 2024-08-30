@@ -38,7 +38,7 @@ export class EmployeeDetailComponent implements OnInit {
   tabs = ['today', 'yesterday', 'dayBeforeYesterday'];
 
   activeTab: string = 'today';
-  
+
 
   constructor(
     private route: ActivatedRoute,
@@ -47,7 +47,9 @@ export class EmployeeDetailComponent implements OnInit {
     private employeeService: EmployeeService,
     private userService: UserService,
     private signalRService: SignalRService
-  ) { }
+  ) {
+
+  }
 
   activityInRecords: ActivityRecordModel[] = [];
   activityOutRecords: ActivityRecordModel[] = [];
@@ -65,7 +67,7 @@ export class EmployeeDetailComponent implements OnInit {
 
       this.employeeService.getEmployeeByUserId(employeeId).subscribe(data => {
         this.employee = data;
-        if(data){
+        if (data) {
           this.employee.userId = data[0].userId
         }
         console.log('Employee Data:', this.employee);
@@ -147,7 +149,7 @@ export class EmployeeDetailComponent implements OnInit {
       });
     }
   }
-  
+
 
   formatDate(date: Date): string {
     return date.toISOString().split('T')[0];
@@ -174,18 +176,18 @@ export class EmployeeDetailComponent implements OnInit {
       }
     });
   }
-  employeeHoursData: any[]=[];
+  employeeHoursData: any[] = [];
 
-  getEmployeeLogsByUserId():void{
+  getEmployeeLogsByUserId(): void {
     const encryptedId = this.route.snapshot.paramMap.get('id');
     if (encryptedId) {
       const employeeId = EncryptDescrypt.decrypt(encryptedId);
       const startDate = '2024-08-01';
       const endDate = '2024-08-31';
-      this.attendanceLogService.getEmployeeHoursByUserId(employeeId, startDate, endDate).subscribe((data) => {
-        this.employeeHoursData = data;
-        console.log("Employee hours daily data for a month", this.employeeHoursData);
-      });
+      // this.attendanceLogService.getEmployeeHoursByUserId(employeeId, startDate, endDate).subscribe((data:any) => {
+      //   this.employeeHoursData = data;
+      //   console.log("Employee hours daily data for a month", this.employeeHoursData);
+      // });
     }
   }
 
@@ -193,7 +195,7 @@ export class EmployeeDetailComponent implements OnInit {
     const currentMonth = moment().format('YYYY-MM');
     const daysInMonth = moment(currentMonth).daysInMonth();
 
-    return Array.from({ length: daysInMonth }, (_, i) => 
+    return Array.from({ length: daysInMonth }, (_, i) =>
       moment(`${currentMonth}-${i + 1}`).format('YYYY-MM-DD')
     );
   }
@@ -212,9 +214,9 @@ export class EmployeeDetailComponent implements OnInit {
       {
         label: 'Daily Hours',
         data: [
-          7, 8, 9.5, 8.5, 7, 6, 9, 8.2, 7.8, 9.1, 
-          8.7, 7.6, 9, 8.9, 7.5, 8.4, 9.2, 8.8, 7.4, 
-          6.5, 9, 8, 7.2, 6.9, 9, 8.3, 7.7, 9.5, 8.6, 
+          7, 8, 9.5, 8.5, 7, 6, 9, 8.2, 7.8, 9.1,
+          8.7, 7.6, 9, 8.9, 7.5, 8.4, 9.2, 8.8, 7.4,
+          6.5, 9, 8, 7.2, 6.9, 9, 8.3, 7.7, 9.5, 8.6,
           7
         ],
         borderColor: 'rgba(54, 162, 235, 1)',

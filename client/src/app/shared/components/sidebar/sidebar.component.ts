@@ -27,7 +27,6 @@ export class SidebarComponent {
     if(user){
       user = JSON.parse(user).roleId
       this.roleId = parseInt(user!)
-
     }
     
   }

@@ -44,7 +44,7 @@ export class AttendanceLogService {
     let url;
     if (id > 0) {
       console.log("fiffiif")
-      url = `${this.urlMain}/user/${id}?startDate=${startDate}`
+      url = `${this.urlMain}/user/${id}?date=${startDate}`
     } else {
       console.log("00000000000000000")
       url = `${this.urlMain}?startDate=${startDate}`
@@ -84,22 +84,6 @@ export class AttendanceLogService {
 
   getAllEmployeesHours(startDate: string, endDate: string, reportType: string): Observable<AttendanceLogModel[]> {
     const attUrl = `${this.urlMain}/totalhours?startDate=${startDate}&endDate=${endDate}&reportType=${reportType}`;
-    return this.http.get<AttendanceLogModel[]>(attUrl).pipe(
-      map(employees =>
-        employees.map(employee => ({
-          ...employee,
-          fullName: ConcatName.concatName(employee.firstName, employee.lastName)
-        }))
-      ),
-      catchError(error => {
-        console.error('Error fetching all employee hours', error);
-        return of([]);
-      })
-    );
-  }
-
-  getEmployeeHoursByUserId(userId: string, startDate: string, endDate: string): Observable<AttendanceLogModel[]>{
-    const attUrl = `${this.urlMain}/totalhours?userId=${userId}&startDate=${startDate}&endDate=${endDate}`;
     return this.http.get<AttendanceLogModel[]>(attUrl).pipe(
       map(employees =>
         employees.map(employee => ({

@@ -29,11 +29,11 @@ export class NavbarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    const storedData = localStorage.getItem('loginData');
+    const storedData = localStorage.getItem('user');
     if (storedData) {
       this.logindata = JSON.parse(storedData);
       if (this.logindata.id) {
-        this.fetchEmployeeInfo(this.logindata.id);
+        this.fetchEmployeeInfo(this.logindata.userId);
       }
     }
   }
@@ -51,10 +51,8 @@ export class NavbarComponent implements OnInit {
         cancelButtonText: 'Cancel'
       }).then((result) => {
         if (result.isConfirmed) {
-          localStorage.removeItem('loginData');
+          localStorage.removeItem('token');
           localStorage.removeItem("user")
-          this.logindata = null;
-          this.employeeInfo = {};
           this.isOn = false;
           this.toggleOff.emit();
           Swal.fire({
@@ -64,7 +62,9 @@ export class NavbarComponent implements OnInit {
             text: 'You have been logged out successfully.',
             timer: 2000
           }).then(() => {
-            window.location.href = '/'; // Redirect after the alert
+            this.employeeInfo = {};
+            this.logindata = null;
+            this.router.navigate(['login']);
           });
         }
       });
@@ -78,8 +78,8 @@ export class NavbarComponent implements OnInit {
   }
 
   navigateToProfile(): void {
-    if (this.logindata && this.logindata.id) {
-      const encryptedId = EncryptDescrypt.encrypt(this.logindata.id.toString());
+    if (this.logindata && this.logindata.userId) {
+      const encryptedId = EncryptDescrypt.encrypt(this.logindata.userId.toString());
       this.router.navigate(['/ats/employee-detail', encryptedId]);
     } else {
       console.error('User ID is missing or data is incorrect');

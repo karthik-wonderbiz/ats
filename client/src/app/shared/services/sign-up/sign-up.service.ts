@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import EmployeeModel from '../../../model/employee-sign-up.model';
 import { Observable } from 'rxjs';
+import SignUpModel from '../../../model/signup.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class SignUpService {
 
   }
 
-  saveLoginData(loginData: EmployeeModel): Observable<EmployeeModel> {
+  saveLoginData(loginData: EmployeeModel): Observable<SignUpModel> {
     const {
       firstName,
       lastName,
@@ -22,7 +23,7 @@ export class SignUpService {
       password,
       profilePic
     } = loginData
-    return this.http.post<EmployeeModel>(this.APIUrl,
+    return this.http.post<SignUpModel>(this.APIUrl,
 
       {
         firstName,

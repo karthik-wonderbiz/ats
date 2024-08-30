@@ -10,7 +10,6 @@ import { AdminDashboardComponent } from '../../modules/admin/components/admin-da
 import { NotFoundComponent } from '../../components/not-found/not-found.component';
 import { Route, Router } from '@angular/router';
 import { LoginService } from '../../shared/services/login/login.service';
-import { ComponentType } from '@fullcalendar/core/preact.js';
 import { DashboardComponent } from '../../modules/admin/components/dashboard/dashboard.component';
 import { AllEmployeesComponent } from '../../modules/admin/components/all-employees/all-employees.component';
 import { EmployeeAttendanceRecordsComponent } from '../../modules/admin/components/employee-attendance-records/employee-attendance-records.component';
@@ -46,6 +45,7 @@ export class RoutingService {
     UpdatePassword: { path: 'change-password', component: ChangePasswordComponent },
     MisEntry: { path: 'mis-entries', component: MisEntriesListComponent },
     MisEntrySummary: { path: 'mis-entries/:id/:date', component: MisEntriesComponent },
+    EmployeeStatus: { path: "employee-status-details", component: EmployeeStatusDetailsComponent }
   };
   private defaultRoutes: Route[] = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -70,28 +70,22 @@ export class RoutingService {
     return new Promise<void>((resolve, reject) => {
       const user = localStorage.getItem('user');
       if (user) {
-        console.log(user)
         const roleId = JSON.parse(user).roleId;
         if (roleId) {
-          console.log(roleId)
           this.loginService.getRoutes(roleId).subscribe({
             next: (data) => {
-              console.log(data)
               this.routes = data;
               const my = this.generateRoutes(data)
-              console.log(my)
               this.router.resetConfig(my);
               resolve();
             },
             error: (e) => {
-              console.log(e);
               this.setDefaultRoute();
               resolve();
             },
           });
         }
       } else {
-        console.log("no user")
         this.setDefaultRoute();
         resolve();
       }
@@ -120,17 +114,10 @@ export class RoutingService {
   }
 
   generateRoutes(pageList: Page[]) {
-    const userRoutes = pageList.map((r) => {
-      console.log(r.pageTitle, {
-        path: this.routeMapping[r.pageTitle].path,
-        component: this.routeMapping[r.pageTitle].component || NotFoundComponent,
-      })
-      return {
-        path: this.routeMapping[r.pageTitle].path,
-        component: this.routeMapping[r.pageTitle].component || NotFoundComponent,
-      }
-    });
-    console.log(userRoutes)
+    const userRoutes = pageList.map((r) => ({
+      path: this.routeMapping[r.pageTitle].path,
+      component: this.routeMapping[r.pageTitle].component || NotFoundComponent,
+    }));
     const updatedRoutes = [...this.defaultRoutes, {
       path: 'ats', component: AdminDashboardComponent,
       children: [
@@ -138,7 +125,6 @@ export class RoutingService {
       ]
     }];
     updatedRoutes.push({ path: '**', component: NotFoundComponent });
-    console.log("rotes loaded:", updatedRoutes);
     return updatedRoutes;
   }
   // private getComponent(pageTitle: string): Type<any> | undefined {

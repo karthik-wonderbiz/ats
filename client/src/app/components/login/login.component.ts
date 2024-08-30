@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { AuthService } from '../../services/authentication/auth.service';
 import { AppRoutingModule } from '../../app-routing.module';
 import { RoutingService } from '../../services/routing/routing.service';
+import EmployeeModel from '../../model/employee-sign-up.model';
 
 @Component({
   selector: 'app-login',
@@ -19,11 +20,31 @@ export class LoginComponent {
   //   email: 'karthik@wonder.com',
   //   password: '80io*)IO'
   // };
-
-  loginData = {
+  loginData: EmployeeModel = {
+    firstName: '',
+    lastName: '',
     email: '',
-    password: ''
+    contactNo: '',
+    password: '',
+    profilePic: '',
+    id: '',
+    userId: '',
   };
+
+  ngOnInit() {
+    let user = localStorage.getItem("user")
+    if (user && JSON.parse(user).roleId) {
+      if (JSON.parse(user).roleId == 2) {
+        this.router.navigate(["ats/dashboard"])
+      } else {
+        this.router.navigate(["ats/log-records"])
+      }
+    }
+  }
+  // loginData = {
+  //   email: '',
+  //   password: ''
+  // };
 
   loginError = '';
   isInvalid = false;
@@ -64,22 +85,16 @@ export class LoginComponent {
   ) { }
 
   onLogin(loginForm: NgForm): void {
-    const loginData: LoginModel = {
-      email: this.loginData.email,
-      password: this.loginData.password,
-      roleId: 0,
-      pageList: []
-    }
-    console.log(loginData)
+
     if (this.validateEmail() && this.validatePassword()) {
-      this.loginService.Login(loginData).pipe().subscribe({
+      this.loginService.Login(this.loginData).pipe().subscribe({
         next: (response) => {
-          console.log(JSON.stringify(response));
-          localStorage.setItem('loginData', JSON.stringify(response));
-          localStorage.setItem("user", JSON.stringify({
-            roleId: response.roleId,
-            email: response.email
-          }))
+          console.log("Login user:", response)
+          const { firstName, lastName, email, profilePic, userId, employeeDetailId, roleId } = response
+          let user = {
+            firstName, lastName, email, profilePic, userId, id: employeeDetailId, roleId
+          }
+          localStorage.setItem("user", JSON.stringify(user))
           this.routingService.setRoutes(response.pageList)
         },
         error: (error) => {
@@ -91,7 +106,6 @@ export class LoginComponent {
           setTimeout(() => { this.isLogSubmitted = false }, 900);
         },
         complete: () => {
-          console.log(JSON.stringify("Login Success"));
           this.loginError = '';
           this.isInvalid = false;
           this.loginStatusChange.emit(true);
@@ -102,12 +116,6 @@ export class LoginComponent {
             showConfirmButton: false,
             timer: 2000
           }).then(() => {
-            // if (this.loginData.email === "admin@gmail.com" && this.loginData.password === "Admin@123") {
-            //   this.router.navigate(['admin']);
-            // } else {
-            //   this.router.navigate(['user']);
-            // }
-            // this.appRoutingModule.loadUserRoutes();
             let user = localStorage.getItem("user")
             if (user) {
               user = JSON.parse(user).roleId
@@ -117,7 +125,6 @@ export class LoginComponent {
                 this.router.navigate(['ats/log-records']);
               }
             }
-            // if(localStorage.setItem)
           });
           setTimeout(() => { this.isLoginSuccessful = false }, 1000);
         }

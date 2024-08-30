@@ -16,11 +16,11 @@ import { EmployeeService } from '../../../../services/employee/employee.service'
 })
 export class ChangePasswordComponent {
 
-  changePassword : ChangePassword = {
+  changePassword: ChangePassword = {
     email: '',
     oldPassword: '',
     newPassword: '',
-    userId : ''
+    userId: ''
   }
 
   confirmPass: ConfirmPassword = {
@@ -58,21 +58,21 @@ export class ChangePasswordComponent {
   constructor(
     private changePasswordService: ChangePasswordService,
     private router: Router,
-    private route : ActivatedRoute,
+    private route: ActivatedRoute,
     private employeeService: EmployeeService,
   ) { }
 
-  ngOnInit(): void { 
-    const userData = localStorage.getItem('loginData');
-    if(userData){
+  ngOnInit(): void {
+    const userData = localStorage.getItem('user');
+    if (userData) {
       this.changePassword.email = JSON.parse(userData).email;
-      this.changePassword.userId = JSON.parse(userData).id;
+      this.changePassword.userId = JSON.parse(userData).userId;
       console.log(this.changePassword.userId);
     }
-    
+
   }
 
-  viewPassOld(){
+  viewPassOld() {
     this.pType = this.pType == "password" ? "text" : 'password'
     this.eyeOld = !this.eyeOld
   }
@@ -89,12 +89,6 @@ export class ChangePasswordComponent {
         console.log(this.changePassword.userId);
         this.changePasswordService.updatePasswordById(employeeId, this.changePassword).pipe().subscribe({
           next: (response) => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Update Successful',
-              text: 'Password has been updated successfully.',
-              timer: 1000
-            });
           },
           error: (error) => {
             Swal.fire({
@@ -111,7 +105,9 @@ export class ChangePasswordComponent {
               showConfirmButton: false,
               text: 'The update process has completed.',
               timer: 1000
-            });
+            }).then(() => {
+              this.router.navigate(["ats/log-records"])
+            })
           }
         });
       }
@@ -121,7 +117,7 @@ export class ChangePasswordComponent {
   validateForm(): boolean {
     return (
       this.validatePassword() &&
-      this.validateConfirmPassword() 
+      this.validateConfirmPassword()
     );
   }
 

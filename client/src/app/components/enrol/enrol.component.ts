@@ -61,6 +61,7 @@ export class EnrolComponent {
     try {
       const user = JSON.parse(userString) as User;
       this.user = user;
+      console.log(user)
     } catch (e) {
       console.error('Error parsing user data from localStorage:', e);
       this.router.navigate(['/']);
@@ -161,6 +162,7 @@ export class EnrolComponent {
 
       if (imageBlob) {
         const formData = new FormData();
+        console.log(this.user)
         formData.append('file', imageBlob, 'capture.jpg');
         formData.append('employee_id', this.user.id.toString());
 
