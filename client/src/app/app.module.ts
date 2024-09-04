@@ -59,6 +59,7 @@ import { PageAccessComponent } from './modules/admin/components/page-access/page
 import { ChangePasswordComponent } from './modules/admin/components/change-password/change-password.component';
 import { MisEntriesComponent } from './modules/admin/components/mis-entries/mis-entries.component';
 import { MisEntriesListComponent } from './modules/admin/components/mis-entries-list/mis-entries-list.component';
+import { UnkonwFacesComponent } from './modules/admin/components/unkonw-faces/unkonw-faces.component';
 
 
 @NgModule({
@@ -105,7 +106,8 @@ import { MisEntriesListComponent } from './modules/admin/components/mis-entries-
     PageAccessComponent,
     ChangePasswordComponent,
     MisEntriesComponent,
-    MisEntriesListComponent
+    MisEntriesListComponent,
+    UnkonwFacesComponent
   ],
   imports: [
     BrowserModule,

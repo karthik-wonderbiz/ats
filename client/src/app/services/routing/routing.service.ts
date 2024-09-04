@@ -22,51 +22,77 @@ import { ChangePasswordComponent } from '../../modules/admin/components/change-p
 import { MisEntriesComponent } from '../../modules/admin/components/mis-entries/mis-entries.component';
 import { MisEntriesListComponent } from '../../modules/admin/components/mis-entries-list/mis-entries-list.component';
 import { AllTopEmployeesComponent } from '../../modules/admin/components/all-top-employees/all-top-employees.component';
+import { UnkonwFacesComponent } from '../../modules/admin/components/unkonw-faces/unkonw-faces.component';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RoutingService {
-  private routes: Page[] = []
+  private routes: Page[] = [];
   // private componentsMap: { [key: string]: Type<any> } = {
   //   home: HomeComponent,
   //   Dashboard:DashboardComponent,
   //   Attendance:
   // }
 
-  private routeMapping: { [key: string]: { path: string, component: any } } = {
+  private routeMapping: { [key: string]: { path: string; component: any } } = {
     Dashboard: { path: 'dashboard', component: DashboardComponent },
     Employees: { path: 'employees', component: AllEmployeesComponent },
-    WorkingHours: { path: 'employees-today-working', component: EmployeeAttendanceRecordsComponent },
-    UpdateProfile: { path: 'update-employee-details/:id', component: UpdateEmployeeDetailsComponent },
+    WorkingHours: {
+      path: 'employees-today-working',
+      component: EmployeeAttendanceRecordsComponent,
+    },
+    UpdateProfile: {
+      path: 'update-employee-details/:id',
+      component: UpdateEmployeeDetailsComponent,
+    },
     Logs: { path: 'log-records', component: EmployeeLogRecordsComponent },
     Permission: { path: 'page-access', component: PageAccessComponent },
-    Attendance: { path: 'todays-attendance', component: EmployeeStatusDetailsComponent },
-    Profile: { path: 'employee-detail/:id', component: EmployeeDetailComponent },
-    UpdatePassword: { path: 'change-password', component: ChangePasswordComponent },
+    Attendance: {
+      path: 'todays-attendance',
+      component: EmployeeStatusDetailsComponent,
+    },
+    Profile: {
+      path: 'employee-detail/:id',
+      component: EmployeeDetailComponent,
+    },
+    UpdatePassword: {
+      path: 'change-password',
+      component: ChangePasswordComponent,
+    },
     MisEntry: { path: 'mis-entries', component: MisEntriesListComponent },
-    MisEntrySummary: { path: 'mis-entries/:id/:date', component: MisEntriesComponent },
-    EmployeeStatus: { path: "employee-status-details", component: EmployeeStatusDetailsComponent },
-    AllTopEmployee: {path: "all-top-employees/:type", component:AllTopEmployeesComponent}
+    MisEntrySummary: {
+      path: 'mis-entries/:id/:date',
+      component: MisEntriesComponent,
+    },
+    EmployeeStatus: {
+      path: 'employee-status-details',
+      component: EmployeeStatusDetailsComponent,
+    },
+    AllTopEmployee: {
+      path: 'all-top-employees/:type',
+      component: AllTopEmployeesComponent,
+    },
+    UnknownFaces: { path: 'unknown-faces', component: UnkonwFacesComponent },
   };
   private defaultRoutes: Route[] = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
     { path: 'sign-up', component: SignUpComponent },
     {
-      path: 'enrolment', component: EnrolmentComponent,
+      path: 'enrolment',
+      component: EnrolmentComponent,
       children: [
         { path: '', redirectTo: '/enrolment/home', pathMatch: 'full' },
         { path: 'home', component: HomeComponent },
         { path: 'home/:userId', component: HomeComponent },
         { path: 'detect', component: DetectComponent },
         { path: 'enrol', component: EnrolComponent },
-      ]
+      ],
     },
   ];
 
-  constructor(private router: Router, private loginService: LoginService) { }
-
+  constructor(private router: Router, private loginService: LoginService) {}
 
   initializeRoutes() {
     return new Promise<void>((resolve, reject) => {
@@ -77,7 +103,7 @@ export class RoutingService {
           this.loginService.getRoutes(roleId).subscribe({
             next: (data) => {
               this.routes = data;
-              const my = this.generateRoutes(data)
+              const my = this.generateRoutes(data);
               this.router.resetConfig(my);
               resolve();
             },
@@ -98,10 +124,9 @@ export class RoutingService {
     this.router.resetConfig([
       ...this.defaultRoutes,
       {
-        path: 'ats', component: AdminDashboardComponent,
-        children: [
-          { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-        ]
+        path: 'ats',
+        component: AdminDashboardComponent,
+        children: [{ path: '', redirectTo: 'dashboard', pathMatch: 'full' }],
       },
       { path: '**', component: NotFoundComponent },
     ]);
@@ -120,17 +145,18 @@ export class RoutingService {
       path: this.routeMapping[r.pageTitle].path,
       component: this.routeMapping[r.pageTitle].component || NotFoundComponent,
     }));
-    const updatedRoutes = [...this.defaultRoutes, {
-      path: 'ats', component: AdminDashboardComponent,
-      children: [
-        ...userRoutes
-      ]
-    }];
+    const updatedRoutes = [
+      ...this.defaultRoutes,
+      {
+        path: 'ats',
+        component: AdminDashboardComponent,
+        children: [...userRoutes],
+      },
+    ];
     updatedRoutes.push({ path: '**', component: NotFoundComponent });
     return updatedRoutes;
   }
   // private getComponent(pageTitle: string): Type<any> | undefined {
   //   return this.componentsMap[pageTitle.toLowerCase()];
   // }
-
 }
