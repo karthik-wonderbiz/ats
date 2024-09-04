@@ -20,6 +20,8 @@ export class DetectComponent {
       .subscribe((text) => this.ttsService.speak(text));
   }
   cameraType: 'IN' | 'OUT' = 'IN';
+
+  isCameraSet: boolean = false;
   isCameraOpen: boolean = false;
   private ttsText = new Subject<string>();
   isClose: boolean = false;
@@ -41,18 +43,23 @@ export class DetectComponent {
   };
 
   onIn() {
-    this.cameraType = 'IN'
-    this.markAttendance()
+    this.markAttendance('IN');
   }
 
   onOut() {
-    this.cameraType = 'OUT'
-    this.markAttendance()
+    this.markAttendance('OUT');
   }
 
   ngOnInit(): void {
     this.initializeWebcam();
-    console.log(this.stream)
+    let cam = localStorage.getItem('camera');
+    if (cam) {
+      cam = JSON.parse(cam!);
+      this.cameraType = cam == 'IN' || cam == 'OUT' ? cam : 'IN';
+      this.isCameraSet = true;
+    } else {
+      this.cameraType = 'IN';
+    }
     // this.attendanceService.getCameraType().subscribe({
     //   next: (data) => {
     //     this.cameraType = data;
@@ -68,7 +75,7 @@ export class DetectComponent {
 
   private initializeWebcam(): void {
     if (this.isCameraOpen) {
-      this.stopWebcam();  // Close the webcam if already open
+      this.stopWebcam(); // Close the webcam if already open
     }
 
     const video: HTMLVideoElement | null = document.getElementById(
@@ -105,8 +112,8 @@ export class DetectComponent {
     }
   }
 
-  async markAttendance(): Promise<void> {
-    console.log(this.cameraType)
+  async markAttendance(cameraType: 'IN' | 'OUT'): Promise<void> {
+    // console.log(this.cameraType);
     const video: HTMLVideoElement = this.videoElement.nativeElement;
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
@@ -119,14 +126,15 @@ export class DetectComponent {
         canvas.toBlob(resolve, 'image/jpeg')
       );
       if (imageBlob) {
-        this.attendanceService.markAttendance(imageBlob, this.cameraType).subscribe({
+        this.attendanceService.markAttendance(imageBlob, cameraType).subscribe({
           next: (data) => {
             const imageUrl = `data:image/jpeg;base64,${data.image_base64}`;
             const image = new Image();
             image.src = imageUrl;
             if (this.resElement) {
               const attendedNames = data.attendance.map((a) => a.firstName);
-              const welcomeMsg = this.cameraType == "IN" ? "Welcome " : "Thank you"
+              const welcomeMsg =
+                this.cameraType == 'IN' ? 'Welcome ' : 'Thank you';
               let ttsText =
                 attendedNames.length > 0
                   ? `${welcomeMsg} ${attendedNames.join(', ')}`

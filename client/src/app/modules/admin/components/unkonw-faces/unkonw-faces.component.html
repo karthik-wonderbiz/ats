@@ -1,12 +1,20 @@
-<div class="flex flex-wrap gap-4">
-  <ng-container *ngFor="let img of imagesWithTime">
-    <div class="flex flex-col justify-center items-center">
-      <img
-        class="h-24 w-24 object-cover"
-        [src]="'http://192.168.29.207:8000' + img.image"
-        alt=""
-      />
-      <p>{{ img.imageLabel }}</p>
-    </div>
-  </ng-container>
+<div *ngIf="isFetcComplete && this.imagesWithTime.length == 0">
+  <p>No Unknown Images captured</p>
+</div>
+<div *ngIf="!isFetcComplete" class="flex justify-center w-full">
+  <app-loader></app-loader>
+</div>
+<div *ngIf="isFetcComplete">
+  <div class="flex flex-wrap gap-4">
+    <ng-container *ngFor="let img of imagesWithTime">
+      <div class="flex flex-col justify-center items-center">
+        <img
+          class="h-24 w-24 object-cover"
+          [src]="'http://192.168.29.207:8000' + img.image"
+          alt=""
+        />
+        <p>{{ img.imageLabel }}</p>
+      </div>
+    </ng-container>
+  </div>
 </div>

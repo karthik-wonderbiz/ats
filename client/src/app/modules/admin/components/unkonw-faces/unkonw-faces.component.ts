@@ -24,6 +24,8 @@ export class UnkonwFacesComponent {
     images: [],
   };
 
+  isFetcComplete: boolean = false;
+
   extractAndFormatDateTime(filename: string) {
     const matches = filename.match(/(\d{8})_(\d{6})/);
 
@@ -63,6 +65,7 @@ export class UnkonwFacesComponent {
             image: img,
           };
         });
+        this.isFetcComplete = true;
       },
       error: (err) => {
         console.log(err);

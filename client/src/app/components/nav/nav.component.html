@@ -1,25 +1,43 @@
 <nav class="bg-gray-900">
-  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-    <a routerLink="./" class="flex items-center space-x-3 rtl:space-x-reverse">
+  <div
+    class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
+  >
+    <a class="flex items-center space-x-3 rtl:space-x-reverse">
       <img height="30" width="30" src="logo.ico" alt="logo" />
-      <p class="self-center text-2xl font-semibold whitespace-nowrap text-white">
+      <p
+        class="self-center text-2xl font-semibold whitespace-nowrap text-white"
+      >
         ATS
       </p>
     </a>
 
     <div class="block w-auto" id="navbar-default">
-      <ul class="font-medium flex p-3 flex-row space-x-8 rtl:space-x-reverse mt-0 border-0">
+      <ul
+        class="font-medium flex p-3 flex-row space-x-8 rtl:space-x-reverse mt-0 border-0"
+      >
         <li>
-          <a routerLink="./" class="block text-white rounded bg-transparent" aria-current="page">Home</a>
+          <a
+            routerLink="./detect"
+            class="block text-white rounded bg-transparent"
+            aria-current="page"
+            >Detect</a
+          >
         </li>
         <li>
-          <a routerLink="./detect" class="block text-white rounded bg-transparent" aria-current="page">Detect</a>
-        </li>
-        <li>
-          <a *ngIf="roleId == 2" routerLink="/ats/dashboard" class="block text-white rounded bg-transparent"
-            aria-current="page">Dashboard</a>
-          <a *ngIf="isLoggedIn && roleId == 3" routerLink="/ats/log-records"
-            class="block text-white rounded bg-transparent" aria-current="page">Logs</a>
+          <a
+            *ngIf="roleId == 2"
+            routerLink="/ats/dashboard"
+            class="block text-white rounded bg-transparent"
+            aria-current="page"
+            >Dashboard</a
+          >
+          <a
+            *ngIf="isLoggedIn && roleId == 3"
+            routerLink="/ats/log-records"
+            class="block text-white rounded bg-transparent"
+            aria-current="page"
+            >Logs</a
+          >
         </li>
       </ul>
     </div>

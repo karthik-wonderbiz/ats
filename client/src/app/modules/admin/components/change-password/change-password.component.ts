@@ -12,20 +12,19 @@ import { EmployeeService } from '../../../../services/employee/employee.service'
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
-  styleUrl: './change-password.component.css'
+  styleUrl: './change-password.component.css',
 })
 export class ChangePasswordComponent {
-
   changePassword: ChangePassword = {
     email: '',
     oldPassword: '',
     newPassword: '',
-    userId: ''
-  }
+    userId: '',
+  };
 
   confirmPass: ConfirmPassword = {
     confirmPassword: '',
-  }
+  };
 
   employee: EmployeeModel = {
     id: '',
@@ -35,7 +34,7 @@ export class ChangePasswordComponent {
     email: '',
     contactNo: '',
     password: '',
-    profilePic: ''
+    profilePic: '',
   };
 
   errors = {
@@ -49,9 +48,10 @@ export class ChangePasswordComponent {
   isSubmitted = false;
   isServerError = false;
 
-  serverError = ''
+  serverError = '';
 
-  pType: string = "password";
+  pType: string = 'password';
+  pTypeOld: string = 'password';
   eye: boolean = true;
   eyeOld: boolean = true;
 
@@ -59,8 +59,8 @@ export class ChangePasswordComponent {
     private changePasswordService: ChangePasswordService,
     private router: Router,
     private route: ActivatedRoute,
-    private employeeService: EmployeeService,
-  ) { }
+    private employeeService: EmployeeService
+  ) {}
 
   ngOnInit(): void {
     const userData = localStorage.getItem('user');
@@ -69,17 +69,16 @@ export class ChangePasswordComponent {
       this.changePassword.userId = JSON.parse(userData).userId;
       console.log(this.changePassword.userId);
     }
-
   }
 
   viewPassOld() {
-    this.pType = this.pType == "password" ? "text" : 'password'
-    this.eyeOld = !this.eyeOld
+    this.pTypeOld = this.pTypeOld == 'password' ? 'text' : 'password';
+    this.eyeOld = !this.eyeOld;
   }
 
   viewPass() {
-    this.pType = this.pType == "password" ? "text" : 'password'
-    this.eye = !this.eye
+    this.pType = this.pType == 'password' ? 'text' : 'password';
+    this.eye = !this.eye;
   }
 
   updatePassword(empForm: NgForm): void {
@@ -87,42 +86,42 @@ export class ChangePasswordComponent {
       if (this.changePassword) {
         const employeeId = this.changePassword.userId;
         console.log(this.changePassword.userId);
-        this.changePasswordService.updatePasswordById(employeeId, this.changePassword).pipe().subscribe({
-          next: (response) => {
-          },
-          error: (error) => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Update Failed',
-              text: error.error,
-              timer: 1000
-            });
-          },
-          complete: () => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Update Complete',
-              showConfirmButton: false,
-              text: 'The update process has completed.',
-              timer: 1000
-            }).then(() => {
-              this.router.navigate(["ats/log-records"])
-            })
-          }
-        });
+        this.changePasswordService
+          .updatePasswordById(employeeId, this.changePassword)
+          .pipe()
+          .subscribe({
+            next: (response) => {},
+            error: (error) => {
+              Swal.fire({
+                icon: 'error',
+                title: 'Update Failed',
+                text: error.error,
+                timer: 1000,
+              });
+            },
+            complete: () => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Update Complete',
+                showConfirmButton: false,
+                text: 'The update process has completed.',
+                timer: 1000,
+              }).then(() => {
+                this.router.navigate(['ats/log-records']);
+              });
+            },
+          });
       }
     }
   }
 
   validateForm(): boolean {
-    return (
-      this.validatePassword() &&
-      this.validateConfirmPassword()
-    );
+    return this.validatePassword() && this.validateConfirmPassword();
   }
 
   validatePassword(): boolean {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,}$/;
 
     if (!regex.test(this.changePassword.newPassword)) {
       if (!/(?=.*[a-z])/.test(this.changePassword.newPassword)) {
@@ -134,7 +133,7 @@ export class ChangePasswordComponent {
       } else if (!/(?=.*[^A-Za-z\d])/.test(this.changePassword.newPassword)) {
         this.errors.newPassword = "Pass should've at least 1 special char!";
       } else {
-        this.errors.newPassword = "Pass must be at least 8 char long!";
+        this.errors.newPassword = 'Pass must be at least 8 char long!';
       }
       return false;
     }

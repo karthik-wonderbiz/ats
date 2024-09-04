@@ -1,9 +1,16 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import EmployeeModel from '../../../../model/employee-sign-up.model';
 import ConfirmPassword from '../../../../model/confirm-password.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http';
 import { SignUpService } from '../../../../shared/services/sign-up/sign-up.service';
 import { NgForm } from '@angular/forms';
 import { EncryptDescrypt } from '../../../../utils/genericFunction';
@@ -11,15 +18,12 @@ import { EmployeeService } from '../../../../services/employee/employee.service'
 import { NgxImageCompressService } from 'ngx-image-compress';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-update-employee-details',
   templateUrl: './update-employee-details.component.html',
-  styleUrl: './update-employee-details.component.css'
+  styleUrl: './update-employee-details.component.css',
 })
-
 export class UpdateEmployeeDetailsComponent {
-
   employee: EmployeeModel = {
     id: '',
     userId: '',
@@ -28,13 +32,13 @@ export class UpdateEmployeeDetailsComponent {
     email: '',
     contactNo: '',
     password: '',
-    profilePic: ''
+    profilePic: '',
   };
   confirmPass: ConfirmPassword = {
     confirmPassword: '',
   };
 
-  fName = ''
+  fName = '';
 
   errors = {
     firstName: 'First name must be at least 3 chars!',
@@ -58,16 +62,15 @@ export class UpdateEmployeeDetailsComponent {
     private http: HttpClient,
     private signupService: SignUpService,
     private imageCompress: NgxImageCompressService
-
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     const encryptedId = this.route.snapshot.paramMap.get('id');
-    console.log("EncryptedId", encryptedId);
+    console.log('EncryptedId', encryptedId);
     if (encryptedId) {
       const employeeId = EncryptDescrypt.decrypt(encryptedId);
       console.log('Decrypted Employee ID:', employeeId);
-      this.employeeService.getEmployeeByUserId(employeeId).subscribe(data => {
+      this.employeeService.getEmployeeByUserId(employeeId).subscribe((data) => {
         console.log(data);
         if (data) {
           this.employee.id = data[0].id;
@@ -90,7 +93,7 @@ export class UpdateEmployeeDetailsComponent {
   // }
 
   toggleCapture() {
-    this.viaCapture = !this.viaCapture
+    this.viaCapture = !this.viaCapture;
   }
 
   updateUser(empForm: NgForm): void {
@@ -98,50 +101,56 @@ export class UpdateEmployeeDetailsComponent {
       if (this.employee) {
         const employeeId = this.employee.id;
         console.log(this.employee.id);
-        this.employeeService.updateUserById(employeeId, this.employee).pipe().subscribe({
-          next: (response) => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Update Successful',
-              text: 'Employee details have been updated successfully.',
-              timer: 1000
-            });
-          },
-          error: (error) => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Update Failed',
-              text: 'There was an error updating the employee details.',
-              timer: 1000
-            });
-          },
-          complete: () => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Update Complete',
-              showConfirmButton: false,
-              text: 'The update process has completed.',
-              timer: 1000
-            });
-            // setTimeout(() => {
-            //   this.router.navigate(['/ats/employees']);
-              
-            // }, 1000);
-          }
-        });
+        this.employeeService
+          .updateUserById(employeeId, this.employee)
+          .pipe()
+          .subscribe({
+            next: (response) => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Update Successful',
+                text: 'Employee details have been updated successfully.',
+                timer: 1000,
+              });
+            },
+            error: (error) => {
+              Swal.fire({
+                icon: 'error',
+                title: 'Update Failed',
+                text: 'There was an error updating the employee details.',
+                timer: 1000,
+              });
+            },
+            complete: () => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Update Complete',
+                showConfirmButton: false,
+                text: 'The update process has completed.',
+                timer: 1000,
+              });
+              this.router.navigate(['/ats/log-records']);
+              // setTimeout(() => {
+              //   this.router.navigate(['/ats/employees']);
+
+              // }, 1000);
+            },
+          });
       }
     }
   }
-  
-  onUpdateEncoding(){
+
+  onUpdateEncoding() {
     setTimeout(() => {
-      const encryptedId = EncryptDescrypt.encrypt(this.employee.userId.toString());
+      const encryptedId = EncryptDescrypt.encrypt(
+        this.employee.userId.toString()
+      );
       this.router.navigate(['/enrolment/home/', encryptedId]);
     }, 1000);
   }
 
   setImageFromCamera(e: string) {
-    this.thumbnail = e
+    this.thumbnail = e;
   }
 
   validateForm(): boolean {
@@ -167,7 +176,6 @@ export class UpdateEmployeeDetailsComponent {
 
     return namePattern.test(this.employee.firstName);
   }
-
 
   validateLastName(): boolean {
     const namePattern = /^[a-zA-Z ]{1,}$/;
@@ -223,12 +231,20 @@ export class UpdateEmployeeDetailsComponent {
         // Draw the image onto the canvas, cropping to a square
         context.drawImage(
           img,
-          offsetX, offsetY, minDimension, minDimension,  // source rectangle
-          0, 0, minDimension, minDimension  // destination rectangle
+          offsetX,
+          offsetY,
+          minDimension,
+          minDimension, // source rectangle
+          0,
+          0,
+          minDimension,
+          minDimension // destination rectangle
         );
 
         // Convert canvas to base64 string
-        const croppedBase64String = canvas.toDataURL('image/jpeg').split(',')[1];
+        const croppedBase64String = canvas
+          .toDataURL('image/jpeg')
+          .split(',')[1];
 
         // Check file size
         const fileSizeInKB = (croppedBase64String.length * (3 / 4)) / 1024;
@@ -239,20 +255,29 @@ export class UpdateEmployeeDetailsComponent {
           return;
         }
         // Resize the image if necessary and then handle the result
-        this.imageCompress.compressFile('data:image/jpeg;base64,' + croppedBase64String, -1, 50, 50, 180, 180).then((resizedImage) => {
-          const resizedBase64String = resizedImage.split(',')[1];
-          this.imageToByte(resizedBase64String);
-          const objectURL = 'data:image/jpeg;base64,' + resizedBase64String;
-          this.thumbnail = this.sanitizer.bypassSecurityTrustUrl(objectURL);
-        });
+        this.imageCompress
+          .compressFile(
+            'data:image/jpeg;base64,' + croppedBase64String,
+            -1,
+            50,
+            50,
+            180,
+            180
+          )
+          .then((resizedImage) => {
+            const resizedBase64String = resizedImage.split(',')[1];
+            this.imageToByte(resizedBase64String);
+            const objectURL = 'data:image/jpeg;base64,' + resizedBase64String;
+            this.thumbnail = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+          });
       }
     };
-  }
+  };
 
   onProfilePicInput(event: Event): void {
-    this.isCaptured = true
-    this.thumbnail = ""
-    this.employee.profilePic = ""
+    this.isCaptured = true;
+    this.thumbnail = '';
+    this.employee.profilePic = '';
 
     const input = event.target as HTMLInputElement;
     const validFileTypes = ['image/jpeg', 'image/png', 'image/jpg'];
@@ -266,7 +291,7 @@ export class UpdateEmployeeDetailsComponent {
         reader.onload = () => {
           const base64String = reader.result as string;
           this.capturedImage = base64String;
-          this.thumbnail = base64String
+          this.thumbnail = base64String;
           this.convertImage();
         };
 
@@ -287,7 +312,6 @@ export class UpdateEmployeeDetailsComponent {
     }
   }
 
-
   imageToByte(base64String: string): void {
     const imageData = { imageData: base64String };
     this.employee.profilePic = imageData.imageData;
@@ -298,16 +322,16 @@ export class UpdateEmployeeDetailsComponent {
   private stream: MediaStream | null = null;
   @ViewChild('video', { static: true })
   videoElement!: ElementRef<HTMLVideoElement>;
-  capturedImage: string = ""
+  capturedImage: string = '';
 
   openCamera() {
-    console.log("call")
-    this.thumbnail = ''
-    this.isCaptured = false
-    this.initializeWebcam()
+    console.log('call');
+    this.thumbnail = '';
+    this.isCaptured = false;
+    this.initializeWebcam();
   }
   async removeCurrent() {
-    await this.capture()
+    await this.capture();
   }
 
   ngOnDestroy(): void {
@@ -327,15 +351,15 @@ export class UpdateEmployeeDetailsComponent {
       );
 
       if (imageBlob) {
-        this.stopWebcam()
-        this.isCaptured = true
+        this.stopWebcam();
+        this.isCaptured = true;
         const reader = new FileReader();
         reader.onloadend = () => {
           this.capturedImage = reader.result as string;
           this.thumbnail = this.capturedImage;
           this.isCamOpen = false;
-          this.employee.profilePic = this.capturedImage
-          this.convertImage()
+          this.employee.profilePic = this.capturedImage;
+          this.convertImage();
         };
         reader.readAsDataURL(imageBlob);
       }
@@ -354,7 +378,7 @@ export class UpdateEmployeeDetailsComponent {
           if (video) {
             video.srcObject = stream;
             this.stream = stream;
-            this.isCamOpen = true
+            this.isCamOpen = true;
           }
         })
         .catch((error: any) => {
@@ -369,19 +393,18 @@ export class UpdateEmployeeDetailsComponent {
     if (this.stream) {
       const tracks = this.stream.getTracks();
       tracks.forEach((track) => track.stop());
-      this.isCamOpen = false
+      this.isCamOpen = false;
     }
   }
-  onDelete(){
+  onDelete() {
     this.errors.profilePic = 'Profile Photo is required!';
-      this.employee.profilePic = ''; // Clear the model value
-      this.thumbnail = '';
-      this.isCamOpen = false
-      this.isCaptured =false
+    this.employee.profilePic = ''; // Clear the model value
+    this.thumbnail = '';
+    this.isCamOpen = false;
+    this.isCaptured = false;
   }
 
-  onBrowse(){
-    this.stopWebcam()
+  onBrowse() {
+    this.stopWebcam();
   }
-
 }
