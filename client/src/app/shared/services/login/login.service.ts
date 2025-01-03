@@ -11,7 +11,7 @@ import EmployeeModel from '../../../model/employee-sign-up.model';
 })
 export class LoginService {
 
-  private baseUrl = 'http://localhost:5147/api';
+  private baseUrl = ' http://localhost:5147/api';
 
   constructor(private http: HttpClient) { }
 

@@ -58,6 +58,7 @@ export class EmployeeLogRecordsComponent implements OnInit {
   ngOnInit(): void {
     this.selectedDate = this.getDefaultDate();
     this.selectedTab = this.tabs[0] || '';
+    this.subscribeToItemUpdates();
     let user = localStorage.getItem("user")
     if (user) {
       this.roleId = JSON.parse(user).roleId
@@ -78,8 +79,8 @@ export class EmployeeLogRecordsComponent implements OnInit {
 
   onDateChange() {
     this.isDataLoaded = false;
-
-    console.log("date changed", this.selectedDate)
+    
+    console.log("date changed",this.selectedDate)
     this.fetchAttendanceLogs();
   }
 
@@ -121,6 +122,7 @@ export class EmployeeLogRecordsComponent implements OnInit {
   fetchAttendanceLogs() {
     console.log("Fetching records")
     if (this.selectedTab === '') {
+
       if (this.roleId == 2) {
         console.log("admin", this.roleId)
         this.getAllAttendanceLogs(0);
@@ -128,6 +130,11 @@ export class EmployeeLogRecordsComponent implements OnInit {
         console.log("emo", this.roleId)
         this.getAllAttendanceLogs(this.userId)
       }
+// =======
+//       console.log("All records")
+
+//       this.getAllAttendanceLogs();
+// >>>>>>> 4c216fb820c60dabf6b9cca1ab7d3c852f9c6460
     } else if (this.selectedTab === 'IN' || this.selectedTab === 'OUT') {
       console.log("tab records")
 

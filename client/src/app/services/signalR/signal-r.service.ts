@@ -18,7 +18,7 @@ export class SignalRService {
 
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:5147/atsHub') // Update this URL to match your backend's address
+      .withUrl(' http://localhost:5147/atsHub') // Update this URL to match your backend's address
       .configureLogging(signalR.LogLevel.Information)
       .build();
 

@@ -103,7 +103,7 @@ export class RoutingService {
           this.loginService.getRoutes(roleId).subscribe({
             next: (data) => {
               this.routes = data;
-              const my = this.generateRoutes(data);
+              const my = this.generateRoutes(data)
               this.router.resetConfig(my);
               resolve();
             },
@@ -140,11 +140,39 @@ export class RoutingService {
     return this.routes;
   }
 
+  // generateRoutes(pageList: Page[]) {
+  //   const userRoutes = pageList.map((r) => ({
+  //     path: this.routeMapping[r.pageTitle].path,
+  //     component: this.routeMapping[r.pageTitle].component || NotFoundComponent,
+  //   }));
+  //   const updatedRoutes = [...this.defaultRoutes, {
+  //     path: 'ats', component: AdminDashboardComponent,
+  //     children: [
+  //       ...userRoutes
+  //     ]
+  //   }];
+  //   updatedRoutes.push({ path: '**', component: NotFoundComponent });
+  //   return updatedRoutes;
+  // }
+
+
   generateRoutes(pageList: Page[]) {
-    const userRoutes = pageList.map((r) => ({
-      path: this.routeMapping[r.pageTitle].path,
-      component: this.routeMapping[r.pageTitle].component || NotFoundComponent,
-    }));
+    const userRoutes = pageList.map((r) => {
+      const routeConfig = this.routeMapping[r.pageTitle];
+      if (routeConfig) {
+        return {
+          path: routeConfig.path,
+          component: routeConfig.component,
+        };
+      } else {
+        console.warn(`Route for pageTitle '${r.pageTitle}' not found in routeMapping.`);
+        return {
+          path: r.pageTitle.toLowerCase().replace(/\s+/g, '-'),
+          component: NotFoundComponent, // Fallback component for unmapped routes
+        };
+      }
+    });
+  
     const updatedRoutes = [
       ...this.defaultRoutes,
       {
@@ -152,11 +180,17 @@ export class RoutingService {
         component: AdminDashboardComponent,
         children: [...userRoutes],
       },
+      { path: '**', component: NotFoundComponent },
     ];
-    updatedRoutes.push({ path: '**', component: NotFoundComponent });
+  
     return updatedRoutes;
   }
+
+  
+  
   // private getComponent(pageTitle: string): Type<any> | undefined {
   //   return this.componentsMap[pageTitle.toLowerCase()];
   // }
+
+
 }

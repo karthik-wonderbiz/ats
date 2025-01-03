@@ -5,7 +5,7 @@ server = "10.10.10.127"
 port = "1433"
 user = 'sa'
 password = "user@123"
-database = "AttendanceTrackingSystem"
+database = "AttendnceTrackingSystem"
 videoSource = 0
 apiBaseUrl = "http://localhost:5147/api"
 
