@@ -11,6 +11,6 @@ export class RouteService {
   constructor(private http: HttpClient) {
   }
   getRoutes(): Observable<Page[]> {
-    return this.http.get<Page[]>('http://192.168.29.242:5000/api/accesspage');
+    return this.http.get<Page[]>('http://localhost:5147/api/accesspage');
   }
 }

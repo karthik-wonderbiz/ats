@@ -13,7 +13,7 @@
 
 //   // Method to perform the login
 //   login(credentials: { email: string, password: string }): Observable<any> {
-//     return this.http.post<any>('http://192.168.29.242:5000/api/user/log-in', credentials) // Replace 'API_ENDPOINT/login' with your actual login endpoint
+//     return this.http.post<any>('http://localhost:5147/api/user/log-in', credentials) // Replace 'API_ENDPOINT/login' with your actual login endpoint
 //       .pipe(
 //         tap(user => this.setCurrentUser(user)) // Store the user information upon successful login
 //       );

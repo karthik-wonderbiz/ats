@@ -1,12 +1,12 @@
 waitTime = 10
 detectMultipleface = True
 cameraType="IN"
-server = "192.168.29.242"
-port = "1438"
+server = "10.10.10.127"
+port = "1433"
 user = 'sa'
-password = "Sahil@2014"
-database = "NayaAtsDevelop"
+password = "user@123"
+database = "AttendanceTrackingSystem"
 videoSource = 0
-apiBaseUrl = "http://192.168.29.242:5000/api"
+apiBaseUrl = "http://localhost:5147/api"
 
 connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server},{port};DATABASE={database};UID={user};PWD={password}'
