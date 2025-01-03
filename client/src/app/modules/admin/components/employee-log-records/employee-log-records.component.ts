@@ -22,7 +22,7 @@ export class EmployeeLogRecordsComponent implements OnInit {
   searchInput: string = '';
   selectedDate: string = '';
   selectedTab: string = '';
-  roleId: number = 0;
+  roleId: number = 2;
   userId: number = 0;
 
   isDataLoaded: boolean = false;
@@ -59,12 +59,11 @@ export class EmployeeLogRecordsComponent implements OnInit {
     this.selectedDate = this.getDefaultDate();
     this.selectedTab = this.tabs[0] || '';
     this.subscribeToItemUpdates();
-    let user = localStorage.getItem("loginData")
+    let user = localStorage.getItem("user")
     if (user) {
-      console.log("usermmm:", JSON.parse(user));
       this.roleId = JSON.parse(user).roleId
       if (this.roleId == 3) {
-        this.userId = JSON.parse(user).id
+        this.userId = JSON.parse(user).userId
       }
       if (this.roleId == 2) {
         this.tabNames = ['In Out', 'In', 'Out'];
@@ -79,6 +78,8 @@ export class EmployeeLogRecordsComponent implements OnInit {
 
   onDateChange() {
     this.isDataLoaded = false;
+    
+    console.log("date changed",this.selectedDate)
     this.fetchAttendanceLogs();
   }
 
@@ -112,9 +113,14 @@ export class EmployeeLogRecordsComponent implements OnInit {
   }
 
   fetchAttendanceLogs() {
+    console.log("Fetching records")
     if (this.selectedTab === '') {
+      console.log("All records")
+
       this.getAllAttendanceLogs();
     } else if (this.selectedTab === 'IN' || this.selectedTab === 'OUT') {
+      console.log("tab records")
+
       this.getAllAttendanceLogsInOut(this.selectedTab);
     }
   }

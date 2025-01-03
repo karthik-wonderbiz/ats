@@ -46,6 +46,7 @@ export class RoutingService {
     UpdatePassword: { path: 'change-password', component: ChangePasswordComponent },
     MisEntry: { path: 'mis-entries', component: MisEntriesListComponent },
     MisEntrySummary: { path: 'mis-entries/:id/:date', component: MisEntriesComponent },
+    EmployeeStatus:{path:"employee-status-details",component:EmployeeStatusDetailsComponent}
   };
   private defaultRoutes: Route[] = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -70,28 +71,22 @@ export class RoutingService {
     return new Promise<void>((resolve, reject) => {
       const user = localStorage.getItem('user');
       if (user) {
-        console.log(user)
         const roleId = JSON.parse(user).roleId;
         if (roleId) {
-          console.log(roleId)
           this.loginService.getRoutes(roleId).subscribe({
             next: (data) => {
-              console.log(data)
               this.routes = data;
               const my = this.generateRoutes(data)
-              console.log(my)
               this.router.resetConfig(my);
               resolve();
             },
             error: (e) => {
-              console.log(e);
               this.setDefaultRoute();
               resolve();
             },
           });
         }
       } else {
-        console.log("no user")
         this.setDefaultRoute();
         resolve();
       }
@@ -119,30 +114,57 @@ export class RoutingService {
     return this.routes;
   }
 
+  // generateRoutes(pageList: Page[]) {
+  //   const userRoutes = pageList.map((r) => ({
+  //     path: this.routeMapping[r.pageTitle].path,
+  //     component: this.routeMapping[r.pageTitle].component || NotFoundComponent,
+  //   }));
+  //   const updatedRoutes = [...this.defaultRoutes, {
+  //     path: 'ats', component: AdminDashboardComponent,
+  //     children: [
+  //       ...userRoutes
+  //     ]
+  //   }];
+  //   updatedRoutes.push({ path: '**', component: NotFoundComponent });
+  //   return updatedRoutes;
+  // }
+
+
   generateRoutes(pageList: Page[]) {
     const userRoutes = pageList.map((r) => {
-      console.log(r.pageTitle, {
-        path: this.routeMapping[r.pageTitle].path,
-        component: this.routeMapping[r.pageTitle].component || NotFoundComponent,
-      })
-      return {
-        path: this.routeMapping[r.pageTitle].path,
-        component: this.routeMapping[r.pageTitle].component || NotFoundComponent,
+      const routeConfig = this.routeMapping[r.pageTitle];
+      if (routeConfig) {
+        return {
+          path: routeConfig.path,
+          component: routeConfig.component,
+        };
+      } else {
+        console.warn(`Route for pageTitle '${r.pageTitle}' not found in routeMapping.`);
+        return {
+          path: r.pageTitle.toLowerCase().replace(/\s+/g, '-'),
+          component: NotFoundComponent, // Fallback component for unmapped routes
+        };
       }
     });
-    console.log(userRoutes)
-    const updatedRoutes = [...this.defaultRoutes, {
-      path: 'ats', component: AdminDashboardComponent,
-      children: [
-        ...userRoutes
-      ]
-    }];
-    updatedRoutes.push({ path: '**', component: NotFoundComponent });
-    console.log("rotes loaded:", updatedRoutes);
+  
+    const updatedRoutes = [
+      ...this.defaultRoutes,
+      {
+        path: 'ats',
+        component: AdminDashboardComponent,
+        children: [...userRoutes],
+      },
+      { path: '**', component: NotFoundComponent },
+    ];
+  
     return updatedRoutes;
   }
+
+  
+  
   // private getComponent(pageTitle: string): Type<any> | undefined {
   //   return this.componentsMap[pageTitle.toLowerCase()];
   // }
+
 
 }
