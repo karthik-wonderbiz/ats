@@ -65,7 +65,7 @@ export class EmployeeLogRecordsComponent implements OnInit {
       if (this.roleId == 3) {
         this.userId = JSON.parse(user).userId
       }
-      if (this.roleId == 2) {
+      if (this.roleId == 1) {
         this.tabNames = ['In Out', 'In', 'Out'];
         this.tabs = ['', 'IN', 'OUT'];
       } else {

@@ -219,7 +219,7 @@ async def startup_event():
     # Load the initial encodings from the database
     known_face_id, known_face_names, known_face_encodings = load_encodings_from_db()
     # Connect to SignalR hub and listen for updates
-    hub_connection = HubConnectionBuilder().with_url(" http://localhost:5147/atsHub").configure_logging(logging.CRITICAL)\
+    hub_connection = HubConnectionBuilder().with_url(" http://10.10.10.13:5000/atsHub").configure_logging(logging.CRITICAL)\
     .with_automatic_reconnect({
         "type": "raw",
         "keep_alive_interval": 10,

@@ -7,6 +7,6 @@ user = 'sa'
 password = "user@123"
 database = "AttendnceTrackingSystem"
 videoSource = 0
-apiBaseUrl = "http://localhost:5147/api"
+apiBaseUrl = "http://10.10.10.13:5000/api"
 
 connection_string = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server},{port};DATABASE={database};UID={user};PWD={password}'

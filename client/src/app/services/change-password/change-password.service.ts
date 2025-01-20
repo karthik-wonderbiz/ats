@@ -9,7 +9,7 @@ import EmployeeModel from '../../model/employee-sign-up.model';
 })
 export class ChangePasswordService {
 
-  private baseUrl = ' http://localhost:5147/api/user';
+  private baseUrl = ' http://10.10.10.13:5000/api/user';
 
   constructor(private http: HttpClient) { }
 

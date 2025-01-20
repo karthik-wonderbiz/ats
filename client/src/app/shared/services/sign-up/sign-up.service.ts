@@ -9,7 +9,7 @@ import SignUpModel from '../../../model/signup.model';
 })
 export class SignUpService {
 
-  private APIUrl = " http://localhost:5147/api/user/signup";
+  private APIUrl = " http://10.10.10.13:5000/api/user/signup";
   constructor(private http: HttpClient) {
 
   }

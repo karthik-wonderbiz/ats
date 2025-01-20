@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root',
 })
 export class FacesService {
-  private BASE_URI = 'http://192.168.29.207:8000/get-unknown-faces';
+  private BASE_URI = 'http://10.10.10.13:8000/get-unknown-faces';
   constructor(private http: HttpClient) {}
 
   getUnknownFaces(): Observable<UnknownFaces> {

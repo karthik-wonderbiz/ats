@@ -10,7 +10,7 @@ import EmployeeModel from '../../model/employee-sign-up.model';
   providedIn: 'root'
 })
 export class EmployeeService {
-  private baseUrl = ' http://localhost:5147/api/employeedetail';
+  private baseUrl = ' http://10.10.10.13:5000/api/employeedetail';
 
   constructor(private http: HttpClient) { }
 
