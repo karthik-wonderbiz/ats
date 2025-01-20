@@ -19,8 +19,8 @@ export class ChangePasswordComponent {
     email: '',
     oldPassword: '',
     newPassword: '',
-    userId: '',
-  };
+    userId: ''
+  }
 
   confirmPass: ConfirmPassword = {
     confirmPassword: '',
@@ -59,8 +59,8 @@ export class ChangePasswordComponent {
     private changePasswordService: ChangePasswordService,
     private router: Router,
     private route: ActivatedRoute,
-    private employeeService: EmployeeService
-  ) {}
+    private employeeService: EmployeeService,
+  ) { }
 
   ngOnInit(): void {
     const userData = localStorage.getItem('user');
@@ -69,11 +69,12 @@ export class ChangePasswordComponent {
       this.changePassword.userId = JSON.parse(userData).userId;
       console.log(this.changePassword.userId);
     }
+
   }
 
   viewPassOld() {
-    this.pTypeOld = this.pTypeOld == 'password' ? 'text' : 'password';
-    this.eyeOld = !this.eyeOld;
+    this.pType = this.pType == "password" ? "text" : 'password'
+    this.eyeOld = !this.eyeOld
   }
 
   viewPass() {
@@ -86,37 +87,38 @@ export class ChangePasswordComponent {
       if (this.changePassword) {
         const employeeId = this.changePassword.userId;
         console.log(this.changePassword.userId);
-        this.changePasswordService
-          .updatePasswordById(employeeId, this.changePassword)
-          .pipe()
-          .subscribe({
-            next: (response) => {},
-            error: (error) => {
-              Swal.fire({
-                icon: 'error',
-                title: 'Update Failed',
-                text: error.error,
-                timer: 1000,
-              });
-            },
-            complete: () => {
-              Swal.fire({
-                icon: 'success',
-                title: 'Update Complete',
-                showConfirmButton: false,
-                text: 'The update process has completed.',
-                timer: 1000,
-              }).then(() => {
-                this.router.navigate(['ats/log-records']);
-              });
-            },
-          });
+        this.changePasswordService.updatePasswordById(employeeId, this.changePassword).pipe().subscribe({
+          next: (response) => {
+          },
+          error: (error) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Update Failed',
+              text: error.error,
+              timer: 1000
+            });
+          },
+          complete: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Update Complete',
+              showConfirmButton: false,
+              text: 'The update process has completed.',
+              timer: 1000
+            }).then(() => {
+              this.router.navigate(["ats/log-records"])
+            })
+          }
+        });
       }
     }
   }
 
   validateForm(): boolean {
-    return this.validatePassword() && this.validateConfirmPassword();
+    return (
+      this.validatePassword() &&
+      this.validateConfirmPassword()
+    );
   }
 
   validatePassword(): boolean {

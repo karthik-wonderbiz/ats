@@ -16,7 +16,7 @@ import { EncryptDescrypt } from '../../utils/genericFunction';
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css'],
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnInit {
 
   employee: EmployeeModel = {
     firstName: '',
@@ -62,6 +62,8 @@ export class SignUpComponent {
     private imageCompress: NgxImageCompressService
   ) { }
 
+  ngOnInit():void{}
+
   toggleCapture() {
     this.viaCapture = !this.viaCapture
   }
@@ -95,7 +97,7 @@ export class SignUpComponent {
 
           const { firstName, lastName, email, profilePic, userId, employeeDetailId, roleId } = response
           let user = {
-            firstName, lastName, email, profilePic, userId, id: employeeDetailId, roleId, isLoggedIn: false
+            firstName, lastName, email, profilePic, userId, id: employeeDetailId, roleId
           }
 
           localStorage.setItem("user", JSON.stringify(user))

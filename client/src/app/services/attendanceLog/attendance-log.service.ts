@@ -9,7 +9,7 @@ import { ConcatName, TimeFormatter } from '../../utils/genericFunction';
   providedIn: 'root'
 })
 export class AttendanceLogService {
-  private urlMain = "http://192.168.29.242:5000/api/attendanceLog";
+  private urlMain = " http://10.10.10.13:5000/api/attendanceLog";
 
   constructor(private http: HttpClient) { }
 

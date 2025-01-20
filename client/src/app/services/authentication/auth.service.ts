@@ -24,7 +24,7 @@ interface LoginResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private loginUrl = 'http://192.168.29.242:5000/api/user/log-in';
+  private loginUrl = ' http://10.10.10.13:5000/api/user/log-in';
 
   constructor(private http: HttpClient) {} // HttpClient should be injected here
 

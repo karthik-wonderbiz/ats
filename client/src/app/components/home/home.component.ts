@@ -38,32 +38,40 @@ export class HomeComponent {
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      const encryptedId = params['userId']; 
+      const encryptedId = params['userId'];
       this.user.userId = parseInt(EncryptDescrypt.decrypt((encryptedId)));
-      this.getUser(); 
+      this.getUser();
     });
   }
 
   getUser = () => {
-    console.log(this.user.userId);
-    this.userService.getUserById(this.user.userId).subscribe({
-      next: (data) => {
-        const { designationName, firstName, lastName, profilePic, id } = data;
-        this.user.firstName = firstName;
-        this.user.lastName = lastName;
-        this.user.designationName = designationName;
-        this.user.profilePic = profilePic;
-        this.isUser = true;
-        this.user.id = id;
-        // localStorage.setItem('user', JSON.stringify(this.user));
-      },
-      error: (err) => {
-        this.toast.message = err.message || 'User not found';
-        this.isClose = true;
-        setTimeout(() => {
-          this.isClose = false;
-        }, 4000);
-      },
-    });
+    let user = localStorage.getItem("user")
+    if (user) {
+      this.user.id = JSON.parse(user).id
+      this.user.email = JSON.parse(user).email
+      this.user.firstName = JSON.parse(user).firstName
+      this.user.lastName = JSON.parse(user).lastName
+      this.user.profilePic = JSON.parse(user).profilePic
+      this.isUser = true
+    }
+    // this.userService.getUserById(this.user.userId).subscribe({
+    //   next: (data) => {
+    //     const { email, firstName, lastName, profilePic, id } = data;
+    //     this.user.firstName = firstName;
+    //     this.user.lastName = lastName;
+    //     this.user.email = email;
+    //     this.user.profilePic = profilePic;
+    //     this.isUser = true;
+    //     this.user.id = id;
+    //     localStorage.setItem('user', JSON.stringify(this.user)); // commment karna hai
+    //   },
+    //   error: (err) => {
+    //     this.toast.message = err.message || 'User not found';
+    //     this.isClose = true;
+    //     setTimeout(() => {
+    //       this.isClose = false;
+    //     }, 4000);
+    //   },
+    // });
   };
 }
